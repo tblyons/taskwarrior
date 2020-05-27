@@ -70,21 +70,21 @@ const char *colorstring[] = {
 ////////////////////////////////////////////////////////////////////////////////
 static struct
 {
-  Color::color_id id;
   std::string english_name;
+  Color::color_id id;
   int index;                    // offset red=3 (therefore fg=33, bg=43)
 } allColors[] =
 {
-  // Color.h enum    English     Index
-  { Color::nocolor,  "none",     0},
-  { Color::black,    "black",    1}, // fg 29+0  bg 39+0
-  { Color::red,      "red",      2},
-  { Color::green,    "green",    3},
-  { Color::yellow,   "yellow",   4},
-  { Color::blue,     "blue",     5},
-  { Color::magenta,  "magenta",  6},
-  { Color::cyan,     "cyan",     7},
-  { Color::white,    "white",    8},
+  // English    Color.h enum     Index
+  { "none",     Color::nocolor,  0},
+  { "black",    Color::black,    1}, // fg 29+0  bg 39+0
+  { "red",      Color::red,      2},
+  { "green",    Color::green,    3},
+  { "yellow",   Color::yellow,   4},
+  { "blue",     Color::blue,     5},
+  { "magenta",  Color::magenta,  6},
+  { "cyan",     Color::cyan,     7},
+  { "white",    Color::white,    8},
 
 };
 
