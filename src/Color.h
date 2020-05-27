@@ -50,6 +50,7 @@ public:
   Color (const std::string&);                   // "red on bright black"
   Color (color_id);                             // fg.
   Color (color_id, color_id, bool, bool, bool); // fg, bg, underline, bold, bright
+  Color& operator=(Color const&) = default;
   operator std::string () const;
   operator int () const;
 
