@@ -73,9 +73,11 @@ int CmdSummary::execute (std::string& output)
 
   // Generate unique list of project names from all pending tasks.
   std::map <std::string, bool> allProjects;
-  for (auto& task : filtered)
-    if (showAllProjects || task.getStatus () == Task::pending)
-      allProjects[task.get ("project")] = false;
+  for (auto& task : filtered) {
+    if (showAllProjects || task.getStatus() == Task::pending) {
+      allProjects[task.get("project")] = false;
+    }
+  }
 
   // Initialize counts, sum.
   std::map <std::string, int> countPending;
@@ -100,8 +102,9 @@ int CmdSummary::execute (std::string& output)
     std::vector <std::string> projects = extractParents (project);
     projects.push_back (project);
 
-    for (auto& parent : projects)
+    for (auto& parent : projects) {
       ++counter[parent];
+    }
 
     if (task.getStatus () == Task::pending ||
         task.getStatus () == Task::waiting)
@@ -111,8 +114,9 @@ int CmdSummary::execute (std::string& output)
         ++countPending[parent];
 
         time_t entry = strtol (task.get ("entry").c_str (), NULL, 10);
-        if (entry)
-          sumEntry[parent] = sumEntry[parent] + (double) (now - entry);
+        if (entry) {
+          sumEntry[parent] = sumEntry[parent] + (double)(now - entry);
+        }
       }
     }
 
@@ -124,8 +128,9 @@ int CmdSummary::execute (std::string& output)
 
         time_t entry = strtol (task.get ("entry").c_str (), NULL, 10);
         time_t end   = strtol (task.get ("end").c_str (), NULL, 10);
-        if (entry && end)
-          sumEntry[parent] = sumEntry[parent] + (double) (end - entry);
+        if (entry && end) {
+          sumEntry[parent] = sumEntry[parent] + (double)(end - entry);
+        }
       }
     }
   }
@@ -174,14 +179,18 @@ int CmdSummary::execute (std::string& output)
                           : indentProject (i.first, "  ", '.')));
 
       view.set (row, 1, countPending[i.first]);
-      if (counter[i.first])
-        view.set (row, 2, ISO8601p ((int) (sumEntry[i.first] / (double)counter[i.first])).formatVague ());
+      if (counter[i.first]) {
+        view.set(row, 2,
+                 ISO8601p((int)(sumEntry[i.first] / (double)counter[i.first]))
+                     .formatVague());
+      }
 
       int c = countCompleted[i.first];
       int p = countPending[i.first];
       int completedBar = 0;
-      if (c + p)
+      if (c + p) {
         completedBar = (c * barWidth) / (c + p);
+      }
 
       std::string bar;
       std::string subbar;
@@ -198,8 +207,9 @@ int CmdSummary::execute (std::string& output)
       view.set (row, 4, bar);
 
       char percent[12] = "0%";
-      if (c + p)
-        sprintf (percent, "%d%%", 100 * c / (c + p));
+      if (c + p) {
+        sprintf(percent, "%d%%", 100 * c / (c + p));
+      }
       view.set (row, 3, percent);
       processed.push_back (i.first);
     }

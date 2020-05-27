@@ -49,10 +49,13 @@ void ColumnParent::measure (Task& task, unsigned int& minimum, unsigned int& max
 
   if (task.has (_name))
   {
-         if (_style == "default" || _style == "long") minimum = maximum = 36;
-    else if (_style == "short")                       minimum = maximum = 8;
-    else
-      throw format (STRING_COLUMN_BAD_FORMAT, _name, _style);
+    if (_style == "default" || _style == "long") {
+      minimum = maximum = 36;
+    } else if (_style == "short") {
+      minimum = maximum = 8;
+    } else {
+      throw format(STRING_COLUMN_BAD_FORMAT, _name, _style);
+    }
   }
 }
 
@@ -67,12 +70,12 @@ void ColumnParent::render (
   {
     // f30cb9c3-3fc0-483f-bfb2-3bf134f00694  default
     // f30cb9c3                              short
-    if (_style == "default" ||
-        _style == "long")
+    if (_style == "default" || _style == "long") {
       renderStringLeft (lines, width, color, task.get(_name));
 
-    else if (_style == "short")
-      renderStringLeft (lines, width, color, task.get (_name).substr (0, 8));
+    } else if (_style == "short") {
+      renderStringLeft(lines, width, color, task.get(_name).substr(0, 8));
+    }
   }
 }
 

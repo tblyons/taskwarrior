@@ -89,8 +89,9 @@ int CmdPrepend::execute (std::string&)
       context.tdb2.modify (task);
       ++count;
       feedback_affected (STRING_CMD_PREPEND_TASK, task);
-      if (context.verbose ("project"))
-        projectChanges[task.get ("project")] = onProjectChange (task, false);
+      if (context.verbose("project")) {
+        projectChanges[task.get("project")] = onProjectChange(task, false);
+      }
 
       // Prepend to siblings.
       if (task.has ("parent"))
@@ -120,15 +121,18 @@ int CmdPrepend::execute (std::string&)
     {
       std::cout << STRING_CMD_PREPEND_NO << "\n";
       rc = 1;
-      if (_permission_quit)
+      if (_permission_quit) {
         break;
+      }
     }
   }
 
   // Now list the project changes.
-  for (auto& change : projectChanges)
-    if (change.first != "")
-      context.footnote (change.second);
+  for (auto& change : projectChanges) {
+    if (change.first != "") {
+      context.footnote(change.second);
+    }
+  }
 
   feedback_affected (count == 1 ? STRING_CMD_PREPEND_1 : STRING_CMD_PREPEND_N, count);
   return rc;

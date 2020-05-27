@@ -48,8 +48,9 @@ void ColumnStatus::setStyle (const std::string& value)
 {
   _style = value;
 
-  if (_style == "short" && _label == STRING_COLUMN_LABEL_STATUS)
+  if (_style == "short" && _label == STRING_COLUMN_LABEL_STATUS) {
     _label = STRING_COLUMN_LABEL_STAT;
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -61,21 +62,22 @@ void ColumnStatus::measure (Task& task, unsigned int& minimum, unsigned int& max
   if (_style == "default" ||
       _style == "long")
   {
-    if (status == Task::pending)
+    if (status == Task::pending) {
       minimum = maximum = utf8_width (STRING_COLUMN_LABEL_STAT_PE);
-    else if (status == Task::deleted)
+    } else if (status == Task::deleted) {
       minimum = maximum = utf8_width (STRING_COLUMN_LABEL_STAT_DE);
-    else if (status == Task::waiting)
+    } else if (status == Task::waiting) {
       minimum = maximum = utf8_width (STRING_COLUMN_LABEL_STAT_WA);
-    else if (status == Task::completed)
+    } else if (status == Task::completed) {
       minimum = maximum = utf8_width (STRING_COLUMN_LABEL_STAT_CO);
-    else if (status == Task::recurring)
-      minimum = maximum = utf8_width (STRING_COLUMN_LABEL_STAT_RE);
-  }
-  else if (_style == "short")
+    } else if (status == Task::recurring) {
+      minimum = maximum = utf8_width(STRING_COLUMN_LABEL_STAT_RE);
+    }
+  } else if (_style == "short") {
     minimum = maximum = 1;
-  else
-    throw format (STRING_COLUMN_BAD_FORMAT, _name, _style);
+  } else {
+    throw format(STRING_COLUMN_BAD_FORMAT, _name, _style);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -91,20 +93,32 @@ void ColumnStatus::render (
   if (_style == "default" ||
       _style == "long")
   {
-         if (status == Task::pending)   value = STRING_COLUMN_LABEL_STAT_PE;
-    else if (status == Task::completed) value = STRING_COLUMN_LABEL_STAT_CO;
-    else if (status == Task::deleted)   value = STRING_COLUMN_LABEL_STAT_DE;
-    else if (status == Task::waiting)   value = STRING_COLUMN_LABEL_STAT_WA;
-    else if (status == Task::recurring) value = STRING_COLUMN_LABEL_STAT_RE;
+    if (status == Task::pending) {
+      value = STRING_COLUMN_LABEL_STAT_PE;
+    } else if (status == Task::completed) {
+      value = STRING_COLUMN_LABEL_STAT_CO;
+    } else if (status == Task::deleted) {
+      value = STRING_COLUMN_LABEL_STAT_DE;
+    } else if (status == Task::waiting) {
+      value = STRING_COLUMN_LABEL_STAT_WA;
+    } else if (status == Task::recurring) {
+      value = STRING_COLUMN_LABEL_STAT_RE;
+    }
   }
 
   else if (_style == "short")
   {
-         if (status == Task::pending)   value = STRING_COLUMN_LABEL_STAT_P;
-    else if (status == Task::completed) value = STRING_COLUMN_LABEL_STAT_C;
-    else if (status == Task::deleted)   value = STRING_COLUMN_LABEL_STAT_D;
-    else if (status == Task::waiting)   value = STRING_COLUMN_LABEL_STAT_W;
-    else if (status == Task::recurring) value = STRING_COLUMN_LABEL_STAT_R;
+    if (status == Task::pending) {
+      value = STRING_COLUMN_LABEL_STAT_P;
+    } else if (status == Task::completed) {
+      value = STRING_COLUMN_LABEL_STAT_C;
+    } else if (status == Task::deleted) {
+      value = STRING_COLUMN_LABEL_STAT_D;
+    } else if (status == Task::waiting) {
+      value = STRING_COLUMN_LABEL_STAT_W;
+    } else if (status == Task::recurring) {
+      value = STRING_COLUMN_LABEL_STAT_R;
+    }
   }
 
   renderStringLeft (lines, width, color, value);

@@ -62,9 +62,11 @@ int CmdTags::execute (std::string& output)
   // Get all the tasks.
   auto tasks = context.tdb2.pending.get_tasks ();
 
-  if (context.config.getBoolean ("list.all.tags"))
-    for (auto& task : context.tdb2.completed.get_tasks ())
-      tasks.push_back (task);
+  if (context.config.getBoolean("list.all.tags")) {
+    for (auto& task : context.tdb2.completed.get_tasks()) {
+      tasks.push_back(task);
+    }
+  }
 
   int quantity = tasks.size ();
 
@@ -81,11 +83,13 @@ int CmdTags::execute (std::string& output)
     std::vector <std::string> tags;
     task.getTags (tags);
 
-    for (auto& tag : tags)
-      if (unique.find (tag) != unique.end ())
+    for (auto& tag : tags) {
+      if (unique.find(tag) != unique.end()) {
         unique[tag]++;
-      else
+      } else {
         unique[tag] = 1;
+      }
+    }
   }
 
   if (unique.size ())
@@ -124,15 +128,17 @@ int CmdTags::execute (std::string& output)
         << view.render ()
         << optionalBlankLine ();
 
-    if (unique.size () == 1)
+    if (unique.size() == 1) {
       context.footnote (STRING_CMD_TAGS_SINGLE);
-    else
-      context.footnote (format (STRING_CMD_TAGS_PLURAL, unique.size ()));
+    } else {
+      context.footnote(format(STRING_CMD_TAGS_PLURAL, unique.size()));
+    }
 
-    if (quantity == 1)
+    if (quantity == 1) {
       context.footnote (STRING_FEEDBACK_TASKS_SINGLE);
-    else
-      context.footnote (format (STRING_FEEDBACK_TASKS_PLURAL, quantity));
+    } else {
+      context.footnote(format(STRING_FEEDBACK_TASKS_PLURAL, quantity));
+    }
 
     out << "\n";
   }
@@ -168,9 +174,11 @@ int CmdCompletionTags::execute (std::string& output)
   // Get all the tasks.
   auto tasks = context.tdb2.pending.get_tasks ();
 
-  if (context.config.getBoolean ("complete.all.tags"))
-    for (auto& task : context.tdb2.completed.get_tasks ())
-      tasks.push_back (task);
+  if (context.config.getBoolean("complete.all.tags")) {
+    for (auto& task : context.tdb2.completed.get_tasks()) {
+      tasks.push_back(task);
+    }
+  }
 
   // Apply filter.
   Filter filter;
@@ -185,8 +193,9 @@ int CmdCompletionTags::execute (std::string& output)
     std::vector <std::string> tags;
     task.getTags (tags);
 
-    for (auto& tag : tags)
+    for (auto& tag : tags) {
       unique[tag] = 0;
+    }
   }
 
   // Add built-in tags to map.
@@ -223,8 +232,9 @@ int CmdCompletionTags::execute (std::string& output)
   // If you update the above list, update src/commands/CmdInfo.cpp and src/commands/CmdTags.cpp as well.
 
   std::stringstream out;
-  for (auto& it : unique)
+  for (auto& it : unique) {
     out << it.first << "\n";
+  }
 
   output = out.str ();
   return 0;

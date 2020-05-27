@@ -71,8 +71,9 @@ CmdDiagnostics::CmdDiagnostics ()
 int CmdDiagnostics::execute (std::string& output)
 {
   Color bold;
-  if (context.color ())
-    bold = Color ("bold");
+  if (context.color()) {
+    bold = Color("bold");
+  }
 
   std::stringstream out;
   out << "\n"
@@ -146,12 +147,13 @@ int CmdDiagnostics::execute (std::string& output)
   std::string compliance = "non-compliant";
 #ifdef __cplusplus
   int level = __cplusplus;
-  if (level == 199711)
+  if (level == 199711) {
     compliance = "C++98/03";
-  else if (level == 201103)
+  } else if (level == 201103) {
     compliance = "C++11";
-  else
-    compliance = format (level);
+  } else {
+    compliance = format(level);
+  }
 #endif
   out << " " << STRING_CMD_DIAG_COMPLIANCE
       << ": "
@@ -222,16 +224,14 @@ int CmdDiagnostics::execute (std::string& output)
       << "\n";
 
   char* env = getenv ("TASKRC");
-  if (env)
-    out << "     TASKRC: "
-        << env
-        << "\n";
+  if (env) {
+    out << "     TASKRC: " << env << "\n";
+  }
 
   env = getenv ("TASKDATA");
-  if (env)
-    out << "   TASKDATA: "
-        << env
-        << "\n";
+  if (env) {
+    out << "   TASKDATA: " << env << "\n";
+  }
 
   out << "    Locking: "
       << (context.config.getBoolean ("locking")
@@ -247,32 +247,33 @@ int CmdDiagnostics::execute (std::string& output)
 
   // Determine rc.editor/$EDITOR/$VISUAL.
   char* peditor;
-  if (context.config.get ("editor") != "")
+  if (context.config.get("editor") != "") {
     out << "  rc.editor: " << context.config.get ("editor") << "\n";
-  else if ((peditor = getenv ("VISUAL")) != NULL)
+  } else if ((peditor = getenv("VISUAL")) != NULL) {
     out << "    $VISUAL: " << peditor << "\n";
-  else if ((peditor = getenv ("EDITOR")) != NULL)
+  } else if ((peditor = getenv("EDITOR")) != NULL) {
     out << "    $EDITOR: " << peditor << "\n";
+  }
 
   out << "     Server: "
       << context.config.get ("taskd.server")
       << "\n";
 
-  if (context.config.get ("taskd.ca") != "")
-    out << "         CA: "
-        << context.config.get ("taskd.ca")
-        << (File (context.config.get ("taskd.ca")).readable ()
-             ? ", readable, " : ", not readable, ")
-        << File (context.config.get ("taskd.ca")).size ()
-        << " bytes\n";
+  if (context.config.get("taskd.ca") != "") {
+    out << "         CA: " << context.config.get("taskd.ca")
+        << (File(context.config.get("taskd.ca")).readable()
+                ? ", readable, "
+                : ", not readable, ")
+        << File(context.config.get("taskd.ca")).size() << " bytes\n";
+  }
 
   std::string trust_value = context.config.get ("taskd.trust");
-  if (trust_value == "strict" ||
-      trust_value == "ignore hostname" ||
-      trust_value == "allow all")
+  if (trust_value == "strict" || trust_value == "ignore hostname" ||
+      trust_value == "allow all") {
     out << "      Trust: " << trust_value << "\n";
-  else
+  } else {
     out << "      Trust: Bad value - see 'man taskrc'\n";
+  }
 
   out << "Certificate: "
       << context.config.get ("taskd.certificate")
@@ -295,10 +296,10 @@ int CmdDiagnostics::execute (std::string& output)
   // Get credentials, but mask out the key.
   std::string credentials = context.config.get ("taskd.credentials");
   auto last_slash = credentials.rfind ('/');
-  if (last_slash != std::string::npos)
-    credentials = credentials.substr (0, last_slash)
-                + "/"
-                + std::string (credentials.length () - last_slash - 1, '*');
+  if (last_slash != std::string::npos) {
+    credentials = credentials.substr(0, last_slash) + "/" +
+                  std::string(credentials.length() - last_slash - 1, '*');
+  }
 
   out << "      Creds: "
       << credentials
@@ -321,9 +322,11 @@ int CmdDiagnostics::execute (std::string& output)
   if (hooks.size ())
   {
     unsigned int longest = 0;
-    for (auto& hook : hooks)
-      if (hook.length () > longest)
-        longest = hook.length ();
+    for (auto& hook : hooks) {
+      if (hook.length() > longest) {
+        longest = hook.length();
+      }
+    }
     longest -= hookLocation._data.length () + 1;
 
     out << "     Active: ";
@@ -352,8 +355,9 @@ int CmdDiagnostics::execute (std::string& output)
       }
     }
 
-    if (! count)
+    if (!count) {
       out << "\n";
+    }
 
     out << "   Inactive: ";
     count = 0;
@@ -385,11 +389,12 @@ int CmdDiagnostics::execute (std::string& output)
       }
     }
 
-    if (! count)
+    if (!count) {
       out << "\n";
+    }
+  } else {
+    out << format("             ({1})\n", STRING_CMD_DIAG_NONE);
   }
-  else
-    out << format ("             ({1})\n", STRING_CMD_DIAG_NONE);
 
   out << "\n";
 
@@ -415,10 +420,11 @@ int CmdDiagnostics::execute (std::string& output)
   for (auto& i : all)
   {
     uuid = i.get ("uuid");
-    if (seen.find (uuid) != seen.end ())
+    if (seen.find(uuid) != seen.end()) {
       dups.push_back (uuid);
-    else
-       seen[uuid] = 0;
+    } else {
+      seen[uuid] = 0;
+    }
   }
 
   out << "       Dups: "
@@ -427,8 +433,9 @@ int CmdDiagnostics::execute (std::string& output)
 
   if (dups.size ())
   {
-    for (auto& d : dups)
-      out << "             " << format (STRING_CMD_DIAG_UUID_DUP, d) << "\n";
+    for (auto& d : dups) {
+      out << "             " << format(STRING_CMD_DIAG_UUID_DUP, d) << "\n";
+    }
   }
   else
   {
@@ -473,9 +480,9 @@ int CmdDiagnostics::execute (std::string& output)
     }
   }
 
-  if (noBrokenRefs)
-    out << "             " << STRING_CMD_DIAG_REF_OK
-        << "\n";
+  if (noBrokenRefs) {
+    out << "             " << STRING_CMD_DIAG_REF_OK << "\n";
+  }
 
   out << "\n";
   output = out.str ();

@@ -139,11 +139,17 @@ int confirm4 (const std::string& question)
 
   if (matches.size () == 1)
   {
-         if (matches[0] == STRING_UTIL_CONFIRM_YES_U) return 1;
-    else if (matches[0] == STRING_UTIL_CONFIRM_YES)   return 1;
-    else if (matches[0] == STRING_UTIL_CONFIRM_ALL_U) return 2;
-    else if (matches[0] == STRING_UTIL_CONFIRM_ALL)   return 2;
-    else if (matches[0] == STRING_UTIL_CONFIRM_QUIT)  return 3;
+    if (matches[0] == STRING_UTIL_CONFIRM_YES_U) {
+      return 1;
+    } else if (matches[0] == STRING_UTIL_CONFIRM_YES) {
+      return 1;
+    } else if (matches[0] == STRING_UTIL_CONFIRM_ALL_U) {
+      return 2;
+    } else if (matches[0] == STRING_UTIL_CONFIRM_ALL) {
+      return 2;
+    } else if (matches[0] == STRING_UTIL_CONFIRM_QUIT) {
+      return 3;
+    }
   }
 
   return 0;
@@ -155,10 +161,16 @@ std::string formatBytes (size_t bytes)
 {
   char formatted[24];
 
-       if (bytes >=  995000000) sprintf (formatted, "%.1f %s", (bytes / 1000000000.0), STRING_UTIL_GIBIBYTES);
-  else if (bytes >=     995000) sprintf (formatted, "%.1f %s", (bytes /    1000000.0), STRING_UTIL_MEBIBYTES);
-  else if (bytes >=        995) sprintf (formatted, "%.1f %s", (bytes /       1000.0), STRING_UTIL_KIBIBYTES);
-  else                          sprintf (formatted, "%d %s",   (int)bytes,             STRING_UTIL_BYTES);
+  if (bytes >= 995000000) {
+    sprintf(formatted, "%.1f %s", (bytes / 1000000000.0),
+            STRING_UTIL_GIBIBYTES);
+  } else if (bytes >= 995000) {
+    sprintf(formatted, "%.1f %s", (bytes / 1000000.0), STRING_UTIL_MEBIBYTES);
+  } else if (bytes >= 995) {
+    sprintf(formatted, "%.1f %s", (bytes / 1000.0), STRING_UTIL_KIBIBYTES);
+  } else {
+    sprintf(formatted, "%d %s", (int)bytes, STRING_UTIL_BYTES);
+  }
 
   return Lexer::commify (formatted);
 }
@@ -188,10 +200,10 @@ int autoComplete (
       }
 
       // Maintain a list of partial matches.
-      else if (length >= (unsigned) minimum &&
-               length <= item.length ()    &&
-               partial == item.substr (0, length))
-        matches.push_back (item);
+      else if (length >= (unsigned)minimum && length <= item.length() &&
+               partial == item.substr(0, length)) {
+        matches.push_back(item);
+      }
     }
   }
 
@@ -263,17 +275,21 @@ int execute (
   unsigned int written;
   const char* input_cstr = input.c_str ();
 
-  if (signal (SIGPIPE, SIG_IGN) == SIG_ERR) // Handled locally with EPIPE.
-    throw std::string (std::strerror (errno));
+  if (signal(SIGPIPE, SIG_IGN) == SIG_ERR) { // Handled locally with EPIPE.
+    throw std::string(std::strerror(errno));
+  }
 
-  if (pipe (pin) == -1)
-    throw std::string (std::strerror (errno));
+  if (pipe(pin) == -1) {
+    throw std::string(std::strerror(errno));
+  }
 
-  if (pipe (pout) == -1)
-    throw std::string (std::strerror (errno));
+  if (pipe(pout) == -1) {
+    throw std::string(std::strerror(errno));
+  }
 
-  if ((pid = fork ()) == -1)
-    throw std::string (std::strerror (errno));
+  if ((pid = fork()) == -1) {
+    throw std::string(std::strerror(errno));
+  }
 
   if (pid == 0)
   {
@@ -282,20 +298,23 @@ int execute (
     close (pout[0]);  // Close the read end of the output pipe.
 
     // Parent writes to pin[1]. Set read end pin[0] as STDIN for child.
-    if (dup2 (pin[0], STDIN_FILENO) == -1)
-      throw std::string (std::strerror (errno));
+    if (dup2(pin[0], STDIN_FILENO) == -1) {
+      throw std::string(std::strerror(errno));
+    }
     close (pin[0]);
 
     // Parent reads from pout[0]. Set write end pout[1] as STDOUT for child.
-    if (dup2 (pout[1], STDOUT_FILENO) == -1)
-      throw std::string (std::strerror (errno));
+    if (dup2(pout[1], STDOUT_FILENO) == -1) {
+      throw std::string(std::strerror(errno));
+    }
     close (pout[1]);
 
     // Add executable as argv[0] and NULL-terminate the array for execvp().
     char** argv = new char* [args.size () + 2];
     argv[0] = (char*) executable.c_str ();
-    for (unsigned int i = 0; i < args.size (); ++i)
-      argv[i+1] = (char*) args[i].c_str ();
+    for (unsigned int i = 0; i < args.size(); ++i) {
+      argv[i + 1] = (char*)args[i].c_str();
+    }
 
     argv[args.size () + 1] = NULL;
     _exit (execvp (executable.c_str (), argv));
@@ -317,12 +336,14 @@ int execute (
   while (read_retval != 0 || input.size () != written)
   {
     FD_ZERO (&rfds);
-    if (read_retval != 0)
-      FD_SET (pout[0], &rfds);
+    if (read_retval != 0) {
+      FD_SET(pout[0], &rfds);
+    }
 
     FD_ZERO (&wfds);
-    if (input.size () != written)
-      FD_SET (pin[1], &wfds);
+    if (input.size() != written) {
+      FD_SET(pin[1], &wfds);
+    }
 
     // On Linux, tv may be overwritten by select().  Reset it each time.
     // NOTE: Timeout chosen arbitrarily - we don't time out execute() calls.
@@ -333,8 +354,9 @@ int execute (
 
     select_retval = select (std::max (pout[0], pin[1]) + 1, &rfds, &wfds, NULL, &tv);
 
-    if (select_retval == -1)
-      throw std::string (std::strerror (errno));
+    if (select_retval == -1) {
+      throw std::string(std::strerror(errno));
+    }
 
     // Write data to child's STDIN
     if (FD_ISSET (pin[1], &wfds))
@@ -366,8 +388,9 @@ int execute (
     if (FD_ISSET (pout[0], &rfds))
     {
       read_retval = read (pout[0], &buf, sizeof (buf) - 1);
-      if (read_retval == -1)
-        throw std::string (std::strerror (errno));
+      if (read_retval == -1) {
+        throw std::string(std::strerror(errno));
+      }
 
       buf[read_retval] = '\0';
       output += buf;
@@ -377,8 +400,9 @@ int execute (
   close (pout[0]);  // Close the read end of the output pipe.
 
   int status = -1;
-  if (wait (&status) == -1)
-    throw std::string (std::strerror (errno));
+  if (wait(&status) == -1) {
+    throw std::string(std::strerror(errno));
+  }
 
   if (WIFEXITED (status))
   {
@@ -389,8 +413,9 @@ int execute (
     throw std::string ("Error: Could not get Hook exit status!");
   }
 
-  if (signal (SIGPIPE, SIG_DFL) == SIG_ERR)  // We're done, return to default.
-    throw std::string (std::strerror (errno));
+  if (signal(SIGPIPE, SIG_DFL) == SIG_ERR) { // We're done, return to default.
+    throw std::string(std::strerror(errno));
+  }
 
   return status;
 }
@@ -439,10 +464,11 @@ const std::string indentProject (
   }
 
   std::string child = "";
-  if (lastpos == 0)
+  if (lastpos == 0) {
     child = project;
-  else
-    child = project.substr (lastpos + 1);
+  } else {
+    child = project.substr(lastpos + 1);
+  }
 
   return prefix + child;
 }
@@ -457,8 +483,9 @@ const std::vector <std::string> extractParents (
   std::string::size_type copyUntil = 0;
   while ((copyUntil = project.find (delimiter, pos + 1)) != std::string::npos)
   {
-    if (copyUntil != project.size () - 1)
-      vec.push_back (project.substr (0, copyUntil));
+    if (copyUntil != project.size() - 1) {
+      vec.push_back(project.substr(0, copyUntil));
+    }
     pos = copyUntil;
   }
   return vec;

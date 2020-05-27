@@ -60,13 +60,12 @@ void ColumnTags::setStyle (const std::string& value)
 {
   _style = value;
 
-  if (_style == "indicator" &&
-      _label == STRING_COLUMN_LABEL_TAGS)
+  if (_style == "indicator" && _label == STRING_COLUMN_LABEL_TAGS) {
     _label = _label.substr (0, context.config.get ("tag.indicator").length ());
 
-  else if (_style == "count" &&
-            _label == STRING_COLUMN_LABEL_TAGS)
+  } else if (_style == "count" && _label == STRING_COLUMN_LABEL_TAGS) {
     _label = STRING_COLUMN_LABEL_TAG;
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -79,10 +78,11 @@ void ColumnTags::measure (Task& task, unsigned int& minimum, unsigned int& maxim
   {
     if (_style == "indicator")
     {
-      if (task.has ("tags"))
+      if (task.has("tags")) {
         minimum = maximum = utf8_width (context.config.get ("tag.indicator"));
-      else
+      } else {
         minimum = maximum = 0;
+      }
     }
     else if (_style == "count")
     {
@@ -101,19 +101,21 @@ void ColumnTags::measure (Task& task, unsigned int& minimum, unsigned int& maxim
         for (const auto& tag : all)
         {
           auto length = utf8_width (tag);
-          if (length > minimum)
+          if (length > minimum) {
             minimum = length;
+          }
         }
 
         maximum = utf8_width (tags);
       }
 
       // No need to split a single tag.
-      else
-        minimum = maximum = utf8_width (tags);
+      else {
+        minimum = maximum = utf8_width(tags);
+      }
+    } else {
+      throw format(STRING_COLUMN_BAD_FORMAT, _name, _style);
     }
-    else
-      throw format (STRING_COLUMN_BAD_FORMAT, _name, _style);
   }
 }
 
@@ -140,11 +142,12 @@ void ColumnTags::render (
         all.clear ();
         wrapText (all, tags, width, _hyphenate);
 
-        for (const auto& i : all)
-          renderStringLeft (lines, width, color, i);
+        for (const auto& i : all) {
+          renderStringLeft(lines, width, color, i);
+        }
+      } else {
+        renderStringLeft(lines, width, color, tags);
       }
-      else
-        renderStringLeft (lines, width, color, tags);
     }
     else if (_style == "indicator")
     {

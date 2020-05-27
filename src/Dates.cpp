@@ -138,8 +138,9 @@ bool namedDates (const std::string& name, Variant& value)
   int i;
 
   int minimum = CLI2::minimumMatchLength;
-  if (minimum == 0)
+  if (minimum == 0) {
     minimum = 3;
+  }
 
   // Dynamics.
   if (closeEnough ("now", name, minimum))
@@ -188,10 +189,11 @@ bool namedDates (const std::string& name, Variant& value)
 
   else if (isDay (name, i))
   {
-    if (t->tm_wday >= i)
+    if (t->tm_wday >= i) {
       t->tm_mday += i - t->tm_wday + 7;
-    else
+    } else {
       t->tm_mday += i - t->tm_wday;
+    }
 
     t->tm_hour = t->tm_min = t->tm_sec = 0;
     t->tm_isdst = -1;
@@ -200,8 +202,9 @@ bool namedDates (const std::string& name, Variant& value)
 
   else if (isMonth (name, i))
   {
-    if (t->tm_mon >= i)
+    if (t->tm_mon >= i) {
       t->tm_year++;
+    }
 
     t->tm_mon = i;
     t->tm_mday = 1;
@@ -349,8 +352,9 @@ bool namedDates (const std::string& name, Variant& value)
     t->tm_min = 0;
     t->tm_sec = -1;
     int extra = (5 - t->tm_wday) * 86400;
-    if (extra < 0)
+    if (extra < 0) {
       extra += 7 * 86400;
+    }
 
     t->tm_isdst = -1;
     value = Variant (mktime (t) + extra, Variant::type_date);
@@ -461,15 +465,21 @@ bool namedDates (const std::string& name, Variant& value)
       easter (t);
     }
 
-         if (closeEnough ("goodfriday",   name, minimum)) t->tm_mday -= 2;
+    if (closeEnough("goodfriday", name, minimum)) {
+      t->tm_mday -= 2;
 
-    // DO NOT REMOVE THIS USELESS-LOOKING LINE.
-    // It is here to capture an exact match for 'easter', to prevent 'easter'
-    // being a partial match for 'eastermonday'.
-    else if (closeEnough ("easter",       name, minimum)) ;
-    else if (closeEnough ("eastermonday", name, minimum)) t->tm_mday += 1;
-    else if (closeEnough ("ascension",    name, minimum)) t->tm_mday += 39;
-    else if (closeEnough ("pentecost",    name, minimum)) t->tm_mday += 49;
+      // DO NOT REMOVE THIS USELESS-LOOKING LINE.
+      // It is here to capture an exact match for 'easter', to prevent 'easter'
+      // being a partial match for 'eastermonday'.
+    } else if (closeEnough("easter", name, minimum)) {
+      ;
+    } else if (closeEnough("eastermonday", name, minimum)) {
+      t->tm_mday += 1;
+    } else if (closeEnough("ascension", name, minimum)) {
+      t->tm_mday += 39;
+    } else if (closeEnough("pentecost", name, minimum)) {
+      t->tm_mday += 49;
+    }
 
     value = Variant (mktime (t), Variant::type_date);
   }
@@ -508,8 +518,9 @@ bool namedDates (const std::string& name, Variant& value)
     value = Variant (mktime (t), Variant::type_date);
   }
 
-  else
+  else {
     return false;
+  }
 
   value.source (name);
   return true;

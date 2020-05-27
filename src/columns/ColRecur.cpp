@@ -57,8 +57,10 @@ void ColumnRecur::setStyle (const std::string& value)
 {
   _style = value;
 
-  if (_style == "indicator" && _label == STRING_COLUMN_LABEL_RECUR)
-    _label = _label.substr (0, context.config.get ("recurrence.indicator").length ());
+  if (_style == "indicator" && _label == STRING_COLUMN_LABEL_RECUR) {
+    _label =
+        _label.substr(0, context.config.get("recurrence.indicator").length());
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -76,13 +78,14 @@ void ColumnRecur::measure (Task& task, unsigned int& minimum, unsigned int& maxi
     }
     else if (_style == "indicator")
     {
-      if (task.has ("recur"))
+      if (task.has("recur")) {
         minimum = maximum = utf8_width (context.config.get ("recurrence.indicator"));
-      else
+      } else {
         minimum = maximum = 0;
+      }
+    } else {
+      throw format(STRING_COLUMN_BAD_FORMAT, _name, _style);
     }
-    else
-      throw format (STRING_COLUMN_BAD_FORMAT, _name, _style);
   }
 }
 
@@ -95,12 +98,13 @@ void ColumnRecur::render (
 {
   if (task.has (_name))
   {
-    if (_style == "default" ||
-        _style == "duration")
+    if (_style == "default" || _style == "duration") {
       renderStringRight (lines, width, color, ISO8601p (task.get ("recur")).format ());
 
-    else if (_style == "indicator")
-      renderStringRight (lines, width, color, context.config.get ("recurrence.indicator"));
+    } else if (_style == "indicator") {
+      renderStringRight(lines, width, color,
+                        context.config.get("recurrence.indicator"));
+    }
   }
 }
 
@@ -131,9 +135,9 @@ void ColumnRecur::modify (Task& task, const std::string& value)
     std::string label = "  [1;37;43mMODIFICATION[0m ";
     context.debug (label + _name + " <-- '" + value + "'");
     task.set (_name, value);
+  } else {
+    throw format(STRING_TASK_INVALID_DUR, value);
   }
-  else
-    throw format (STRING_TASK_INVALID_DUR, value);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -50,8 +50,9 @@ void ColumnMask::measure (Task& task, unsigned int& minimum, unsigned int& maxim
   {
     minimum = maximum = task.get ("mask").length ();
 
-    if (_style != "default")
-      throw format (STRING_COLUMN_BAD_FORMAT, _name, _style);
+    if (_style != "default") {
+      throw format(STRING_COLUMN_BAD_FORMAT, _name, _style);
+    }
   }
 }
 
@@ -62,8 +63,9 @@ void ColumnMask::render (
   int width,
   Color& color)
 {
-  if (task.has (_name))
-    renderStringLeft (lines, width, color, task.get ("mask"));
+  if (task.has(_name)) {
+    renderStringLeft(lines, width, color, task.get("mask"));
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

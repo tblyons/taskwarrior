@@ -51,9 +51,9 @@ void ColumnIMask::measure (Task& task, unsigned int& minimum, unsigned int& maxi
   {
     minimum = maximum = task.get ("imask").length ();
 
-    if (_style != "default" &&
-        _style != "number")
-      throw format (STRING_COLUMN_BAD_FORMAT, _name, _style);
+    if (_style != "default" && _style != "number") {
+      throw format(STRING_COLUMN_BAD_FORMAT, _name, _style);
+    }
   }
 }
 
@@ -64,8 +64,9 @@ void ColumnIMask::render (
   int width,
   Color& color)
 {
-  if (task.has (_name))
-    renderStringRight (lines, width, color, task.get ("imask"));
+  if (task.has(_name)) {
+    renderStringRight(lines, width, color, task.get("imask"));
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -77,19 +77,21 @@ bool A2::hasTag (const std::string& tag) const
 ////////////////////////////////////////////////////////////////////////////////
 void A2::tag (const std::string& tag)
 {
-  if (! hasTag (tag))
-    _tags.push_back (tag);
+  if (!hasTag(tag)) {
+    _tags.push_back(tag);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void A2::unTag (const std::string& tag)
 {
-  for (auto i = _tags.begin (); i != _tags.end (); ++i)
+  for (auto i = _tags.begin(); i != _tags.end(); ++i) {
     if (*i == tag)
     {
       _tags.erase (i);
       break;
     }
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -98,8 +100,9 @@ void A2::attribute (const std::string& name, const std::string& value)
 {
   _attributes[name] = value;
 
-  if (name == "raw")
-    decompose ();
+  if (name == "raw") {
+    decompose();
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -108,8 +111,9 @@ const std::string A2::attribute (const std::string& name) const
 {
   // Prevent autovivification.
   auto i = _attributes.find (name);
-  if (i != _attributes.end ())
+  if (i != _attributes.end()) {
     return i->second;
+  }
 
   return "";
 }
@@ -118,8 +122,9 @@ const std::string A2::attribute (const std::string& name) const
 const std::string A2::getToken () const
 {
   auto i = _attributes.find ("canonical");
-  if (i == _attributes.end ())
-    i = _attributes.find ("raw");
+  if (i == _attributes.end()) {
+    i = _attributes.find("raw");
+  }
 
   return i->second;
 }
@@ -165,10 +170,11 @@ void A2::decompose ()
 
       if (name == "rc")
       {
-        if (mod != "")
+        if (mod != "") {
           tag ("CONFIG");
-        else
-          tag ("RC");
+        } else {
+          tag("RC");
+        }
       }
     }
   }
@@ -195,22 +201,33 @@ const std::string A2::dump () const
 
   // Dump attributes.
   std::string atts;
-  for (const auto& a : _attributes)
+  for (const auto& a : _attributes) {
     atts += a.first + "='\033[33m" + a.second + "\033[0m' ";
+  }
 
   // Dump tags.
   std::string tags;
   for (const auto& tag : _tags)
   {
-         if (tag == "BINARY")        tags += "\033[1;37;44m"           + tag + "\033[0m ";
-    else if (tag == "CMD")           tags += "\033[1;37;46m"           + tag + "\033[0m ";
-    else if (tag == "FILTER")        tags += "\033[1;37;42m"           + tag + "\033[0m ";
-    else if (tag == "MODIFICATION")  tags += "\033[1;37;43m"           + tag + "\033[0m ";
-    else if (tag == "MISCELLANEOUS") tags += "\033[1;37;45m"           + tag + "\033[0m ";
-    else if (tag == "RC")            tags += "\033[1;37;41m"           + tag + "\033[0m ";
-    else if (tag == "CONFIG")        tags += "\033[1;37;101m"          + tag + "\033[0m ";
-    else if (tag == "?")             tags += "\033[38;5;255;48;5;232m" + tag + "\033[0m ";
-    else                             tags += "\033[32m"                + tag + "\033[0m ";
+    if (tag == "BINARY") {
+      tags += "\033[1;37;44m" + tag + "\033[0m ";
+    } else if (tag == "CMD") {
+      tags += "\033[1;37;46m" + tag + "\033[0m ";
+    } else if (tag == "FILTER") {
+      tags += "\033[1;37;42m" + tag + "\033[0m ";
+    } else if (tag == "MODIFICATION") {
+      tags += "\033[1;37;43m" + tag + "\033[0m ";
+    } else if (tag == "MISCELLANEOUS") {
+      tags += "\033[1;37;45m" + tag + "\033[0m ";
+    } else if (tag == "RC") {
+      tags += "\033[1;37;41m" + tag + "\033[0m ";
+    } else if (tag == "CONFIG") {
+      tags += "\033[1;37;101m" + tag + "\033[0m ";
+    } else if (tag == "?") {
+      tags += "\033[38;5;255;48;5;232m" + tag + "\033[0m ";
+    } else {
+      tags += "\033[32m" + tag + "\033[0m ";
+    }
   }
 
   return output + " " + atts + tags;
@@ -223,8 +240,9 @@ void CLI2::getOverride (int argc, const char** argv, std::string& home, File& rc
   for (int i = 0; i < argc; ++i)
   {
     std::string raw = argv[i];
-    if (raw == "--")
+    if (raw == "--") {
       return;
+    }
 
     if (raw.length () >= 3 &&
         raw.substr (0, 3) == "rc:")
@@ -233,8 +251,9 @@ void CLI2::getOverride (int argc, const char** argv, std::string& home, File& rc
 
       home = ".";
       auto last_slash = rc._data.rfind ("/");
-      if (last_slash != std::string::npos)
-        home = rc.parent ();
+      if (last_slash != std::string::npos) {
+        home = rc.parent();
+      }
 
       context.header (format (STRING_PARSER_ALTERNATE_RC, rc._data));
 
@@ -250,14 +269,16 @@ void CLI2::getOverride (int argc, const char** argv, std::string& home, File& rc
 void CLI2::getDataLocation (int argc, const char** argv, Path& data)
 {
   std::string location = context.config.get ("data.location");
-  if (location != "")
+  if (location != "") {
     data = location;
+  }
 
   for (int i = 0; i < argc; ++i)
   {
     std::string raw = argv[i];
-    if (raw == "--")
+    if (raw == "--") {
       break;
+    }
 
     if (raw.length () > 17 &&
         raw.substr (0, 16) == "rc.data.location")
@@ -278,15 +299,17 @@ void CLI2::applyOverrides (int argc, const char** argv)
   for (int i = 0; i < argc; ++i)
   {
     std::string raw = argv[i];
-    if (raw == "--")
+    if (raw == "--") {
       break;
+    }
 
     if (raw.length () > 3 &&
         raw.substr (0, 3) == "rc.")
     {
       auto sep = raw.find ('=', 3);
-      if (sep == std::string::npos)
-        sep = raw.find (':', 3);
+      if (sep == std::string::npos) {
+        sep = raw.find(':', 3);
+      }
       if (sep != std::string::npos)
       {
         std::string name  = raw.substr (3, sep - 3);
@@ -309,9 +332,11 @@ void CLI2::entity (const std::string& category, const std::string& name)
 {
   // Walk the list of entities for category.
   auto c = _entities.equal_range (category);
-  for (auto e = c.first; e != c.second; ++e)
-    if (e->second == name)
+  for (auto e = c.first; e != c.second; ++e) {
+    if (e->second == name) {
       return;
+    }
+  }
 
   // The category/name pair was not found, therefore add it.
   _entities.insert (std::pair <std::string, std::string> (category, name));
@@ -335,11 +360,13 @@ void CLI2::add (const std::vector <std::string>& arguments)
 {
   std::vector <A2> replacement {_original_args[0]};
 
-  for (const auto& arg : arguments)
-    replacement.push_back (A2 (arg, Lexer::Type::word));
+  for (const auto& arg : arguments) {
+    replacement.push_back(A2(arg, Lexer::Type::word));
+  }
 
-  for (unsigned int i = 1; i < _original_args.size (); ++i)
-    replacement.push_back (_original_args[i]);
+  for (unsigned int i = 1; i < _original_args.size(); ++i) {
+    replacement.push_back(_original_args[i]);
+  }
 
   _original_args = replacement;
 
@@ -364,8 +391,9 @@ void CLI2::handleArg0 ()
 
   std::string basename = "task";
   auto slash = raw.rfind ('/');
-  if (slash != std::string::npos)
-    basename = raw.substr (slash + 1);
+  if (slash != std::string::npos) {
+    basename = raw.substr(slash + 1);
+  }
 
   a.attribute ("basename", basename);
   if (basename == "cal" ||
@@ -406,19 +434,23 @@ void CLI2::lexArguments ()
         (lex.isEOS () ||                         // Token goes to EOS
          (quoted && type == Lexer::Type::pair))) // Quoted pairs automatically go to EOS
     {
-      if (! terminated && type == Lexer::Type::separator)
+      if (!terminated && type == Lexer::Type::separator) {
         terminated = true;
-      else if (terminated)
+      } else if (terminated) {
         type = Lexer::Type::word;
+      }
 
       A2 a (_original_args[i].attribute ("raw"), type);
-      if (terminated)
-        a.tag ("TERMINATED");
-      if (quoted)
-        a.tag ("QUOTED");
+      if (terminated) {
+        a.tag("TERMINATED");
+      }
+      if (quoted) {
+        a.tag("QUOTED");
+      }
 
-      if (_original_args[i].hasTag ("ORIGINAL"))
-        a.tag ("ORIGINAL");
+      if (_original_args[i].hasTag("ORIGINAL")) {
+        a.tag("ORIGINAL");
+      }
 
       _args.push_back (a);
     }
@@ -434,11 +466,13 @@ void CLI2::lexArguments ()
       {
         Lexer::dequote (word);
         A2 unknown (word, Lexer::Type::word);
-        if (lex.wasQuoted (_original_args[i].attribute ("raw")))
-          unknown.tag ("QUOTED");
+        if (lex.wasQuoted(_original_args[i].attribute("raw"))) {
+          unknown.tag("QUOTED");
+        }
 
-        if (_original_args[i].hasTag ("ORIGINAL"))
-          unknown.tag ("ORIGINAL");
+        if (_original_args[i].hasTag("ORIGINAL")) {
+          unknown.tag("ORIGINAL");
+        }
 
         _args.push_back (unknown);
       }
@@ -449,19 +483,22 @@ void CLI2::lexArguments ()
         A2 unknown (_original_args[i].attribute ("raw"), Lexer::Type::word);
         unknown.tag ("UNKNOWN");
 
-        if (lex.wasQuoted (_original_args[i].attribute ("raw")))
-          unknown.tag ("QUOTED");
+        if (lex.wasQuoted(_original_args[i].attribute("raw"))) {
+          unknown.tag("QUOTED");
+        }
 
-        if (_original_args[i].hasTag ("ORIGINAL"))
-          unknown.tag ("ORIGINAL");
+        if (_original_args[i].hasTag("ORIGINAL")) {
+          unknown.tag("ORIGINAL");
+        }
 
         _args.push_back (unknown);
       }
     }
   }
 
-  if (context.config.getInteger ("debug.parser") >= 2)
-    context.debug (dump ("CLI2::analyze lexArguments"));
+  if (context.config.getInteger("debug.parser") >= 2) {
+    context.debug(dump("CLI2::analyze lexArguments"));
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -501,17 +538,18 @@ void CLI2::demotion ()
     replacement.push_back (a);
   }
 
-  if (changes &&
-      context.config.getInteger ("debug.parser") >= 2)
-    context.debug (dump ("CLI2::analyze demotion"));
+  if (changes && context.config.getInteger("debug.parser") >= 2) {
+    context.debug(dump("CLI2::analyze demotion"));
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Intended to be called after ::add() to perform the final analysis.
 void CLI2::analyze ()
 {
-  if (context.config.getInteger ("debug.parser") >= 2)
-    context.debug (dump ("CLI2::analyze"));
+  if (context.config.getInteger("debug.parser") >= 2) {
+    context.debug(dump("CLI2::analyze"));
+  }
 
   // Process _original_args.
   _args.clear ();
@@ -523,8 +561,9 @@ void CLI2::analyze ()
   if (! findCommand ())
   {
     defaultCommand ();
-    if (! findCommand ())
-      throw std::string (STRING_TRIVIAL_INPUT);
+    if (!findCommand()) {
+      throw std::string(STRING_TRIVIAL_INPUT);
+    }
   }
 
   demotion ();
@@ -548,8 +587,9 @@ void CLI2::addFilter (const std::string& arg)
     Lexer::Type type;
     Lexer lex (arg);
 
-    while (lex.token (lexeme, type))
-      filter.push_back (lexeme);
+    while (lex.token(lexeme, type)) {
+      filter.push_back(lexeme);
+    }
 
     filter.push_back (")");
     add (filter);
@@ -564,8 +604,9 @@ void CLI2::addFilter (const std::string& arg)
 void CLI2::addContextFilter ()
 {
   // Recursion block.
-  if (_context_filter_added)
+  if (_context_filter_added) {
     return;
+  }
 
   // Detect if any context is set, and bail out if not
   std::string contextName = context.config.get ("context");
@@ -591,14 +632,16 @@ void CLI2::addContextFilter ()
   context.debug ("Applying context: " + contextName);
   std::string contextFilter = context.config.get ("context." + contextName);
 
-  if (contextFilter == "")
+  if (contextFilter == "") {
     context.debug ("Context '" + contextName + "' not defined.");
-  else
-  {
+  } else {
     _context_filter_added = true;
     addFilter (contextFilter);
-    if (context.verbose ("context"))
-      context.footnote (format ("Context '{1}' set. Use 'task context none' to remove.", contextName));
+    if (context.verbose("context")) {
+      context.footnote(
+          format("Context '{1}' set. Use 'task context none' to remove.",
+                 contextName));
+    }
   }
 }
 
@@ -631,15 +674,18 @@ void CLI2::prepareFilter ()
     {
       if (a.hasTag ("FILTER"))
       {
-        if (combined != "")
+        if (combined != "") {
           combined += " ";
+        }
 
         combined += a.attribute ("raw");
       }
     }
 
-    if (combined.size ())
-      context.footnote (std::string (STRING_COLUMN_LABEL_FILTER) + ": " + combined);
+    if (combined.size()) {
+      context.footnote(std::string(STRING_COLUMN_LABEL_FILTER) + ": " +
+                       combined);
+    }
   }
 }
 
@@ -648,16 +694,19 @@ void CLI2::prepareFilter ()
 const std::vector <std::string> CLI2::getWords ()
 {
   std::vector <std::string> words;
-  for (const auto& a : _args)
-    if (a.hasTag ("MISCELLANEOUS"))
-      words.push_back (a.attribute ("raw"));
+  for (const auto& a : _args) {
+    if (a.hasTag("MISCELLANEOUS")) {
+      words.push_back(a.attribute("raw"));
+    }
+  }
 
   if (context.config.getInteger ("debug.parser") >= 2)
   {
     Color colorOrigArgs ("gray10 on gray4");
     std::string message = " ";
-    for (const auto& word : words)
-      message += colorOrigArgs.colorize (word) + " ";
+    for (const auto& word : words) {
+      message += colorOrigArgs.colorize(word) + " ";
+    }
     context.debug ("CLI2::getWords" + message);
   }
 
@@ -700,8 +749,9 @@ bool CLI2::canonicalize (
 ////////////////////////////////////////////////////////////////////////////////
 std::string CLI2::getBinary () const
 {
-  if (_args.size ())
-    return _args[0].attribute ("raw");
+  if (_args.size()) {
+    return _args[0].attribute("raw");
+  }
 
   return "";
 }
@@ -709,9 +759,11 @@ std::string CLI2::getBinary () const
 ////////////////////////////////////////////////////////////////////////////////
 std::string CLI2::getCommand (bool canonical) const
 {
-  for (const auto& a : _args)
-    if (a.hasTag ("CMD"))
-      return a.attribute (canonical ? "canonical" : "raw");
+  for (const auto& a : _args) {
+    if (a.hasTag("CMD")) {
+      return a.attribute(canonical ? "canonical" : "raw");
+    }
+  }
 
   return "";
 }
@@ -728,13 +780,15 @@ const std::string CLI2::dump (const std::string& title) const
   Color colorFilter ("black on rgb311");
   for (auto i = _original_args.begin (); i != _original_args.end (); ++i)
   {
-    if (i != _original_args.begin ())
+    if (i != _original_args.begin()) {
       out << ' ';
+    }
 
-    if (i->hasTag ("ORIGINAL"))
+    if (i->hasTag("ORIGINAL")) {
       out << colorArgs.colorize (i->attribute ("raw"));
-    else
-      out << colorFilter.colorize (i->attribute ("raw"));
+    } else {
+      out << colorFilter.colorize(i->attribute("raw"));
+    }
   }
 
   out << "\n";
@@ -742,8 +796,9 @@ const std::string CLI2::dump (const std::string& title) const
   if (_args.size ())
   {
     out << "  _args\n";
-    for (const auto& a : _args)
-      out << "    " << a.dump () << "\n";
+    for (const auto& a : _args) {
+      out << "    " << a.dump() << "\n";
+    }
   }
 
   if (_id_ranges.size ())
@@ -751,10 +806,11 @@ const std::string CLI2::dump (const std::string& title) const
     out << "  _id_ranges\n    ";
     for (const auto& range : _id_ranges)
     {
-      if (range.first != range.second)
+      if (range.first != range.second) {
         out << colorArgs.colorize (range.first + "-" + range.second) << " ";
-      else
-        out << colorArgs.colorize (range.first) << " ";
+      } else {
+        out << colorArgs.colorize(range.first) << " ";
+      }
     }
 
     out << "\n";
@@ -763,8 +819,9 @@ const std::string CLI2::dump (const std::string& title) const
   if (_uuid_list.size ())
   {
     out << "  _uuid_list\n    ";
-    for (const auto& uuid : _uuid_list)
-      out << colorArgs.colorize (uuid) << " ";
+    for (const auto& uuid : _uuid_list) {
+      out << colorArgs.colorize(uuid) << " ";
+    }
 
     out << "\n";
   }
@@ -798,8 +855,9 @@ void CLI2::aliasExpansion ()
         std::string lexeme;
         Lexer::Type type;
         Lexer lex (_aliases[raw]);
-        while (lex.token (lexeme, type))
-          reconstructed.push_back (A2 (lexeme, type));
+        while (lex.token(lexeme, type)) {
+          reconstructed.push_back(A2(lexeme, type));
+        }
 
         action = true;
         changes = true;
@@ -816,8 +874,9 @@ void CLI2::aliasExpansion ()
     bool terminated = false;
     for (const auto& i : _original_args)
     {
-      if (i.attribute ("raw") == "--")
+      if (i.attribute("raw") == "--") {
         terminated = true;
+      }
 
       if (terminated)
       {
@@ -828,8 +887,9 @@ void CLI2::aliasExpansion ()
         std::string lexeme;
         Lexer::Type type;
         Lexer lex (_aliases[i.attribute ("raw")]);
-        while (lex.token (lexeme, type))
-          reconstructedOriginals.push_back (A2 (lexeme, type));
+        while (lex.token(lexeme, type)) {
+          reconstructedOriginals.push_back(A2(lexeme, type));
+        }
 
         action = true;
         changes = true;
@@ -844,12 +904,13 @@ void CLI2::aliasExpansion ()
   }
   while (action && counter++ < safetyValveDefault);
 
-  if (counter >= safetyValveDefault)
-    context.debug (format (STRING_PARSER_ALIAS_NEST, safetyValveDefault));
+  if (counter >= safetyValveDefault) {
+    context.debug(format(STRING_PARSER_ALIAS_NEST, safetyValveDefault));
+  }
 
-  if (changes &&
-      context.config.getInteger ("debug.parser") >= 2)
-    context.debug (dump ("CLI2::analyze aliasExpansion"));
+  if (changes && context.config.getInteger("debug.parser") >= 2) {
+    context.debug(dump("CLI2::analyze aliasExpansion"));
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -882,9 +943,9 @@ void CLI2::canonicalizeNames ()
     }
   }
 
-  if (changes &&
-      context.config.getInteger ("debug.parser") >= 2)
-    context.debug (dump ("CLI2::analyze canonicalizeNames"));
+  if (changes && context.config.getInteger("debug.parser") >= 2) {
+    context.debug(dump("CLI2::analyze canonicalizeNames"));
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -894,15 +955,17 @@ void CLI2::categorizeArgs ()
   // Context is only applied for commands that request it.
   std::string command = getCommand ();
   Command* cmd = context.commands[command];
-  if (cmd && cmd->uses_context ())
-    addContextFilter ();
+  if (cmd && cmd->uses_context()) {
+    addContextFilter();
+  }
 
   bool changes = false;
   bool afterCommand = false;
   for (auto& a : _args)
   {
-    if (a._lextype == Lexer::Type::separator)
+    if (a._lextype == Lexer::Type::separator) {
       continue;
+    }
 
     // Record that the command has been found, it affects behavior.
     if (a.hasTag ("CMD"))
@@ -974,10 +1037,11 @@ void CLI2::categorizeArgs ()
              ! cmd->accepts_modifications () &&
                cmd->accepts_miscellaneous ())
     {
-      if (!afterCommand)
+      if (!afterCommand) {
         a.tag ("FILTER");
-      else
-        a.tag ("MISCELLANEOUS");
+      } else {
+        a.tag("MISCELLANEOUS");
+      }
 
       changes = true;
     }
@@ -986,10 +1050,11 @@ void CLI2::categorizeArgs ()
                cmd->accepts_modifications () &&
              ! cmd->accepts_miscellaneous ())
     {
-      if (!afterCommand)
+      if (!afterCommand) {
         a.tag ("FILTER");
-      else
-        a.tag ("MODIFICATION");
+      } else {
+        a.tag("MODIFICATION");
+      }
 
       changes = true;
     }
@@ -1003,9 +1068,9 @@ void CLI2::categorizeArgs ()
     }
   }
 
-  if (changes &&
-      context.config.getInteger ("debug.parser") >= 2)
-    context.debug (dump ("CLI2::analyze categorizeArgs"));
+  if (changes && context.config.getInteger("debug.parser") >= 2) {
+    context.debug(dump("CLI2::analyze categorizeArgs"));
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1038,8 +1103,9 @@ void CLI2::parenthesizeOriginalFilter ()
     if (_args[i].hasTag ("FILTER") &&
         _args[i].hasTag ("ORIGINAL"))
     {
-      if (firstOriginalFilter == 0)
+      if (firstOriginalFilter == 0) {
         firstOriginalFilter = i;
+      }
 
       lastOriginalFilter = i;
     }
@@ -1073,8 +1139,9 @@ void CLI2::parenthesizeOriginalFilter ()
 
     _args = reconstructed;
 
-    if (context.config.getInteger ("debug.parser") >= 2)
-      context.debug (dump ("CLI2::analyze parenthesizeOriginalFilter"));
+    if (context.config.getInteger("debug.parser") >= 2) {
+      context.debug(dump("CLI2::analyze parenthesizeOriginalFilter"));
+    }
   }
 }
 
@@ -1094,28 +1161,44 @@ bool CLI2::findCommand ()
     //   task project=foo list
     //        ^cmd        ^cmd
     //        ^attribute
-    if (exactMatch ("cmd", raw))
+    if (exactMatch("cmd", raw)) {
       canonical = raw;
-    else if (exactMatch ("attribute", raw))
+    } else if (exactMatch("attribute", raw)) {
       continue;
-    else if (! canonicalize (canonical, "cmd", raw))
+    } else if (!canonicalize(canonical, "cmd", raw)) {
       continue;
+    }
 
     a.attribute ("canonical", canonical);
     a.tag ("CMD");
 
     // Apply command DNA as tags.
     Command* command = context.commands[canonical];
-    if (command->read_only ())             a.tag ("READONLY");
-    if (command->displays_id ())           a.tag ("SHOWSID");
-    if (command->needs_gc ())              a.tag ("RUNSGC");
-    if (command->uses_context ())          a.tag ("USESCONTEXT");
-    if (command->accepts_filter ())        a.tag ("ALLOWSFILTER");
-    if (command->accepts_modifications ()) a.tag ("ALLOWSMODIFICATIONS");
-    if (command->accepts_miscellaneous ()) a.tag ("ALLOWSMISC");
+    if (command->read_only()) {
+      a.tag("READONLY");
+    }
+    if (command->displays_id()) {
+      a.tag("SHOWSID");
+    }
+    if (command->needs_gc()) {
+      a.tag("RUNSGC");
+    }
+    if (command->uses_context()) {
+      a.tag("USESCONTEXT");
+    }
+    if (command->accepts_filter()) {
+      a.tag("ALLOWSFILTER");
+    }
+    if (command->accepts_modifications()) {
+      a.tag("ALLOWSMODIFICATIONS");
+    }
+    if (command->accepts_miscellaneous()) {
+      a.tag("ALLOWSMISC");
+    }
 
-    if (context.config.getInteger ("debug.parser") >= 2)
-      context.debug (dump ("CLI2::analyze findCommand"));
+    if (context.config.getInteger("debug.parser") >= 2) {
+      context.debug(dump("CLI2::analyze findCommand"));
+    }
 
     // Stop and indicate command found.
     return true;
@@ -1133,9 +1216,11 @@ bool CLI2::exactMatch (
 {
   // Extract a list of entities for category.
   auto c = _entities.equal_range (category);
-  for (auto e = c.first; e != c.second; ++e)
-    if (value == e->second)
+  for (auto e = c.first; e != c.second; ++e) {
+    if (value == e->second) {
       return true;
+    }
+  }
 
   return false;
 }
@@ -1167,17 +1252,18 @@ void CLI2::desugarFilterTags ()
       A2 right ("" + raw.substr (1) + "", Lexer::Type::string);
       right.tag ("FILTER");
       reconstructed.push_back (right);
+    } else {
+      reconstructed.push_back(a);
     }
-    else
-      reconstructed.push_back (a);
   }
 
   if (changes)
   {
     _args = reconstructed;
 
-    if (context.config.getInteger ("debug.parser") >= 2)
-      context.debug (dump ("CLI2::prepareFilter desugarFilterTags"));
+    if (context.config.getInteger("debug.parser") >= 2) {
+      context.debug(dump("CLI2::prepareFilter desugarFilterTags"));
+    }
   }
 }
 
@@ -1201,9 +1287,11 @@ void CLI2::findStrayModifications ()
     }
   }
 
-  if (changes)
-    if (context.config.getInteger ("debug.parser") >= 2)
-      context.debug (dump ("CLI2::prepareFilter findStrayModifications"));
+  if (changes) {
+    if (context.config.getInteger("debug.parser") >= 2) {
+      context.debug(dump("CLI2::prepareFilter findStrayModifications"));
+    }
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1225,8 +1313,9 @@ void CLI2::desugarFilterAttributes ()
 
       // An unquoted string, while equivalent to an empty string, doesn't cause
       // an operand shortage in eval.
-      if (value == "")
+      if (value == "") {
         value = "''";
+      }
 
       // Some values are expressions, which need to be lexed. The best way to
       // determine whether an expression is either a single value, or needs to
@@ -1243,8 +1332,9 @@ void CLI2::desugarFilterAttributes ()
       if (context.config.getInteger ("debug.parser") >= 2)
       {
         context.debug ("CLI2::lexExpression " + name + ":" + value);
-        for (auto& v : values)
-          context.debug ("  " + v.dump ());
+        for (auto& v : values) {
+          context.debug("  " + v.dump());
+        }
         context.debug (" ");
       }
 
@@ -1259,8 +1349,9 @@ void CLI2::desugarFilterAttributes ()
         //   duration --> yes
         bool evalSupported = true;
         Column* col = context.columns[canonical];
-        if (col && col->type () == "string")
+        if (col && col->type() == "string") {
           evalSupported = false;
+        }
 
         A2 lhs (name, Lexer::Type::dom);
         lhs.tag ("FILTER");
@@ -1355,9 +1446,9 @@ void CLI2::desugarFilterAttributes ()
 #else
           rhs.attribute ("raw", "\\b" + value + "\\b");
 #endif
+        } else {
+          throw format(STRING_PARSER_UNKNOWN_ATTMOD, mod);
         }
-        else
-          throw format (STRING_PARSER_UNKNOWN_ATTMOD, mod);
 
         reconstructed.push_back (lhs);
         reconstructed.push_back (op);
@@ -1365,14 +1456,16 @@ void CLI2::desugarFilterAttributes ()
         // Do not modify this construct without full understanding.
         if (values.size () == 1 || ! evalSupported)
         {
-          if (Lexer::isDOM (rhs.attribute ("raw")))
+          if (Lexer::isDOM(rhs.attribute("raw"))) {
             rhs._lextype = Lexer::Type::dom;
+          }
 
           reconstructed.push_back (rhs);
+        } else {
+          for (auto& v : values) {
+            reconstructed.push_back(v);
+          }
         }
-        else
-          for (auto& v : values)
-            reconstructed.push_back (v);
 
         found = true;
       }
@@ -1385,22 +1478,25 @@ void CLI2::desugarFilterAttributes ()
         a._lextype = Lexer::Type::word;
       }
 
-      if (found)
+      if (found) {
         changes = true;
-      else
-        reconstructed.push_back (a);
+      } else {
+        reconstructed.push_back(a);
+      }
     }
     // Not a FILTER pair.
-    else
-      reconstructed.push_back (a);
+    else {
+      reconstructed.push_back(a);
+    }
   }
 
   if (changes)
   {
     _args = reconstructed;
 
-    if (context.config.getInteger ("debug.parser") >= 2)
-      context.debug (dump ("CLI2::prepareFilter desugarFilterAttributes"));
+    if (context.config.getInteger("debug.parser") >= 2) {
+      context.debug(dump("CLI2::prepareFilter desugarFilterAttributes"));
+    }
   }
 }
 
@@ -1429,17 +1525,18 @@ void CLI2::desugarFilterPatterns ()
       rhs.attribute ("flags", a.attribute ("flags"));
       rhs.tag ("FILTER");
       reconstructed.push_back (rhs);
+    } else {
+      reconstructed.push_back(a);
     }
-    else
-      reconstructed.push_back (a);
   }
 
   if (changes)
   {
     _args = reconstructed;
 
-    if (context.config.getInteger ("debug.parser") >= 2)
-      context.debug (dump ("CLI2::prepareFilter desugarFilterPatterns"));
+    if (context.config.getInteger("debug.parser") >= 2) {
+      context.debug(dump("CLI2::prepareFilter desugarFilterPatterns"));
+    }
   }
 }
 
@@ -1487,10 +1584,12 @@ void CLI2::findIDs ()
           {
             changes = true;
             auto hyphen = element.find ("-");
-            if (hyphen != std::string::npos)
+            if (hyphen != std::string::npos) {
               _id_ranges.push_back (std::pair <std::string, std::string> (element.substr (0, hyphen), element.substr (hyphen + 1)));
-            else
-              _id_ranges.push_back (std::pair <std::string, std::string> (element, element));
+            } else {
+              _id_ranges.push_back(
+                  std::pair<std::string, std::string>(element, element));
+            }
           }
         }
 
@@ -1543,10 +1642,12 @@ void CLI2::findIDs ()
             {
               changes = true;
               auto hyphen = element.find ("-");
-              if (hyphen != std::string::npos)
+              if (hyphen != std::string::npos) {
                 _id_ranges.push_back (std::pair <std::string, std::string> (element.substr (0, hyphen), element.substr (hyphen + 1)));
-              else
-                _id_ranges.push_back (std::pair <std::string, std::string> (element, element));
+              } else {
+                _id_ranges.push_back(
+                    std::pair<std::string, std::string>(element, element));
+              }
             }
           }
         }
@@ -1568,18 +1669,21 @@ void CLI2::findIDs ()
         pair.tag ("FILTER");
         pair.decompose ();
         reconstructed.push_back (pair);
+      } else {
+        reconstructed.push_back(a);
       }
-      else
-        reconstructed.push_back (a);
     }
 
-    if (changes)
+    if (changes) {
       _args = reconstructed;
+    }
   }
 
-  if (changes)
-    if (context.config.getInteger ("debug.parser") >= 2)
-      context.debug (dump ("CLI2::prepareFilter findIDs"));
+  if (changes) {
+    if (context.config.getInteger("debug.parser") >= 2) {
+      context.debug(dump("CLI2::prepareFilter findIDs"));
+    }
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1629,18 +1733,21 @@ void CLI2::findUUIDs ()
         pair.tag ("FILTER");
         pair.decompose ();
         reconstructed.push_back (pair);
+      } else {
+        reconstructed.push_back(a);
       }
-      else
-        reconstructed.push_back (a);
     }
 
-    if (changes)
+    if (changes) {
       _args = reconstructed;
+    }
   }
 
-  if (changes)
-    if (context.config.getInteger ("debug.parser") >= 2)
-      context.debug (dump ("CLI2::prepareFilter findUUIDs"));
+  if (changes) {
+    if (context.config.getInteger("debug.parser") >= 2) {
+      context.debug(dump("CLI2::prepareFilter findUUIDs"));
+    }
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1648,9 +1755,9 @@ void CLI2::insertIDExpr ()
 {
   // Skip completely if no ID/UUID was found. This is because below, '(' and ')'
   // are inserted regardless of list size.
-  if (! _id_ranges.size () &&
-      ! _uuid_list.size ())
+  if (!_id_ranges.size() && !_uuid_list.size()) {
     return;
+  }
 
   // Find the *first* occurence of lexer type set/number/uuid, and replace it
   // with a synthesized expression. All other occurences are eaten.
@@ -1706,8 +1813,9 @@ void CLI2::insertIDExpr ()
         // Add all ID ranges.
         for (auto r = _id_ranges.begin (); r != _id_ranges.end (); ++r)
         {
-          if (r != _id_ranges.begin ())
-            reconstructed.push_back (opOr);
+          if (r != _id_ranges.begin()) {
+            reconstructed.push_back(opOr);
+          }
 
           if (r->first == r->second)
           {
@@ -1726,10 +1834,11 @@ void CLI2::insertIDExpr ()
             bool ascending = true;
             int low  = strtol (r->first.c_str (),  NULL, 10);
             int high = strtol (r->second.c_str (), NULL, 10);
-            if (low <= high)
+            if (low <= high) {
               ascending = true;
-            else
+            } else {
               ascending = false;
+            }
 
             reconstructed.push_back (openParen);
             reconstructed.push_back (argID);
@@ -1752,15 +1861,16 @@ void CLI2::insertIDExpr ()
         }
 
         // Combine the ID and UUID sections with 'or'.
-        if (_id_ranges.size () &&
-            _uuid_list.size ())
-          reconstructed.push_back (opOr);
+        if (_id_ranges.size() && _uuid_list.size()) {
+          reconstructed.push_back(opOr);
+        }
 
         // Add all UUID list items.
         for (auto u = _uuid_list.begin (); u != _uuid_list.end (); ++u)
         {
-          if (u != _uuid_list.begin ())
-            reconstructed.push_back (opOr);
+          if (u != _uuid_list.begin()) {
+            reconstructed.push_back(opOr);
+          }
 
           reconstructed.push_back (openParen);
           reconstructed.push_back (argUUID);
@@ -1777,17 +1887,18 @@ void CLI2::insertIDExpr ()
       }
 
       // No 'else' because all set/number/uuid args but the first are removed.
+    } else {
+      reconstructed.push_back(a);
     }
-    else
-      reconstructed.push_back (a);
   }
 
   if (changes)
   {
     _args = reconstructed;
 
-    if (context.config.getInteger ("debug.parser") >= 2)
-      context.debug (dump ("CLI2::prepareFilter insertIDExpr"));
+    if (context.config.getInteger("debug.parser") >= 2) {
+      context.debug(dump("CLI2::prepareFilter insertIDExpr"));
+    }
   }
 }
 
@@ -1814,17 +1925,18 @@ void CLI2::lexFilterArgs ()
         extra.tag ("FILTER");
         reconstructed.push_back (extra);
       }
+    } else {
+      reconstructed.push_back(a);
     }
-    else
-      reconstructed.push_back (a);
   }
 
   if (changes)
   {
     _args = reconstructed;
 
-    if (context.config.getInteger ("debug.parser") >= 2)
-      context.debug (dump ("CLI2::prepareFilter lexFilterArgs"));
+    if (context.config.getInteger("debug.parser") >= 2) {
+      context.debug(dump("CLI2::prepareFilter lexFilterArgs"));
+    }
   }
 }
 
@@ -1921,17 +2033,18 @@ void CLI2::desugarFilterPlainArgs ()
       rhs.tag ("FILTER");
       rhs.tag ("PLAIN");
       reconstructed.push_back (rhs);
+    } else {
+      reconstructed.push_back(a);
     }
-    else
-      reconstructed.push_back (a);
   }
 
   if (changes)
   {
     _args = reconstructed;
 
-    if (context.config.getInteger ("debug.parser") >= 2)
-      context.debug (dump ("CLI2::prepareFilter desugarFilterPlainArgs"));
+    if (context.config.getInteger("debug.parser") >= 2) {
+      context.debug(dump("CLI2::prepareFilter desugarFilterPlainArgs"));
+    }
   }
 }
 
@@ -1955,12 +2068,11 @@ void CLI2::insertJunctions ()
     if (a->hasTag ("FILTER"))
     {
       // The prev iterator should be the first FILTER arg.
-      if (prev == _args.begin ())
+      if (prev == _args.begin()) {
         prev = a;
 
       // Insert AND between terms.
-      else if (a != prev)
-      {
+      } else if (a != prev) {
         if ((prev->_lextype != Lexer::Type::op && a->attribute ("raw") == "(")    ||
             (prev->_lextype != Lexer::Type::op && a->_lextype != Lexer::Type::op) ||
             (prev->attribute ("raw") == ")"    && a->_lextype != Lexer::Type::op) ||
@@ -1984,8 +2096,9 @@ void CLI2::insertJunctions ()
   {
     _args = reconstructed;
 
-    if (context.config.getInteger ("debug.parser") >= 2)
-      context.debug (dump ("CLI2::prepareFilter insertJunctions"));
+    if (context.config.getInteger("debug.parser") >= 2) {
+      context.debug(dump("CLI2::prepareFilter insertJunctions"));
+    }
   }
 }
 
@@ -2010,12 +2123,13 @@ void CLI2::defaultCommand ()
   {
     std::string raw = a.attribute ("raw");
 
-    if (a.hasTag ("CMD"))
+    if (a.hasTag("CMD")) {
       found_command = true;
+    }
 
-    if (a._lextype == Lexer::Type::uuid ||
-        a._lextype == Lexer::Type::number)
+    if (a._lextype == Lexer::Type::uuid || a._lextype == Lexer::Type::number) {
       found_sequence = true;
+    }
   }
 
   // If no command was specified, then a command will be inserted.
@@ -2047,11 +2161,13 @@ void CLI2::defaultCommand ()
           reconstructed.push_back (cmd);
         }
 
-        for (unsigned int i = 1; i < _original_args.size (); ++i)
-          reconstructedOriginals.push_back (_original_args[i]);
+        for (unsigned int i = 1; i < _original_args.size(); ++i) {
+          reconstructedOriginals.push_back(_original_args[i]);
+        }
 
-        for (unsigned int i = 1; i < _args.size (); ++i)
-          reconstructed.push_back (_args[i]);
+        for (unsigned int i = 1; i < _args.size(); ++i) {
+          reconstructed.push_back(_args[i]);
+        }
 
         _original_args = reconstructedOriginals;
         _args = reconstructed;
@@ -2067,9 +2183,9 @@ void CLI2::defaultCommand ()
     }
   }
 
-  if (changes &&
-      context.config.getInteger ("debug.parser") >= 2)
-    context.debug (dump ("CLI2::analyze defaultCommand"));
+  if (changes && context.config.getInteger("debug.parser") >= 2) {
+    context.debug(dump("CLI2::analyze defaultCommand"));
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

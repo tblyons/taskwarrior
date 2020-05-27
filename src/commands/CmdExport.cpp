@@ -75,31 +75,36 @@ int CmdExport::execute (std::string& output)
   bool json_array = context.config.getBoolean ("json.array");
 
   // Compose output.
-  if (json_array)
+  if (json_array) {
     output += "[\n";
+  }
 
   int counter = 0;
   for (auto& task : filtered)
   {
     if (counter)
     {
-      if (json_array)
+      if (json_array) {
         output += ",";
+      }
       output += "\n";
     }
 
     output += task.composeJSON (true);
 
     ++counter;
-    if (limit && counter >= limit)
+    if (limit && counter >= limit) {
       break;
+    }
   }
 
-  if (filtered.size ())
+  if (filtered.size()) {
     output += "\n";
+  }
 
-  if (json_array)
+  if (json_array) {
     output += "]\n";
+  }
 
   context.timer_render.stop ();
   return rc;

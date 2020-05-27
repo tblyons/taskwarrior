@@ -84,18 +84,21 @@ void ColumnTypeDate::measure (Task& task, unsigned int& minimum, unsigned int& m
       //   rc.dateformat.report
       //   rc.dateformat.
       std::string format = context.config.get ("report." + _report + ".dateformat");
-      if (format == "")
-        format = context.config.get ("dateformat.report");
-      if (format == "")
-        format = context.config.get ("dateformat");
+      if (format == "") {
+        format = context.config.get("dateformat.report");
+      }
+      if (format == "") {
+        format = context.config.get("dateformat");
+      }
 
       minimum = maximum = ISO8601d::length (format);
     }
     else if (_style == "countdown")
     {
       ISO8601d now;
-      if (now > date)
-        minimum = maximum = ISO8601p (now - date).formatVague ().length ();
+      if (now > date) {
+        minimum = maximum = ISO8601p(now - date).formatVague().length();
+      }
     }
     else if (_style == "julian")
     {
@@ -112,27 +115,30 @@ void ColumnTypeDate::measure (Task& task, unsigned int& minimum, unsigned int& m
     else if (_style == "age")
     {
       ISO8601d now;
-      if (now > date)
+      if (now > date) {
         minimum = maximum = ISO8601p (now - date).formatVague ().length ();
-      else
-        minimum = maximum = ISO8601p (date - now).formatVague ().length () + 1;
+      } else {
+        minimum = maximum = ISO8601p(date - now).formatVague().length() + 1;
+      }
     }
     else if (_style == "relative")
     {
       ISO8601d now;
-      if (now < date)
+      if (now < date) {
         minimum = maximum = ISO8601p (date - now).formatVague ().length ();
-      else
-        minimum = maximum = ISO8601p (now - date).formatVague ().length () + 1;
+      } else {
+        minimum = maximum = ISO8601p(now - date).formatVague().length() + 1;
+      }
     }
     else if (_style == "remaining")
     {
       ISO8601d now;
-      if (date > now)
-        minimum = maximum = ISO8601p (date - now).formatVague ().length ();
+      if (date > now) {
+        minimum = maximum = ISO8601p(date - now).formatVague().length();
+      }
+    } else {
+      throw format(STRING_COLUMN_BAD_FORMAT, _name, _style);
     }
-    else
-      throw format (STRING_COLUMN_BAD_FORMAT, _name, _style);
   }
 }
 
@@ -158,8 +164,9 @@ void ColumnTypeDate::render (
       if (format == "")
       {
         format = context.config.get ("dateformat.report");
-        if (format == "")
-          format = context.config.get ("dateformat");
+        if (format == "") {
+          format = context.config.get("dateformat");
+        }
       }
 
       renderStringLeft (lines, width, color, date.toString (format));
@@ -167,40 +174,43 @@ void ColumnTypeDate::render (
     else if (_style == "countdown")
     {
       ISO8601d now;
-      if (now > date)
-        renderStringRight (lines, width, color, ISO8601p (now - date).formatVague ());
-    }
-    else if (_style == "julian")
+      if (now > date) {
+        renderStringRight(lines, width, color,
+                          ISO8601p(now - date).formatVague());
+      }
+    } else if (_style == "julian") {
       renderStringRight (lines, width, color, format (date.toJulian (), 13, 12));
 
-    else if (_style == "epoch")
+    } else if (_style == "epoch") {
       renderStringRight (lines, width, color, date.toEpochString ());
 
-    else if (_style == "iso")
+    } else if (_style == "iso") {
       renderStringLeft (lines, width, color, date.toISO ());
 
-    else if (_style == "age")
-    {
+    } else if (_style == "age") {
       ISO8601d now;
-      if (now > date)
+      if (now > date) {
         renderStringLeft (lines, width, color, ISO8601p (now - date).formatVague ());
-      else
-        renderStringLeft (lines, width, color, "-" + ISO8601p (date - now).formatVague ());
-    }
-    else if (_style == "relative")
-    {
+      } else {
+        renderStringLeft(lines, width, color,
+                         "-" + ISO8601p(date - now).formatVague());
+      }
+    } else if (_style == "relative") {
       ISO8601d now;
-      if (now < date)
+      if (now < date) {
         renderStringLeft (lines, width, color, ISO8601p (date - now).formatVague ());
-      else
-        renderStringLeft (lines, width, color, "-" + ISO8601p (now - date).formatVague ());
+      } else {
+        renderStringLeft(lines, width, color,
+                         "-" + ISO8601p(now - date).formatVague());
+      }
     }
 
-    else if (_style == "remaining")
-    {
+    else if (_style == "remaining") {
       ISO8601d now;
-      if (date > now)
-        renderStringRight (lines, width, color, ISO8601p (date - now).formatVague ());
+      if (date > now) {
+        renderStringRight(lines, width, color,
+                          ISO8601p(date - now).formatVague());
+      }
     }
   }
 }
@@ -230,8 +240,9 @@ void ColumnTypeDate::modify (Task& task, const std::string& value)
   {
     context.debug (label + _name + " <-- '" + format ("{1}", format (evaluatedValue.get_duration ())) + "' <-- '" + (std::string) evaluatedValue + "' <-- '" + value + "'");
     Variant now;
-    if (namedDates ("now", now))
+    if (namedDates("now", now)) {
       evaluatedValue += now;
+    }
   }
   else
   {
@@ -240,9 +251,9 @@ void ColumnTypeDate::modify (Task& task, const std::string& value)
   }
 
   // If a date doesn't parse (2/29/2014) then it evaluates to zero.
-  if (value != "" &&
-      evaluatedValue.get_date () == 0)
-    throw format (STRING_DATE_INVALID_FORMAT, value, Variant::dateFormat);
+  if (value != "" && evaluatedValue.get_date() == 0) {
+    throw format(STRING_DATE_INVALID_FORMAT, value, Variant::dateFormat);
+  }
 
   task.set (_name, evaluatedValue.get_date ());
 }

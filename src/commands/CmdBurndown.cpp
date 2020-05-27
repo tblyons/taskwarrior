@@ -234,16 +234,18 @@ void Chart::scanForPeak (std::vector <Task>& tasks)
     ISO8601d entry = ISO8601d (task.get_date ("entry"));
 
     ISO8601d end;
-    if (task.has ("end"))
-      end = ISO8601d (task.get_date ("end"));
+    if (task.has("end")) {
+      end = ISO8601d(task.get_date("end"));
+    }
 
     while (entry < end)
     {
       time_t epoch = quantize (entry.toEpoch (), 'D').toEpoch ();
-      if (pending.find (epoch) != pending.end ())
+      if (pending.find(epoch) != pending.end()) {
         ++pending[epoch];
-      else
+      } else {
         pending[epoch] = 1;
+      }
 
       entry = increment (entry, 'D');
     }
@@ -278,8 +280,9 @@ void Chart::scan (std::vector <Task>& tasks)
     ISO8601d from = quantize (ISO8601d (task.get_date ("entry")), _period);
     epoch = from.toEpoch ();
 
-    if (_bars.find (epoch) != _bars.end ())
+    if (_bars.find(epoch) != _bars.end()) {
       ++_bars[epoch]._added;
+    }
 
     // e-->   e--s-->
     // ppp>   pppsss>
@@ -293,16 +296,18 @@ void Chart::scan (std::vector <Task>& tasks)
         while (from < start)
         {
           epoch = from.toEpoch ();
-          if (_bars.find (epoch) != _bars.end ())
+          if (_bars.find(epoch) != _bars.end()) {
             ++_bars[epoch]._pending;
+          }
           from = increment (from, _period);
         }
 
         while (from < now)
         {
           epoch = from.toEpoch ();
-          if (_bars.find (epoch) != _bars.end ())
+          if (_bars.find(epoch) != _bars.end()) {
             ++_bars[epoch]._started;
+          }
           from = increment (from, _period);
         }
       }
@@ -311,8 +316,9 @@ void Chart::scan (std::vector <Task>& tasks)
         while (from < now)
         {
           epoch = from.toEpoch ();
-          if (_bars.find (epoch) != _bars.end ())
+          if (_bars.find(epoch) != _bars.end()) {
             ++_bars[epoch]._pending;
+          }
           from = increment (from, _period);
         }
       }
@@ -326,8 +332,9 @@ void Chart::scan (std::vector <Task>& tasks)
       ISO8601d end = quantize (ISO8601d (task.get_date ("end")), _period);
       epoch = end.toEpoch ();
 
-      if (_bars.find (epoch) != _bars.end ())
+      if (_bars.find(epoch) != _bars.end()) {
         ++_bars[epoch]._removed;
+      }
 
       // Maintain a running total of 'done' tasks that are off the left of the
       // chart.
@@ -340,16 +347,18 @@ void Chart::scan (std::vector <Task>& tasks)
       while (from < end)
       {
         epoch = from.toEpoch ();
-        if (_bars.find (epoch) != _bars.end ())
+        if (_bars.find(epoch) != _bars.end()) {
           ++_bars[epoch]._pending;
+        }
         from = increment (from, _period);
       }
 
       while (from < now)
       {
         epoch = from.toEpoch ();
-        if (_bars.find (epoch) != _bars.end ())
+        if (_bars.find(epoch) != _bars.end()) {
           ++_bars[epoch]._done;
+        }
         from = increment (from, _period);
       }
     }
@@ -361,17 +370,20 @@ void Chart::scan (std::vector <Task>& tasks)
       // Skip old deleted tasks.
       ISO8601d end = quantize (ISO8601d (task.get_date ("end")), _period);
       epoch = end.toEpoch ();
-      if (_bars.find (epoch) != _bars.end ())
+      if (_bars.find(epoch) != _bars.end()) {
         ++_bars[epoch]._removed;
+      }
 
-      if (end < _earliest)
+      if (end < _earliest) {
         continue;
+      }
 
       while (from < end)
       {
         epoch = from.toEpoch ();
-        if (_bars.find (epoch) != _bars.end ())
+        if (_bars.find(epoch) != _bars.end()) {
           ++_bars[epoch]._pending;
+        }
         from = increment (from, _period);
       }
     }
@@ -414,13 +426,15 @@ std::string Chart::render ()
     return std::string (STRING_CMD_BURN_TOO_LARGE) + "\n";
   }
 
-  if (_max_value == 0)
-    context.footnote (STRING_FEEDBACK_NO_MATCH);
+  if (_max_value == 0) {
+    context.footnote(STRING_FEEDBACK_NO_MATCH);
+  }
 
   // Create a grid, folded into a string.
   _grid = "";
-  for (int i = 0; i < _height; ++i)
-    _grid += std::string (_width, ' ') + "\n";
+  for (int i = 0; i < _height; ++i) {
+    _grid += std::string(_width, ' ') + "\n";
+  }
 
   // Title.
   std::string full_title;
@@ -462,8 +476,9 @@ std::string Chart::render ()
   _max_label = (int) log10 ((double) _labels[2]) + 1;
 
   // Draw y-axis.
-  for (int i = 0; i < _graph_height; ++i)
-     _grid.replace (LOC (i + 1, _max_label + 1), 1, "|");
+  for (int i = 0; i < _graph_height; ++i) {
+    _grid.replace(LOC(i + 1, _max_label + 1), 1, "|");
+  }
 
   // Draw y-axis labels.
   char label [12];
@@ -479,8 +494,9 @@ std::string Chart::render ()
 
   // Draw x-axis labels.
   std::vector <time_t> bars_in_sequence;
-  for (auto& bar : _bars)
-    bars_in_sequence.push_back (bar.first);
+  for (auto& bar : _bars) {
+    bars_in_sequence.push_back(bar.first);
+  }
 
   std::sort (bars_in_sequence.begin (), bars_in_sequence.end ());
   std::string _major_label;
@@ -493,8 +509,12 @@ std::string Chart::render ()
     {
       _grid.replace (LOC (_height - 5, _max_label + 3 + ((_actual_bars - bar._offset - 1) * 3)), bar._minor_label.length (), bar._minor_label);
 
-      if (_major_label != bar._major_label)
-        _grid.replace (LOC (_height - 4, _max_label + 2 + ((_actual_bars - bar._offset - 1) * 3)), bar._major_label.length (), " " + bar._major_label);
+      if (_major_label != bar._major_label) {
+        _grid.replace(
+            LOC(_height - 4,
+                _max_label + 2 + ((_actual_bars - bar._offset - 1) * 3)),
+            bar._major_label.length(), " " + bar._major_label);
+      }
 
       _major_label = bar._major_label;
     }
@@ -512,30 +532,45 @@ std::string Chart::render ()
       int started = ((bar._pending + bar._started)                               * _graph_height) / _labels[2];
       int done    = ((bar._pending + bar._started + bar._done + _carryover_done) * _graph_height) / _labels[2];
 
-      for (int b = 0; b < pending; ++b)
-        _grid.replace (LOC (_graph_height - b, _max_label + 3 + ((_actual_bars - bar._offset - 1) * 3)), 2, "PP");
+      for (int b = 0; b < pending; ++b) {
+        _grid.replace(
+            LOC(_graph_height - b,
+                _max_label + 3 + ((_actual_bars - bar._offset - 1) * 3)),
+            2, "PP");
+      }
 
-      for (int b = pending; b < started; ++b)
-        _grid.replace (LOC (_graph_height - b, _max_label + 3 + ((_actual_bars - bar._offset - 1) * 3)), 2, "SS");
+      for (int b = pending; b < started; ++b) {
+        _grid.replace(
+            LOC(_graph_height - b,
+                _max_label + 3 + ((_actual_bars - bar._offset - 1) * 3)),
+            2, "SS");
+      }
 
-      for (int b = started; b < done; ++b)
-        _grid.replace (LOC (_graph_height - b, _max_label + 3 + ((_actual_bars - bar._offset - 1) * 3)), 2, "DD");
+      for (int b = started; b < done; ++b) {
+        _grid.replace(
+            LOC(_graph_height - b,
+                _max_label + 3 + ((_actual_bars - bar._offset - 1) * 3)),
+            2, "DD");
+      }
     }
   }
 
   // Draw rates.
   calculateRates ();
   char rate[12];
-  if (_net_fix_rate != 0.0)
+  if (_net_fix_rate != 0.0) {
     sprintf (rate, "%.1f/d", _net_fix_rate);
-  else
-    strcpy (rate, "-");
+  } else {
+    strcpy(rate, "-");
+  }
 
   _grid.replace (LOC (_height - 2, _max_label + 3), 22 + strlen (rate), std::string ("Net Fix Rate:         ") + rate);
 
   // Draw completion date.
-  if (_completion.length ())
-    _grid.replace (LOC (_height - 1, _max_label + 3), 22 + _completion.length (), "Estimated completion: " + _completion);
+  if (_completion.length()) {
+    _grid.replace(LOC(_height - 1, _max_label + 3), 22 + _completion.length(),
+                  "Estimated completion: " + _completion);
+  }
 
   optimizeGrid ();
 
@@ -548,27 +583,33 @@ std::string Chart::render ()
 
     // Replace DD, SS, PP with colored strings.
     std::string::size_type i;
-    while ((i = _grid.find ("PP")) != std::string::npos)
-      _grid.replace (i, 2, color_pending.colorize ("  "));
+    while ((i = _grid.find("PP")) != std::string::npos) {
+      _grid.replace(i, 2, color_pending.colorize("  "));
+    }
 
-    while ((i = _grid.find ("SS")) != std::string::npos)
-      _grid.replace (i, 2, color_started.colorize ("  "));
+    while ((i = _grid.find("SS")) != std::string::npos) {
+      _grid.replace(i, 2, color_started.colorize("  "));
+    }
 
-    while ((i = _grid.find ("DD")) != std::string::npos)
-      _grid.replace (i, 2, color_done.colorize ("  "));
+    while ((i = _grid.find("DD")) != std::string::npos) {
+      _grid.replace(i, 2, color_done.colorize("  "));
+    }
   }
   else
   {
     // Replace DD, SS, PP with ./+/X strings.
     std::string::size_type i;
-    while ((i = _grid.find ("PP")) != std::string::npos)
-      _grid.replace (i, 2, " X");
+    while ((i = _grid.find("PP")) != std::string::npos) {
+      _grid.replace(i, 2, " X");
+    }
 
-    while ((i = _grid.find ("SS")) != std::string::npos)
-      _grid.replace (i, 2, " +");
+    while ((i = _grid.find("SS")) != std::string::npos) {
+      _grid.replace(i, 2, " +");
+    }
 
-    while ((i = _grid.find ("DD")) != std::string::npos)
-      _grid.replace (i, 2, " .");
+    while ((i = _grid.find("DD")) != std::string::npos) {
+      _grid.replace(i, 2, " .");
+    }
   }
 
   return _grid;
@@ -582,8 +623,9 @@ void Chart::optimizeGrid ()
   while ((ws = _grid.find (" \n")) != std::string::npos)
   {
     auto non_ws = ws;
-    while (_grid[non_ws] == ' ')
+    while (_grid[non_ws] == ' ') {
       --non_ws;
+    }
 
     _grid.replace (non_ws + 1, ws - non_ws + 1, "\n");
   }
@@ -592,9 +634,15 @@ void Chart::optimizeGrid ()
 ////////////////////////////////////////////////////////////////////////////////
 ISO8601d Chart::quantize (const ISO8601d& input, char period)
 {
-  if (period == 'D') return input.startOfDay ();
-  if (period == 'W') return input.startOfWeek ();
-  if (period == 'M') return input.startOfMonth ();
+  if (period == 'D') {
+    return input.startOfDay();
+  }
+  if (period == 'W') {
+    return input.startOfWeek();
+  }
+  if (period == 'M') {
+    return input.startOfMonth();
+  }
 
   return input;
 }
@@ -777,12 +825,14 @@ void Chart::maxima ()
                 _carryover_done;
 
     // Determine _max_value.
-    if (total > _max_value)
+    if (total > _max_value) {
       _max_value = total;
+    }
 
     int length = (int) log10 ((double) total) + 1;
-    if (length > _max_label)
+    if (length > _max_label) {
       _max_label = length;
+    }
   }
 
   // How many bars can be shown?
@@ -822,8 +872,9 @@ void Chart::calculateRates ()
 
   // If there are no current pending tasks, then it is meaningless to find
   // rates or estimated completion date.
-  if (_current_count == 0)
+  if (_current_count == 0) {
     return;
+  }
 
   // If there is a net fix rate, and the peak was at least three days ago.
   ISO8601d now;
@@ -853,8 +904,9 @@ void Chart::calculateRates ()
     if (format == "")
     {
       format = context.config.get ("dateformat");
-      if (format == "")
+      if (format == "") {
         format = "Y-M-D";
+      }
     }
 
     _completion = end.toString (format)
@@ -889,16 +941,19 @@ unsigned Chart::round_up_to (unsigned n, unsigned target)
 unsigned Chart::burndown_size (unsigned ntasks)
 {
   // Nearest 2
-  if (ntasks < 20)
-    return round_up_to (ntasks, 2);
+  if (ntasks < 20) {
+    return round_up_to(ntasks, 2);
+  }
 
   // Nearest 10
-  if (ntasks < 50)
-    return round_up_to (ntasks, 10);
+  if (ntasks < 50) {
+    return round_up_to(ntasks, 10);
+  }
 
   // Nearest 20
-  if (ntasks < 100)
-    return round_up_to (ntasks, 20);
+  if (ntasks < 100) {
+    return round_up_to(ntasks, 20);
+  }
 
   // Choose the number from here rounded up to the nearest 10% of the next
   // highest power of 10 or half of power of 10.
@@ -909,11 +964,13 @@ unsigned Chart::burndown_size (unsigned ntasks)
   // We start at two because we handle 5, 10, 50, and 100 above.
   for (unsigned i = 2; i < count; ++i)
   {
-    if (ntasks < half)
-      return round_up_to (ntasks, half / 10);
+    if (ntasks < half) {
+      return round_up_to(ntasks, half / 10);
+    }
 
-    if (ntasks < full)
-      return round_up_to (ntasks, full / 10);
+    if (ntasks < full) {
+      return round_up_to(ntasks, full / 10);
+    }
 
     half *= 10;
     full *= 10;

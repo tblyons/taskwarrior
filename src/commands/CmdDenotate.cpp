@@ -75,8 +75,9 @@ int CmdDenotate::execute (std::string&)
   {
     if (a.hasTag ("MISCELLANEOUS"))
     {
-      if (pattern != "")
+      if (pattern != "") {
         pattern += ' ';
+      }
 
       pattern += a.attribute ("raw");
     }
@@ -92,8 +93,9 @@ int CmdDenotate::execute (std::string&)
     std::map <std::string, std::string> annotations;
     task.getAnnotations (annotations);
 
-    if (annotations.size () == 0)
-      throw std::string (STRING_CMD_DENO_NONE);
+    if (annotations.size() == 0) {
+      throw std::string(STRING_CMD_DENO_NONE);
+    }
 
     std::string anno;
     bool match = false;
@@ -135,15 +137,17 @@ int CmdDenotate::execute (std::string&)
         ++count;
         context.tdb2.modify (task);
         feedback_affected (format (STRING_CMD_DENO_FOUND, anno));
-        if (context.verbose ("project"))
-          projectChanges[task.get ("project")] = onProjectChange (task, false);
+        if (context.verbose("project")) {
+          projectChanges[task.get("project")] = onProjectChange(task, false);
+        }
       }
       else
       {
         std::cout << STRING_CMD_DENO_NO << "\n";
         rc = 1;
-        if (_permission_quit)
+        if (_permission_quit) {
           break;
+        }
       }
     }
     else
@@ -154,9 +158,11 @@ int CmdDenotate::execute (std::string&)
   }
 
   // Now list the project changes.
-  for (auto& change : projectChanges)
-    if (change.first != "")
-      context.footnote (change.second);
+  for (auto& change : projectChanges) {
+    if (change.first != "") {
+      context.footnote(change.second);
+    }
+  }
 
   feedback_affected (count == 1 ? STRING_CMD_DENO_1 : STRING_CMD_DENO_N, count);
   return rc;

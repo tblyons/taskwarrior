@@ -86,15 +86,18 @@ int CmdDone::execute (std::string&)
 
       task.modify (Task::modAnnotate);
       task.setStatus (Task::completed);
-      if (! task.has ("end"))
-        task.setAsNow ("end");
+      if (!task.has("end")) {
+        task.setAsNow("end");
+      }
 
       // Stop the task, if started.
       if (task.has ("start"))
       {
         task.remove ("start");
-        if (context.config.getBoolean ("journal.time"))
-          task.addAnnotation (context.config.get ("journal.time.stop.annotation"));
+        if (context.config.getBoolean("journal.time")) {
+          task.addAnnotation(
+              context.config.get("journal.time.stop.annotation"));
+        }
       }
 
       if (permission (taskDifferences (before, task) + question, filtered.size ()))
@@ -104,18 +107,21 @@ int CmdDone::execute (std::string&)
         ++count;
         feedback_affected (STRING_CMD_DONE_TASK, task);
         feedback_unblocked (task);
-        if (!nagged)
-          nagged = nag (task);
+        if (!nagged) {
+          nagged = nag(task);
+        }
         dependencyChainOnComplete (task);
-        if (context.verbose ("project"))
-          projectChanges[task.get ("project")] = onProjectChange (task);
+        if (context.verbose("project")) {
+          projectChanges[task.get("project")] = onProjectChange(task);
+        }
       }
       else
       {
         std::cout << STRING_CMD_DONE_NO << "\n";
         rc = 1;
-        if (_permission_quit)
+        if (_permission_quit) {
           break;
+        }
       }
     }
     else
@@ -129,9 +135,11 @@ int CmdDone::execute (std::string&)
   }
 
   // Now list the project changes.
-  for (auto& change : projectChanges)
-    if (change.first != "")
-      context.footnote (change.second);
+  for (auto& change : projectChanges) {
+    if (change.first != "") {
+      context.footnote(change.second);
+    }
+  }
 
   feedback_affected (count == 1 ? STRING_CMD_DONE_1 : STRING_CMD_DONE_N, count);
   return rc;

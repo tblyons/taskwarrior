@@ -67,8 +67,9 @@ void ColumnTypeNumeric::modify (Task& task, const std::string& value)
 
   // If the result is not readily convertible to a numeric value, then this is
   // an error.
-  if (evaluatedValue.type () == Variant::type_string)
-    throw format (STRING_UDA_NUMERIC, evaluatedValue.get_string ());
+  if (evaluatedValue.type() == Variant::type_string) {
+    throw format(STRING_UDA_NUMERIC, evaluatedValue.get_string());
+  }
 
   task.set (_name, evaluatedValue);
 }

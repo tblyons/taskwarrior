@@ -76,10 +76,11 @@ bool CmdConfig::setConfigVariable (std::string name, std::string value, bool con
       if (!confirmation ||
           confirm (format (STRING_CMD_CONFIG_CONFIRM, name, context.config.get (name), value)))
       {
-        if (comment != std::string::npos)
+        if (comment != std::string::npos) {
           line = name + "=" + json::encode (value) + " " + line.substr (comment);
-        else
-          line = name + "=" + json::encode (value);
+        } else {
+          line = name + "=" + json::encode(value);
+        }
 
         change = true;
       }
@@ -95,8 +96,9 @@ bool CmdConfig::setConfigVariable (std::string name, std::string value, bool con
     change = true;
   }
 
-  if (change)
-    File::write (context.config._original_file, contents);
+  if (change) {
+    File::write(context.config._original_file, contents);
+  }
 
   return change;
 }
@@ -136,19 +138,22 @@ int CmdConfig::unsetConfigVariable (std::string name, bool confirmation /* = fal
       }
     }
 
-    if (! lineDeleted)
+    if (!lineDeleted) {
       line++;
+    }
   }
 
-  if (change)
-    File::write (context.config._original_file, contents);
+  if (change) {
+    File::write(context.config._original_file, contents);
+  }
 
-  if ( change && found )
+  if (change && found) {
     return 0;
-  else if ( found )
+  } else if (found) {
     return 1;
-  else
+  } else {
     return 2;
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -177,8 +182,9 @@ int CmdConfig::execute (std::string& output)
     {
       for (unsigned int i = 1; i < words.size (); ++i)
       {
-        if (i > 1)
+        if (i > 1) {
           value += " ";
+        }
 
         value += words[i];
       }
@@ -190,23 +196,23 @@ int CmdConfig::execute (std::string& output)
 
       // task config name value
       // task config name ""
-      if (words.size () > 1)
+      if (words.size() > 1) {
         change = setConfigVariable(name, value, confirmation);
 
       // task config name
-      else
-      {
+      } else {
         rc = unsetConfigVariable(name, confirmation);
         if (rc == 0)
         {
           change = true;
           found = true;
-        }
-        else if (rc == 1)
+        } else if (rc == 1) {
           found = true;
+        }
 
-        if (!found)
-          throw format (STRING_CMD_CONFIG_NO_ENTRY, name);
+        if (!found) {
+          throw format(STRING_CMD_CONFIG_NO_ENTRY, name);
+        }
       }
 
       // Show feedback depending on whether .taskrc has been rewritten
@@ -215,17 +221,17 @@ int CmdConfig::execute (std::string& output)
         out << format (STRING_CMD_CONFIG_FILE_MOD,
                        context.config._original_file._data)
             << "\n";
-      }
-      else
+      } else {
         out << STRING_CMD_CONFIG_NO_CHANGE << "\n";
+      }
+    } else {
+      throw std::string(STRING_CMD_CONFIG_NO_NAME);
     }
-    else
-      throw std::string (STRING_CMD_CONFIG_NO_NAME);
 
     output = out.str ();
+  } else {
+    throw std::string(STRING_CMD_CONFIG_NO_NAME);
   }
-  else
-    throw std::string (STRING_CMD_CONFIG_NO_NAME);
 
   return rc;
 }
@@ -253,8 +259,9 @@ int CmdCompletionConfig::execute (std::string& output)
   context.config.all (configs);
   std::sort (configs.begin (), configs.end ());
 
-  for (auto& config : configs)
+  for (auto& config : configs) {
     output += config + "\n";
+  }
 
   return 0;
 }

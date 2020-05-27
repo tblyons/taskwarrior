@@ -106,8 +106,12 @@ Color::Color (const Color& other)
 Color::Color (unsigned int c)
 : _value (0)
 {
-  if (!(c & _COLOR_HASFG)) _value &= ~_COLOR_FG;
-  if (!(c & _COLOR_HASBG)) _value &= ~_COLOR_BG;
+  if (!(c & _COLOR_HASFG)) {
+    _value &= ~_COLOR_FG;
+  }
+  if (!(c & _COLOR_HASBG)) {
+    _value &= ~_COLOR_BG;
+  }
 
   _value = c & (_COLOR_256 | _COLOR_HASBG | _COLOR_HASFG |_COLOR_UNDERLINE |
                 _COLOR_INVERSE | _COLOR_BOLD | _COLOR_BRIGHT | _COLOR_BG |
@@ -145,15 +149,19 @@ Color::Color (const std::string& spec)
   {
     word = Lexer::lowerCase (Lexer::trim (word));
 
-         if (word == "bold")      fg_value |= _COLOR_BOLD;
-    else if (word == "bright")    bg_value |= _COLOR_BRIGHT;
-    else if (word == "underline") fg_value |= _COLOR_UNDERLINE;
-    else if (word == "inverse")   fg_value |= _COLOR_INVERSE;
-    else if (word == "on")        bg = true;
+    if (word == "bold") {
+      fg_value |= _COLOR_BOLD;
+    } else if (word == "bright") {
+      bg_value |= _COLOR_BRIGHT;
+    } else if (word == "underline") {
+      fg_value |= _COLOR_UNDERLINE;
+    } else if (word == "inverse") {
+      fg_value |= _COLOR_INVERSE;
+    } else if (word == "on") {
+      bg = true;
 
-    // X where X is one of black, red, blue ...
-    else if ((index = find (word)) != -1)
-    {
+      // X where X is one of black, red, blue ...
+    } else if ((index = find(word)) != -1) {
       if (index)
       {
         if (bg)
@@ -170,12 +178,11 @@ Color::Color (const std::string& spec)
     }
 
     // greyN/grayN, where 0 <= N <= 23.
-    else if (! word.compare (0, 4, "grey", 4) ||
-             ! word.compare (0, 4, "gray", 4))
-    {
+    else if (!word.compare(0, 4, "grey", 4) || !word.compare(0, 4, "gray", 4)) {
       index = strtol (word.substr (4).c_str (), nullptr, 10);
-      if (index < 0 || index > 23)
-        throw format (STRING_COLOR_UNRECOGNIZED, word);
+      if (index < 0 || index > 23) {
+        throw format(STRING_COLOR_UNRECOGNIZED, word);
+      }
 
       if (bg)
       {
@@ -192,20 +199,18 @@ Color::Color (const std::string& spec)
     }
 
     // rgbRGB, where 0 <= R,G,B <= 5.
-    else if (! word.compare (0, 3, "rgb", 3))
-    {
+    else if (!word.compare(0, 3, "rgb", 3)) {
       index = strtol (word.substr (3).c_str (), nullptr, 10);
-      if (word.length () != 6 ||
-          index < 0 || index > 555)
-        throw format (STRING_COLOR_UNRECOGNIZED, word);
+      if (word.length() != 6 || index < 0 || index > 555) {
+        throw format(STRING_COLOR_UNRECOGNIZED, word);
+      }
 
       int r = strtol (word.substr (3, 1).c_str (), nullptr, 10);
       int g = strtol (word.substr (4, 1).c_str (), nullptr, 10);
       int b = strtol (word.substr (5, 1).c_str (), nullptr, 10);
-      if (r < 0 || r > 5 ||
-          g < 0 || g > 5 ||
-          b < 0 || b > 5)
-        throw format (STRING_COLOR_UNRECOGNIZED, word);
+      if (r < 0 || r > 5 || g < 0 || g > 5 || b < 0 || b > 5) {
+        throw format(STRING_COLOR_UNRECOGNIZED, word);
+      }
 
       index = 16 + r*36 + g*6 + b;
 
@@ -224,11 +229,11 @@ Color::Color (const std::string& spec)
     }
 
     // colorN, where 0 <= N <= 255.
-    else if (! word.compare (0, 5, "color", 5))
-    {
+    else if (!word.compare(0, 5, "color", 5)) {
       index = strtol (word.substr (5).c_str (), nullptr, 10);
-      if (index < 0 || index > 255)
-        throw format (STRING_COLOR_UNRECOGNIZED, word);
+      if (index < 0 || index > 255) {
+        throw format(STRING_COLOR_UNRECOGNIZED, word);
+      }
 
       upgrade ();
 
@@ -244,9 +249,9 @@ Color::Color (const std::string& spec)
         fg_value |= index;
         fg_value |= _COLOR_256;
       }
+    } else if (word != "") {
+      throw format(STRING_COLOR_UNRECOGNIZED, word);
     }
-    else if (word != "")
-      throw format (STRING_COLOR_UNRECOGNIZED, word);
   }
 
   // Now combine the fg and bg into a single color.
@@ -290,23 +295,29 @@ Color::Color (color_id fg, color_id bg, bool underline, bool bold, bool bright)
 Color::operator std::string () const
 {
   std::string description;
-  if (_value & _COLOR_BOLD) description += "bold";
+  if (_value & _COLOR_BOLD) {
+    description += "bold";
+  }
 
-  if (_value & _COLOR_UNDERLINE)
-    description += std::string (description.length () ? " " : "") + "underline";
+  if (_value & _COLOR_UNDERLINE) {
+    description += std::string(description.length() ? " " : "") + "underline";
+  }
 
-  if (_value & _COLOR_INVERSE)
-    description += std::string (description.length () ? " " : "") + "inverse";
+  if (_value & _COLOR_INVERSE) {
+    description += std::string(description.length() ? " " : "") + "inverse";
+  }
 
-  if (_value & _COLOR_HASFG)
-    description += std::string (description.length () ? " " : "") + fg ();
+  if (_value & _COLOR_HASFG) {
+    description += std::string(description.length() ? " " : "") + fg();
+  }
 
   if (_value & _COLOR_HASBG)
   {
     description += std::string (description.length () ? " " : "") + "on";
 
-    if (_value & _COLOR_BRIGHT)
-      description += std::string (description.length () ? " " : "") + "bright";
+    if (_value & _COLOR_BRIGHT) {
+      description += std::string(description.length() ? " " : "") + "bright";
+    }
 
     description += " " + bg ();
   }
@@ -325,8 +336,9 @@ Color::operator int () const
 // other take precedence.
 void Color::blend (const Color& other)
 {
-  if (!other.nontrivial ())
+  if (!other.nontrivial()) {
     return;
+  }
 
   Color c (other);
   _value |= (c._value & _COLOR_UNDERLINE);    // Always inherit underline.
@@ -358,8 +370,12 @@ void Color::blend (const Color& other)
   else
   {
     // Upgrade either color, if necessary.
-    if (!(_value   & _COLOR_256)) upgrade ();
-    if (!(c._value & _COLOR_256)) c.upgrade ();
+    if (!(_value & _COLOR_256)) {
+      upgrade();
+    }
+    if (!(c._value & _COLOR_256)) {
+      c.upgrade();
+    }
 
     // 256 <-- 256.
     if (c._value & _COLOR_HASFG)
@@ -438,11 +454,13 @@ void Color::_colorize (std::string &result, const std::string& input) const
   // 256 color
   if (_value & _COLOR_256)
   {
-    if (_value & _COLOR_UNDERLINE)
+    if (_value & _COLOR_UNDERLINE) {
       result += "\033[4m";
+    }
 
-    if (_value & _COLOR_INVERSE)
+    if (_value & _COLOR_INVERSE) {
       result += "\033[7m";
+    }
 
     if (_value & _COLOR_HASFG)
     {
@@ -469,31 +487,41 @@ void Color::_colorize (std::string &result, const std::string& input) const
 
     if (_value & _COLOR_BOLD)
     {
-      if (count++) result += ";";
+      if (count++) {
+        result += ";";
+      }
       result += "1";
     }
 
     if (_value & _COLOR_UNDERLINE)
     {
-      if (count++) result += ";";
+      if (count++) {
+        result += ";";
+      }
       result += "4";
     }
 
     if (_value & _COLOR_INVERSE)
     {
-      if (count++) result += ";";
+      if (count++) {
+        result += ";";
+      }
       result += "7";
     }
 
     if (_value & _COLOR_HASFG)
     {
-      if (count++) result += ";";
+      if (count++) {
+        result += ";";
+      }
       result += colorstring[(29 + (_value & _COLOR_FG))];
     }
 
     if (_value & _COLOR_HASBG)
     {
-      if (count++) result += ";";
+      if (count++) {
+        result += ";";
+      }
       result += colorstring[((_value & _COLOR_BRIGHT ? 99 : 39) + ((_value & _COLOR_BG) >> 8))];
     }
 
@@ -514,15 +542,17 @@ std::string Color::strip (const std::string& input)
   {
     if (inside)
     {
-      if (input[i] == 'm')
+      if (input[i] == 'm') {
         inside = false;
+      }
     }
     else
     {
-      if (input[i] == 033)
+      if (input[i] == 033) {
         inside = true;
-      else
+      } else {
         output += input[i];
+      }
     }
   }
 
@@ -545,9 +575,11 @@ bool Color::nontrivial () const
 ////////////////////////////////////////////////////////////////////////////////
 int Color::find (const std::string& input)
 {
-  for (unsigned int i = 0; i < NUM_COLORS; ++i)
-    if (allColors[i].english_name == input)
-      return (int) i;
+  for (unsigned int i = 0; i < NUM_COLORS; ++i) {
+    if (allColors[i].english_name == input) {
+      return (int)i;
+    }
+  }
 
   return -1;
 }
@@ -568,9 +600,11 @@ std::string Color::fg () const
   }
   else
   {
-    for (unsigned int i = 0; i < NUM_COLORS; ++i)
-      if (allColors[i].index == index)
+    for (unsigned int i = 0; i < NUM_COLORS; ++i) {
+      if (allColors[i].index == index) {
         return allColors[i].english_name;
+      }
+    }
   }
 
   return "";
@@ -592,9 +626,11 @@ std::string Color::bg () const
   }
   else
   {
-    for (unsigned int i = 0; i < NUM_COLORS; ++i)
-      if (allColors[i].index == index)
+    for (unsigned int i = 0; i < NUM_COLORS; ++i) {
+      if (allColors[i].index == index) {
         return allColors[i].english_name;
+      }
+    }
   }
 
   return "";

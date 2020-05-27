@@ -55,8 +55,9 @@ void wrapText (
   std::string line;
   unsigned int offset = 0;
   const int dw = width < 12 ? 12 : width;
-  while (extractLine (line, text, dw, hyphenate, offset))
-    lines.push_back (line);
+  while (extractLine(line, text, dw, hyphenate, offset)) {
+    lines.push_back(line);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -74,8 +75,9 @@ void split (
     start = i + 1;
   }
 
-  if (input.length ())
-    results.insert (input.substr (start));
+  if (input.length()) {
+    results.insert(input.substr(start));
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -93,8 +95,9 @@ void split (
     start = i + 1;
   }
 
-  if (input.length ())
-    results.push_back (input.substr (start));
+  if (input.length()) {
+    results.push_back(input.substr(start));
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -114,8 +117,9 @@ void split (
     start = i + length;
   }
 
-  if (input.length ())
-    results.push_back (input.substr (start));
+  if (input.length()) {
+    results.push_back(input.substr(start));
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -129,8 +133,9 @@ void join (
   for (unsigned int i = 0; i < size; ++i)
   {
     s << items[i];
-    if (i < size - 1)
+    if (i < size - 1) {
       s << separator;
+    }
   }
 
   result = s.str ();
@@ -147,8 +152,9 @@ void join (
   for (unsigned int i = 0; i < size; ++i)
   {
     s << items[i];
-    if (i < size - 1)
+    if (i < size - 1) {
       s << separator;
+    }
   }
 
   result = s.str ();
@@ -164,8 +170,9 @@ std::string unquoteText (const std::string& input)
   {
     char quote = output[0];
     if ((quote == '\'' || quote == '"') &&
-        output[output.length () - 1] == quote)
-      return output.substr (1, output.length () - 2);
+        output[output.length() - 1] == quote) {
+      return output.substr(1, output.length() - 2);
+    }
   }
 
   return output;
@@ -183,17 +190,19 @@ int longestWord (const std::string& input)
   {
     if (character == ' ')
     {
-      if (length > longest)
+      if (length > longest) {
         longest = length;
+      }
 
       length = 0;
+    } else {
+      length += mk_wcwidth(character);
     }
-    else
-      length += mk_wcwidth (character);
   }
 
-  if (length > longest)
+  if (length > longest) {
     longest = length;
+  }
 
   return longest;
 }
@@ -210,17 +219,19 @@ int longestLine (const std::string& input)
   {
     if (character == '\n')
     {
-      if (length > longest)
+      if (length > longest) {
         longest = length;
+      }
 
       length = 0;
+    } else {
+      length += mk_wcwidth(character);
     }
-    else
-      length += mk_wcwidth (character);
   }
 
-  if (length > longest)
+  if (length > longest) {
     longest = length;
+  }
 
   return longest;
 }
@@ -235,8 +246,9 @@ bool extractLine (
   unsigned int& offset)
 {
   // Terminate processing.
-  if (offset >= text.length ())
+  if (offset >= text.length()) {
     return false;
+  }
 
   int line_length                     {0};
   int character                       {0};
@@ -257,8 +269,9 @@ bool extractLine (
     if (! Lexer::isWhitespace (character))
     {
       something = true;
-      if (! text[cursor] || Lexer::isWhitespace (text[cursor]))
+      if (!text[cursor] || Lexer::isWhitespace(text[cursor])) {
         lastWordEnd = prior_cursor;
+      }
     }
 
     line_length += mk_wcwidth (character);
@@ -350,9 +363,11 @@ bool nontrivial (const std::string& input)
 {
   std::string::size_type i = 0;
   int character;
-  while ((character = utf8_next_char (input, i)))
-    if (! Lexer::isWhitespace (character))
+  while ((character = utf8_next_char(input, i))) {
+    if (!Lexer::isWhitespace(character)) {
       return true;
+    }
+  }
 
   return false;
 }
@@ -364,8 +379,9 @@ bool compare (
   bool sensitive /*= true*/)
 {
   // Use strcasecmp if required.
-  if (!sensitive)
-    return strcasecmp (left.c_str (), right.c_str ()) == 0 ? true : false;
+  if (!sensitive) {
+    return strcasecmp(left.c_str(), right.c_str()) == 0 ? true : false;
+  }
 
   // Otherwise, just use std::string::operator==.
   return left == right;
@@ -378,13 +394,14 @@ bool closeEnough (
   unsigned int minLength /* = 0 */)
 {
   // An exact match is accepted first.
-  if (compare (reference, attempt, false))
+  if (compare(reference, attempt, false)) {
     return true;
+  }
 
   // A partial match will suffice.
-  if (attempt.length () < reference.length () &&
-      attempt.length () >= minLength)
-    return compare (reference.substr (0, attempt.length ()), attempt, false);
+  if (attempt.length() < reference.length() && attempt.length() >= minLength) {
+    return compare(reference.substr(0, attempt.length()), attempt, false);
+  }
 
   return false;
 }
@@ -402,8 +419,9 @@ std::string::size_type find (
     // Handle empty pattern.
     const char* p = pattern.c_str ();
     size_t len = pattern.length ();
-    if (len == 0)
+    if (len == 0) {
       return 0;
+    }
 
     // Evaluate these once, for performance reasons.
     const char* t = text.c_str ();
@@ -413,15 +431,18 @@ std::string::size_type find (
     for (; t <= end - len; ++t)
     {
       int diff = 0;
-      for (size_t i = 0; i < len; ++i)
-        if ((diff = tolower (t[i]) - tolower (p[i])))
+      for (size_t i = 0; i < len; ++i) {
+        if ((diff = tolower(t[i]) - tolower(p[i]))) {
           break;
+        }
+      }
 
       // diff == 0 means there was no break from the loop, which only occurs
       // when a difference is detected.  Therefore, the loop terminated, and
       // diff is zero.
-      if (diff == 0)
+      if (diff == 0) {
         return t - start;
+      }
     }
 
     return std::string::npos;
@@ -445,12 +466,14 @@ std::string::size_type find (
     // Handle empty pattern.
     const char* p = pattern.c_str ();
     size_t len = pattern.length ();
-    if (len == 0)
+    if (len == 0) {
       return 0;
+    }
 
     // Handle bad begin.
-    if (begin >= text.length ())
+    if (begin >= text.length()) {
       return std::string::npos;
+    }
 
     // Evaluate these once, for performance reasons.
     const char* start = text.c_str ();
@@ -460,15 +483,18 @@ std::string::size_type find (
     for (; t <= end - len; ++t)
     {
       int diff = 0;
-      for (size_t i = 0; i < len; ++i)
-        if ((diff = tolower (t[i]) - tolower (p[i])))
+      for (size_t i = 0; i < len; ++i) {
+        if ((diff = tolower(t[i]) - tolower(p[i]))) {
           break;
+        }
+      }
 
       // diff == 0 means there was no break from the loop, which only occurs
       // when a difference is detected.  Therefore, the loop terminated, and
       // diff is zero.
-      if (diff == 0)
+      if (diff == 0) {
         return t - start;
+      }
     }
 
     return std::string::npos;
@@ -490,15 +516,17 @@ int strippedLength (const std::string& input)
   {
     if (inside)
     {
-      if (input[i] == 'm')
+      if (input[i] == 'm') {
         inside = false;
+      }
     }
     else
     {
-      if (input[i] == 033)
+      if (input[i] == 033) {
         inside = true;
-      else
+      } else {
         ++count;
+      }
     }
   }
 
@@ -519,18 +547,21 @@ const std::string obfuscateText (const std::string& input)
     {
       output << (char) character;
 
-      if (character == 'm')
+      if (character == 'm') {
         inside = false;
+      }
     }
     else
     {
-      if (character == 033)
+      if (character == 033) {
         inside = true;
+      }
 
-      if (inside || character == ' ')
+      if (inside || character == ' ') {
         output << (char) character;
-      else
+      } else {
         output << 'x';
+      }
     }
   }
 
@@ -570,8 +601,9 @@ const std::string format (float value, int width, int precision)
     // For value close to zero, width - 2 (2 accounts for the first zero and
     // the dot) is the number of digits after zero that are significant
     double factor = 1;
-    for (int i = 2; i < width; i++)
+    for (int i = 2; i < width; i++) {
       factor *= 10;
+    }
     value = roundf (value * factor) / factor;
   }
   s << value;
@@ -589,8 +621,9 @@ const std::string format (double value, int width, int precision)
     // For value close to zero, width - 2 (2 accounts for the first zero and
     // the dot) is the number of digits after zero that are significant
     double factor = 1;
-    for (int i = 2; i < width; i++)
+    for (int i = 2; i < width; i++) {
       factor *= 10;
+    }
     value = round (value * factor) / factor;
   }
   s << value;
@@ -633,11 +666,13 @@ std::string leftJustify (const std::string& input, const int width)
 {
   auto len = static_cast <int> (utf8_text_width (input));
 
-  if (len == width)
+  if (len == width) {
     return input;
+  }
 
-  if (len > width)
-    return input.substr (0, width);
+  if (len > width) {
+    return input.substr(0, width);
+  }
 
   return input + std::string (width - utf8_text_width (input), ' ');
 }
@@ -663,11 +698,13 @@ std::string rightJustify (const std::string& input, const int width)
 {
   auto len = static_cast <int> (utf8_text_width (input));
 
-  if (len == width)
+  if (len == width) {
     return input;
+  }
 
-  if (len > width)
-    return input.substr (0, width);
+  if (len > width) {
+    return input.substr(0, width);
+  }
 
   return ((width > len)
            ? std::string (width - len, ' ')

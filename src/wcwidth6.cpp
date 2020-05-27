@@ -72,16 +72,18 @@ static int bisearch(wchar_t ucs, const struct interval *table, int max) {
     int min = 0;
     int mid;
 
-    if (ucs < table[0].first || ucs > table[max].last)
-        return 0;
+    if (ucs < table[0].first || ucs > table[max].last) {
+      return 0;
+    }
     while (max >= min) {
         mid = (min + max) / 2;
-        if (ucs > table[mid].last)
-            min = mid + 1;
-        else if (ucs < table[mid].first)
-            max = mid - 1;
-        else
-            return 1;
+        if (ucs > table[mid].last) {
+          min = mid + 1;
+        } else if (ucs < table[mid].first) {
+          max = mid - 1;
+        } else {
+          return 1;
+        }
     }
 
     return 0;
@@ -176,15 +178,18 @@ int mk_wcwidth(wchar_t ucs)
   };
 
   /* test for 8-bit control characters */
-  if (ucs == 0)
+  if (ucs == 0) {
     return 0;
-  if (ucs < 32 || (ucs >= 0x7f && ucs < 0xa0))
+  }
+  if (ucs < 32 || (ucs >= 0x7f && ucs < 0xa0)) {
     return -1;
+  }
 
   /* binary search in table of non-spacing characters */
   if (bisearch(ucs, combining,
-         sizeof(combining) / sizeof(struct interval) - 1))
+               sizeof(combining) / sizeof(struct interval) - 1)) {
     return 0;
+  }
 
   /* if we arrive here, ucs is not a combining or C0/C1 control character */
 

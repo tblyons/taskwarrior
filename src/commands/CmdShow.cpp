@@ -63,8 +63,9 @@ int CmdShow::execute (std::string& output)
   // Obtain the arguments from the description.  That way, things like '--'
   // have already been handled.
   std::vector <std::string> words = context.cli2.getWords ();
-  if (words.size () > 1)
-    throw std::string (STRING_CMD_SHOW_ARGS);
+  if (words.size() > 1) {
+    throw std::string(STRING_CMD_SHOW_ARGS);
+  }
 
   int width = context.getWidth ();
 
@@ -253,9 +254,11 @@ int CmdShow::execute (std::string& output)
   Config default_config;
   default_config.setDefaults ();
 
-  for (auto& i : context.config)
-    if (i.second != default_config.get (i.first))
-      default_values.push_back (i.first);
+  for (auto& i : context.config) {
+    if (i.second != default_config.get(i.first)) {
+      default_values.push_back(i.first);
+    }
+  }
 
   // Create output view.
   ViewText view;
@@ -279,12 +282,14 @@ int CmdShow::execute (std::string& output)
 
   std::string section;
 
-  // Look for the first plausible argument which could be a pattern 
-  if (words.size ())
+  // Look for the first plausible argument which could be a pattern
+  if (words.size()) {
     section = words[0];
+  }
 
-  if (section == "all")
+  if (section == "all") {
     section = "";
+  }
 
   std::string::size_type loc;
   for (auto& i : context.config)
@@ -329,10 +334,11 @@ int CmdShow::execute (std::string& output)
   {
     out << STRING_CMD_SHOW_DIFFER << "\n";
 
-    if (context.color () && warning.nontrivial ())
+    if (context.color() && warning.nontrivial()) {
       out << "  "
-          << format (STRING_CMD_SHOW_DIFFER_COLOR, warning.colorize ("color"))
+          << format(STRING_CMD_SHOW_DIFFER_COLOR, warning.colorize("color"))
           << "\n\n";
+    }
   }
 
   // Display the unrecognized variables.
@@ -340,11 +346,14 @@ int CmdShow::execute (std::string& output)
   {
     out << STRING_CMD_SHOW_UNREC << "\n";
 
-    for (auto& i : unrecognized)
+    for (auto& i : unrecognized) {
       out << "  " << i << "\n";
+    }
 
-    if (context.color () && error.nontrivial ())
-      out << "\n" << format (STRING_CMD_SHOW_DIFFER_COLOR, error.colorize ("color"));
+    if (context.color() && error.nontrivial()) {
+      out << "\n"
+          << format(STRING_CMD_SHOW_DIFFER_COLOR, error.colorize("color"));
+    }
 
     out << "\n\n";
   }
@@ -357,19 +366,21 @@ int CmdShow::execute (std::string& output)
 
   // Check for bad values in rc.calendar.details.
   std::string calendardetails = context.config.get ("calendar.details");
-  if (calendardetails != "full"   &&
-      calendardetails != "sparse" &&
-      calendardetails != "none")
-    out << format (STRING_CMD_SHOW_CONFIG_ERROR, "calendar.details", calendardetails)
+  if (calendardetails != "full" && calendardetails != "sparse" &&
+      calendardetails != "none") {
+    out << format(STRING_CMD_SHOW_CONFIG_ERROR, "calendar.details",
+                  calendardetails)
         << "\n";
+  }
 
   // Check for bad values in rc.calendar.holidays.
   std::string calendarholidays = context.config.get ("calendar.holidays");
-  if (calendarholidays != "full"   &&
-      calendarholidays != "sparse" &&
-      calendarholidays != "none")
-    out << format (STRING_CMD_SHOW_CONFIG_ERROR, "calendar.holidays", calendarholidays)
+  if (calendarholidays != "full" && calendarholidays != "sparse" &&
+      calendarholidays != "none") {
+    out << format(STRING_CMD_SHOW_CONFIG_ERROR, "calendar.holidays",
+                  calendarholidays)
         << "\n";
+  }
 
   // Verify installation.  This is mentioned in the documentation as the way
   // to ensure everything is properly installed.
@@ -383,11 +394,13 @@ int CmdShow::execute (std::string& output)
   {
     Directory location (context.config.get ("data.location"));
 
-    if (location._data == "")
+    if (location._data == "") {
       out << STRING_CMD_SHOW_NO_LOCATION << "\n";
+    }
 
-    if (! location.exists ())
+    if (!location.exists()) {
       out << STRING_CMD_SHOW_LOC_EXIST << "\n";
+    }
   }
 
   output = out.str ();
@@ -417,8 +430,9 @@ int CmdShowRaw::execute (std::string& output)
 
   // Display them all.
   std::stringstream out;
-  for (auto& i : all)
-    out << i << '=' << context.config.get (i) << "\n";
+  for (auto& i : all) {
+    out << i << '=' << context.config.get(i) << "\n";
+  }
 
   output = out.str ();
   return 0;

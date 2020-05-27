@@ -59,8 +59,12 @@ void ColumnDepends::setStyle (const std::string& value)
 {
   _style = value;
 
-       if (_style == "indicator" && _label == STRING_COLUMN_LABEL_DEP) _label = _label.substr (0, context.config.get ("dependency.indicator").length ());
-  else if (_style == "count"     && _label == STRING_COLUMN_LABEL_DEP) _label = STRING_COLUMN_LABEL_DEP_S;
+  if (_style == "indicator" && _label == STRING_COLUMN_LABEL_DEP) {
+    _label =
+        _label.substr(0, context.config.get("dependency.indicator").length());
+  } else if (_style == "count" && _label == STRING_COLUMN_LABEL_DEP) {
+    _label = STRING_COLUMN_LABEL_DEP_S;
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -72,10 +76,11 @@ void ColumnDepends::measure (Task& task, unsigned int& minimum, unsigned int& ma
 
   if (_style == "indicator")
   {
-    if (task.has ("depends"))
+    if (task.has("depends")) {
       minimum = maximum = utf8_width (context.config.get ("dependency.indicator"));
-    else
+    } else {
       minimum = maximum = 0;
+    }
   }
   else if (_style == "count")
   {
@@ -88,8 +93,9 @@ void ColumnDepends::measure (Task& task, unsigned int& minimum, unsigned int& ma
     if (task.has ("depends"))
     {
       std::vector <int> blocking_ids;
-      for (auto& i : blocking)
-        blocking_ids.push_back (i.id);
+      for (auto& i : blocking) {
+        blocking_ids.push_back(i.id);
+      }
 
       std::string all;
       join (all, " ", blocking_ids);
@@ -99,13 +105,14 @@ void ColumnDepends::measure (Task& task, unsigned int& minimum, unsigned int& ma
       for (auto& i : blocking)
       {
         length = format (i.id).length ();
-        if (length > minimum)
+        if (length > minimum) {
           minimum = length;
+        }
       }
     }
+  } else {
+    throw format(STRING_COLUMN_BAD_FORMAT, _name, _style);
   }
-  else
-    throw format (STRING_COLUMN_BAD_FORMAT, _name, _style);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -117,22 +124,20 @@ void ColumnDepends::render (
 {
   if (task.has (_name))
   {
-    if (_style == "indicator")
+    if (_style == "indicator") {
       renderStringRight (lines, width, color, context.config.get ("dependency.indicator"));
-    else
-    {
+    } else {
       std::vector <Task> blocking;
       dependencyGetBlocking (task, blocking);
 
-      if (_style == "count")
+      if (_style == "count") {
         renderStringRight (lines, width, color, "[" + format (static_cast <int>(blocking.size ())) + "]");
 
-      else if (_style == "default" ||
-               _style == "list")
-      {
+      } else if (_style == "default" || _style == "list") {
         std::vector <int> blocking_ids;
-        for (const auto& t : blocking)
-          blocking_ids.push_back (t.id);
+        for (const auto& t : blocking) {
+          blocking_ids.push_back(t.id);
+        }
 
         std::string combined;
         join (combined, " ", blocking_ids);
@@ -140,8 +145,9 @@ void ColumnDepends::render (
         std::vector <std::string> all;
         wrapText (all, combined, width, _hyphenate);
 
-        for (const auto& i : all)
-          renderStringLeft (lines, width, color, i);
+        for (const auto& i : all) {
+          renderStringLeft(lines, width, color, i);
+        }
       }
     }
   }
@@ -159,17 +165,19 @@ void ColumnDepends::modify (Task& task, const std::string& value)
   {
     if (dep[0] == '-')
     {
-      if (dep.length () == 37)
+      if (dep.length() == 37) {
         task.removeDependency (dep.substr (1));
-      else
-        task.removeDependency (strtol (dep.substr (1).c_str (), NULL, 10));
+      } else {
+        task.removeDependency(strtol(dep.substr(1).c_str(), NULL, 10));
+      }
     }
     else
     {
-      if (dep.length () == 36)
+      if (dep.length() == 36) {
         task.addDependency (dep);
-      else
-        task.addDependency (strtol (dep.c_str (), NULL, 10));
+      } else {
+        task.addDependency(strtol(dep.c_str(), NULL, 10));
+      }
     }
   }
 }

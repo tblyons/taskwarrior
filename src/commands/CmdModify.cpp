@@ -94,16 +94,19 @@ int CmdModify::execute (std::string&)
       {
         std::cout << STRING_CMD_MODIFY_NO << "\n";
         rc = 1;
-        if (_permission_quit)
+        if (_permission_quit) {
           break;
+        }
       }
     }
   }
 
   // Now list the project changes.
-  for (auto& change : projectChanges)
-    if (change.first != "")
-      context.footnote (change.second);
+  for (auto& change : projectChanges) {
+    if (change.first != "") {
+      context.footnote(change.second);
+    }
+  }
 
   feedback_affected (count == 1 ? STRING_CMD_MODIFY_1 : STRING_CMD_MODIFY_N, count);
   return rc;
@@ -113,21 +116,19 @@ int CmdModify::execute (std::string&)
 void CmdModify::checkConsistency (Task &before, Task &after)
 {
   // Perform some logical consistency checks.
-  if (after.has ("recur")  &&
-      !after.has ("due")   &&
-      !before.has ("due"))
-    throw std::string (STRING_CMD_MODIFY_NO_DUE);
+  if (after.has("recur") && !after.has("due") && !before.has("due")) {
+    throw std::string(STRING_CMD_MODIFY_NO_DUE);
+  }
 
-  if (before.has ("recur") &&
-      before.has ("due")   &&
-      (!after.has ("due")  ||
-        after.get ("due") == ""))
-    throw std::string (STRING_CMD_MODIFY_REM_DUE);
+  if (before.has("recur") && before.has("due") &&
+      (!after.has("due") || after.get("due") == "")) {
+    throw std::string(STRING_CMD_MODIFY_REM_DUE);
+  }
 
-  if (before.has ("recur")  &&
-      (!after.has ("recur") ||
-        after.get ("recur") == ""))
-    throw std::string (STRING_CMD_MODIFY_REC_ALWAYS);
+  if (before.has("recur") &&
+      (!after.has("recur") || after.get("recur") == "")) {
+    throw std::string(STRING_CMD_MODIFY_REC_ALWAYS);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -142,16 +143,18 @@ int CmdModify::modifyAndUpdate (
   feedback_affected (STRING_CMD_MODIFY_TASK, after);
   feedback_unblocked (after);
   context.tdb2.modify (after);
-  if (context.verbose ("project") && projectChanges)
-    (*projectChanges)[after.get ("project")] = onProjectChange (before, after);
+  if (context.verbose("project") && projectChanges) {
+    (*projectChanges)[after.get("project")] = onProjectChange(before, after);
+  }
 
   // Task has siblings - modify them.
-  if (after.has ("parent"))
+  if (after.has("parent")) {
     count += modifyRecurrenceSiblings (after, projectChanges);
 
   // Task has child tasks - modify them.
-  else if (after.get ("status") == "recurring")
-    count += modifyRecurrenceParent (after, projectChanges);
+  } else if (after.get("status") == "recurring") {
+    count += modifyRecurrenceParent(after, projectChanges);
+  }
 
   return count;
 }
@@ -177,8 +180,10 @@ int CmdModify::modifyRecurrenceSiblings (
       feedback_affected (STRING_CMD_MODIFY_TASK_R, sibling);
       feedback_unblocked (sibling);
       context.tdb2.modify (sibling);
-      if (context.verbose ("project") && projectChanges)
-        (*projectChanges)[sibling.get ("project")] = onProjectChange (alternate, sibling);
+      if (context.verbose("project") && projectChanges) {
+        (*projectChanges)[sibling.get("project")] =
+            onProjectChange(alternate, sibling);
+      }
     }
 
     // Modify the parent
@@ -209,8 +214,10 @@ int CmdModify::modifyRecurrenceParent (
       child.modify (Task::modReplace);
       updateRecurrenceMask (child);
       context.tdb2.modify (child);
-      if (context.verbose ("project") && projectChanges)
-        (*projectChanges)[child.get ("project")] = onProjectChange (alternate, child);
+      if (context.verbose("project") && projectChanges) {
+        (*projectChanges)[child.get("project")] =
+            onProjectChange(alternate, child);
+      }
       ++count;
       feedback_affected (STRING_CMD_MODIFY_TASK_R, child);
     }

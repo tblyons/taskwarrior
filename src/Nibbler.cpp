@@ -200,8 +200,9 @@ bool Nibbler::getQuoted (char c, std::string& result)
   {
     i = (*_input).find (c, i);
 
-    if (i == std::string::npos)
-      return false;  // Unclosed quote
+    if (i == std::string::npos) {
+      return false; // Unclosed quote
+    }
 
     if (i == start)
     {
@@ -322,15 +323,17 @@ bool Nibbler::getInt (int& result)
 
   if (i < _length)
   {
-    if ((*_input)[i] == '-')
+    if ((*_input)[i] == '-') {
       ++i;
-    else if ((*_input)[i] == '+')
+    } else if ((*_input)[i] == '+') {
       ++i;
+    }
   }
 
   // TODO Potential for use of find_first_not_of
-  while (i < _length && Lexer::isDigit ((*_input)[i]))
+  while (i < _length && Lexer::isDigit((*_input)[i])) {
     ++i;
+  }
 
   if (i > _cursor)
   {
@@ -347,8 +350,9 @@ bool Nibbler::getUnsignedInt (int& result)
 {
   auto i = _cursor;
   // TODO Potential for use of find_first_not_of
-  while (i < _length && Lexer::isDigit ((*_input)[i]))
+  while (i < _length && Lexer::isDigit((*_input)[i])) {
     ++i;
+  }
 
   if (i > _cursor)
   {
@@ -381,24 +385,27 @@ bool Nibbler::getNumber (std::string& result)
   auto i = _cursor;
 
   // [+-]?
-  if (i < _length && ((*_input)[i] == '-' || (*_input)[i] == '+'))
+  if (i < _length && ((*_input)[i] == '-' || (*_input)[i] == '+')) {
     ++i;
+  }
 
   // digit+
   if (i < _length && Lexer::isDigit ((*_input)[i]))
   {
     ++i;
 
-    while (i < _length && Lexer::isDigit ((*_input)[i]))
+    while (i < _length && Lexer::isDigit((*_input)[i])) {
       ++i;
+    }
 
     // ( . digit+ )?
     if (i < _length && (*_input)[i] == '.')
     {
       ++i;
 
-      while (i < _length && Lexer::isDigit ((*_input)[i]))
+      while (i < _length && Lexer::isDigit((*_input)[i])) {
         ++i;
+      }
     }
 
     // ( [eE] [+-]? digit+ )?
@@ -406,15 +413,17 @@ bool Nibbler::getNumber (std::string& result)
     {
       ++i;
 
-      if (i < _length && ((*_input)[i] == '+' || (*_input)[i] == '-'))
+      if (i < _length && ((*_input)[i] == '+' || (*_input)[i] == '-')) {
         ++i;
+      }
 
       if (i < _length && Lexer::isDigit ((*_input)[i]))
       {
         ++i;
 
-        while (i < _length && Lexer::isDigit ((*_input)[i]))
+        while (i < _length && Lexer::isDigit((*_input)[i])) {
           ++i;
+        }
 
         result = _input->substr (_cursor, i - _cursor);
         _cursor = i;
@@ -464,20 +473,21 @@ bool Nibbler::getPartialUUID (std::string& result)
   std::string::size_type i;
   for (i = 0; i < 36 && i < (_length - _cursor); i++)
   {
-    if (_uuid_pattern[i] == 'x' && !isxdigit ((*_input)[_cursor + i]))
+    if (_uuid_pattern[i] == 'x' && !isxdigit((*_input)[_cursor + i])) {
       break;
 
-    else if (_uuid_pattern[i] == '-' && (*_input)[_cursor + i] != '-')
+    } else if (_uuid_pattern[i] == '-' && (*_input)[_cursor + i] != '-') {
       break;
+    }
   }
 
   // If the partial match found is long enough, consider it a match.
   if (i >= _uuid_min_length)
   {
     // Fail if there is another hex digit.
-    if (_cursor + i < _length &&
-        isxdigit ((*_input)[_cursor + i]))
+    if (_cursor + i < _length && isxdigit((*_input)[_cursor + i])) {
       return false;
+    }
 
     result = _input->substr (_cursor, i);
     _cursor += i;
@@ -546,13 +556,15 @@ bool Nibbler::skipAllOneOf (const std::string& chars)
   if (_cursor < _length)
   {
     auto i = _input->find_first_not_of (chars, _cursor);
-    if (i == _cursor)
+    if (i == _cursor) {
       return false;
+    }
 
-    if (i == std::string::npos)
+    if (i == std::string::npos) {
       _cursor = _length;  // Yes, off the end.
-    else
+    } else {
       _cursor = i;
+    }
 
     return true;
   }
@@ -564,8 +576,9 @@ bool Nibbler::skipAllOneOf (const std::string& chars)
 // Peeks ahead - does not move cursor.
 char Nibbler::next ()
 {
-  if (_cursor < _length)
+  if (_cursor < _length) {
     return (*_input)[_cursor];
+  }
 
   return '\0';
 }
@@ -580,10 +593,10 @@ std::string::size_type Nibbler::cursor ()
 // Peeks ahead - does not move cursor.
 std::string Nibbler::next (const int quantity)
 {
-  if (           _cursor  <  _length &&
-      (unsigned) quantity <= _length &&
-                 _cursor  <= _length - quantity)
-    return _input->substr (_cursor, quantity);
+  if (_cursor < _length && (unsigned)quantity <= _length &&
+      _cursor <= _length - quantity) {
+    return _input->substr(_cursor, quantity);
+  }
 
   return "";
 }
@@ -609,8 +622,9 @@ const std::string& Nibbler::str () const
 ////////////////////////////////////////////////////////////////////////////////
 bool Nibbler::depleted ()
 {
-  if (_cursor >= _length)
+  if (_cursor >= _length) {
     return true;
+  }
 
   return false;
 }

@@ -73,16 +73,20 @@ int CmdStats::execute (std::string& output)
   // Count the undo transactions.
   std::vector <std::string> undoTxns = context.tdb2.undo.get_lines ();
   int undoCount = 0;
-  for (auto& tx : undoTxns)
-    if (tx == "---")
+  for (auto& tx : undoTxns) {
+    if (tx == "---") {
       ++undoCount;
+    }
+  }
 
   // Count the backlog transactions.
   std::vector <std::string> backlogTxns = context.tdb2.backlog.get_lines ();
   int backlogCount = 0;
-  for (auto& tx : backlogTxns)
-    if (tx[0] == '{')
+  for (auto& tx : backlogTxns) {
+    if (tx[0] == '{') {
       ++backlogCount;
+    }
+  }
 
   // Get all the tasks.
   Filter filter;
@@ -122,12 +126,20 @@ int CmdStats::execute (std::string& output)
     case Task::waiting:   ++waitingT;   break;
     }
 
-    if (task.is_blocked)  ++blockedT;
-    if (task.is_blocking) ++blockingT;
+    if (task.is_blocked) {
+      ++blockedT;
+    }
+    if (task.is_blocking) {
+      ++blockingT;
+    }
 
     time_t entry = strtol (task.get ("entry").c_str (), NULL, 10);
-    if (entry < earliest) earliest = entry;
-    if (entry > latest)   latest   = entry;
+    if (entry < earliest) {
+      earliest = entry;
+    }
+    if (entry > latest) {
+      latest = entry;
+    }
 
     if (status == Task::completed)
     {
@@ -135,8 +147,9 @@ int CmdStats::execute (std::string& output)
       daysPending += (end - entry) / 86400.0;
     }
 
-    if (status == Task::pending)
-      daysPending += (now.toEpoch () - entry) / 86400.0;
+    if (status == Task::pending) {
+      daysPending += (now.toEpoch() - entry) / 86400.0;
+    }
 
     descLength += task.get ("description").length ();
 
@@ -146,15 +159,18 @@ int CmdStats::execute (std::string& output)
 
     std::vector <std::string> tags;
     task.getTags (tags);
-    if (tags.size ())
+    if (tags.size()) {
       ++taggedT;
+    }
 
-    for (auto& tag : tags)
+    for (auto& tag : tags) {
       allTags[tag] = 0;
+    }
 
     std::string project = task.get ("project");
-    if (project != "")
+    if (project != "") {
       allProjects[project] = 0;
+    }
   }
 
   // Create a table for output.

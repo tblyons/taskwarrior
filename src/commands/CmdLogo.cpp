@@ -89,8 +89,9 @@ int CmdLogo::execute (std::string& output)
     ""
   };
 
-  if (!context.color ())
-    throw std::string (STRING_CMD_LOGO_COLOR_REQ);
+  if (!context.color()) {
+    throw std::string(STRING_CMD_LOGO_COLOR_REQ);
+  }
 
   std::string indent (context.config.getInteger ("indent.report"), ' ');
   output += optionalBlankLine ();
@@ -102,10 +103,9 @@ int CmdLogo::execute (std::string& output)
     for (int c = 0; c < 14; ++c)
     {
       int value = (int) data[line][c];
-      if (value == '.')
+      if (value == '.') {
         output += "  ";
-      else
-      {
+      } else {
         value += 167;
         char block [24];
         sprintf (block, "\033[48;5;%dm  \033[0m", value);
@@ -116,10 +116,9 @@ int CmdLogo::execute (std::string& output)
     for (int c = 13; c >= 0; --c)
     {
       int value = data[line][c];
-      if (value == '.')
+      if (value == '.') {
         output += "  ";
-      else
-      {
+      } else {
         value += 167;
         char block [24];
         sprintf (block, "\033[48;5;%dm  \033[0m", value);

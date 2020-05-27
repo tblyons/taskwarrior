@@ -56,15 +56,13 @@ CmdHelp::CmdHelp ()
 int CmdHelp::execute (std::string& output)
 {
   auto words = context.cli2.getWords ();
-  if (words.size () == 1 && closeEnough ("usage", words[0]))
+  if (words.size() == 1 && closeEnough("usage", words[0])) {
     output = "\n"
            + composeUsage ()
            + "\n";
-  else
-    output = "\n"
-           + composeUsage ()
-           + "\n"
-           + STRING_CMD_HELP_TEXT;
+  } else {
+    output = "\n" + composeUsage() + "\n" + STRING_CMD_HELP_TEXT;
+  }
 
   return 0;
 }
@@ -86,8 +84,9 @@ std::string CmdHelp::composeUsage () const
 
   // Obsolete method of getting a list of all commands.
   std::vector <std::string> all;
-  for (auto& cmd : context.commands)
-    all.push_back (cmd.first);
+  for (auto& cmd : context.commands) {
+    all.push_back(cmd.first);
+  }
 
   // Sort alphabetically by usage.
   std::sort (all.begin (), all.end ());

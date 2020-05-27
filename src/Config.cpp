@@ -407,8 +407,9 @@ void Config::load (const std::string& file, int nest /* = 1 */)
 {
   Timer timer ("Config::load (" + file + ")");
 
-  if (nest > 10)
-    throw std::string (STRING_CONFIG_OVERNEST);
+  if (nest > 10) {
+    throw std::string(STRING_CONFIG_OVERNEST);
+  }
 
   // First time in, load the default values.
   if (nest == 1)
@@ -419,16 +420,18 @@ void Config::load (const std::string& file, int nest /* = 1 */)
 
   // Read the file, then parse the contents.
   std::string contents;
-  if (File::read (file, contents) && contents.length ())
-    parse (contents, nest);
+  if (File::read(file, contents) && contents.length()) {
+    parse(contents, nest);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void Config::parse (const std::string& input, int nest /* = 1 */)
 {
   // Shortcut case for default constructor.
-  if (input.length () == 0)
+  if (input.length() == 0) {
     return;
+  }
 
   // Split the input into lines.
   std::vector <std::string> lines;
@@ -439,8 +442,9 @@ void Config::parse (const std::string& input, int nest /* = 1 */)
   {
     // Remove comments.
     auto pound = line.find ("#"); // no i18n
-    if (pound != std::string::npos)
-      line = line.substr (0, pound);
+    if (pound != std::string::npos) {
+      line = line.substr(0, pound);
+    }
 
     line = Lexer::trim (line, " \t"); // no i18n
 
@@ -463,16 +467,17 @@ void Config::parse (const std::string& input, int nest /* = 1 */)
           Path included (Lexer::trim (line.substr (include + 7), " \t"));
           if (included.is_absolute ())
           {
-            if (included.readable ())
+            if (included.readable()) {
               this->load (included, nest + 1);
-            else
-              throw format (STRING_CONFIG_READ_INCLUDE, included._data);
+            } else {
+              throw format(STRING_CONFIG_READ_INCLUDE, included._data);
+            }
+          } else {
+            throw format(STRING_CONFIG_INCLUDE_PATH, included._data);
           }
-          else
-            throw format (STRING_CONFIG_INCLUDE_PATH, included._data);
+        } else {
+          throw format(STRING_CONFIG_BAD_ENTRY, line);
         }
-        else
-          throw format (STRING_CONFIG_BAD_ENTRY, line);
       }
     }
   }
@@ -512,8 +517,9 @@ void Config::createDefaultRC (const std::string& rc, const std::string& data)
            << "\n";
 
   // Write out the new file.
-  if (! File::write (rc, contents.str ()))
-    throw format (STRING_CONFIG_BAD_WRITE, rc);
+  if (!File::write(rc, contents.str())) {
+    throw format(STRING_CONFIG_BAD_WRITE, rc);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -522,8 +528,11 @@ void Config::createDefaultData (const std::string& data)
   Directory d (data);
   if (! d.exists ())
   {
-    if (getBoolean ("exit.on.missing.db"))
-      throw std::string ("Error: rc.data.location does not exist - exiting according to rc.exit.on.missing.db setting.");
+    if (getBoolean("exit.on.missing.db")) {
+      throw std::string(
+          "Error: rc.data.location does not exist - exiting according to "
+          "rc.exit.on.missing.db setting.");
+    }
 
     d.create ();
 
@@ -555,8 +564,9 @@ bool Config::has (const std::string& key)
 std::string Config::get (const std::string& key)
 {
   auto found = find (key);
-  if (found != end ())
+  if (found != end()) {
     return found->second;
+  }
 
   return "";
 }
@@ -565,8 +575,9 @@ std::string Config::get (const std::string& key)
 int Config::getInteger (const std::string& key)
 {
   auto found = find (key);
-  if (found != end ())
-    return strtoimax (found->second.c_str (), nullptr, 10);
+  if (found != end()) {
+    return strtoimax(found->second.c_str(), nullptr, 10);
+  }
 
   return 0;
 }
@@ -576,12 +587,15 @@ double Config::getReal (const std::string& key)
 {
   //NOTE: Backwards compatible handling of next coefficient.
   //TODO: Remove.
-  if (key == "urgency.user.tag.next.coefficient" and has ("urgency.next.coefficient"))
-    return getReal ("urgency.next.coefficient");
+  if (key == "urgency.user.tag.next.coefficient" and
+      has("urgency.next.coefficient")) {
+    return getReal("urgency.next.coefficient");
+  }
 
   auto found = find (key);
-  if (found != end ())
-    return strtod (found->second.c_str (), nullptr);
+  if (found != end()) {
+    return strtod(found->second.c_str(), nullptr);
+  }
 
   return 0.0;
 }
@@ -593,16 +607,13 @@ bool Config::getBoolean (const std::string& key)
   if (found != end ())
   {
     std::string value = Lexer::lowerCase ((*this)[key]);
-    if (value == "t"      ||  // TODO Deprecate
-        value == "true"   ||
-        value == "1"      ||
-        value == "+"      ||  // TODO Deprecate
-        value == "y"      ||
-        value == "yes"    ||
-        value == "on"     ||
+    if (value == "t" ||                                    // TODO Deprecate
+        value == "true" || value == "1" || value == "+" || // TODO Deprecate
+        value == "y" || value == "yes" || value == "on" ||
         value == "enable" ||  // TODO Deprecate
-        value == "enabled")   // TODO Deprecate
+        value == "enabled") { // TODO Deprecate
       return true;
+    }
   }
 
   return false;
@@ -630,8 +641,9 @@ void Config::set (const std::string& key, const std::string& value)
 // Provide a vector of all configuration keys.
 void Config::all (std::vector<std::string>& items) const
 {
-  for (auto& it : *this)
-    items.push_back (it.first);
+  for (auto& it : *this) {
+    items.push_back(it.first);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

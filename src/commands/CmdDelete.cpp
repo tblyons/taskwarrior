@@ -86,8 +86,9 @@ int CmdDelete::execute (std::string&)
 
       task.modify (Task::modAnnotate);
       task.setStatus (Task::deleted);
-      if (! task.has ("end"))
-        task.setAsNow ("end");
+      if (!task.has("end")) {
+        task.setAsNow("end");
+      }
 
       if (permission (question, filtered.size ()))
       {
@@ -97,8 +98,9 @@ int CmdDelete::execute (std::string&)
         feedback_affected (STRING_CMD_DELETE_TASK, task);
         feedback_unblocked (task);
         dependencyChainOnComplete (task);
-        if (context.verbose ("project"))
-          projectChanges[task.get ("project")] = onProjectChange (task);
+        if (context.verbose("project")) {
+          projectChanges[task.get("project")] = onProjectChange(task);
+        }
 
         // Delete siblings.
         if (task.has ("parent"))
@@ -112,8 +114,9 @@ int CmdDelete::execute (std::string&)
             {
               sibling.modify (Task::modAnnotate);
               sibling.setStatus (Task::deleted);
-              if (! sibling.has ("end"))
-                sibling.setAsNow ("end");
+              if (!sibling.has("end")) {
+                sibling.setAsNow("end");
+              }
 
               updateRecurrenceMask (sibling);
               context.tdb2.modify (sibling);
@@ -126,8 +129,9 @@ int CmdDelete::execute (std::string&)
             Task parent;
             context.tdb2.get (task.get ("parent"), parent);
             parent.setStatus (Task::deleted);
-            if (! parent.has ("end"))
-              parent.setAsNow ("end");
+            if (!parent.has("end")) {
+              parent.setAsNow("end");
+            }
 
             context.tdb2.modify (parent);
           }
@@ -145,8 +149,9 @@ int CmdDelete::execute (std::string&)
             {
               child.modify (Task::modAnnotate);
               child.setStatus (Task::deleted);
-              if (! child.has ("end"))
-                child.setAsNow ("end");
+              if (!child.has("end")) {
+                child.setAsNow("end");
+              }
 
               updateRecurrenceMask (child);
               context.tdb2.modify (child);
@@ -161,8 +166,9 @@ int CmdDelete::execute (std::string&)
       {
         std::cout << STRING_CMD_DELETE_NO << "\n";
         rc = 1;
-        if (_permission_quit)
+        if (_permission_quit) {
           break;
+        }
       }
     }
     else
@@ -176,9 +182,11 @@ int CmdDelete::execute (std::string&)
   }
 
   // Now list the project changes.
-  for (auto& change : projectChanges)
-    if (change.first != "")
-      context.footnote (change.second);
+  for (auto& change : projectChanges) {
+    if (change.first != "") {
+      context.footnote(change.second);
+    }
+  }
 
   feedback_affected (count == 1 ? STRING_CMD_DELETE_1 : STRING_CMD_DELETE_N, count);
   return rc;

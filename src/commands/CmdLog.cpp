@@ -59,20 +59,24 @@ int CmdLog::execute (std::string& output)
   task.setStatus (Task::completed);
 
   // Cannot log recurring tasks.
-  if (task.has ("recur"))
-    throw std::string (STRING_CMD_LOG_NO_RECUR);
+  if (task.has("recur")) {
+    throw std::string(STRING_CMD_LOG_NO_RECUR);
+  }
 
   // Cannot log waiting tasks.
-  if (task.has ("wait"))
-    throw std::string (STRING_CMD_LOG_NO_WAITING);
+  if (task.has("wait")) {
+    throw std::string(STRING_CMD_LOG_NO_WAITING);
+  }
 
   context.tdb2.add (task);
 
-  if (context.verbose ("project"))
-    context.footnote (onProjectChange (task));
+  if (context.verbose("project")) {
+    context.footnote(onProjectChange(task));
+  }
 
-  if (context.verbose ("new-uuid"))
-    output = format (STRING_CMD_LOG_LOGGED, task.get ("uuid")) + "\n";
+  if (context.verbose("new-uuid")) {
+    output = format(STRING_CMD_LOG_LOGGED, task.get("uuid")) + "\n";
+  }
 
   return 0;
 }

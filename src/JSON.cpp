@@ -69,12 +69,12 @@ const char *json_encode[] = {
 json::value* json::value::parse (Nibbler& nibbler)
 {
   json::value* v;
-  if ((v = json::object::parse  (nibbler)) ||
-      (v = json::array::parse   (nibbler)) ||
-      (v = json::string::parse  (nibbler)) ||
-      (v = json::number::parse  (nibbler)) ||
-      (v = json::literal::parse (nibbler)))
+  if ((v = json::object::parse(nibbler)) || (v = json::array::parse(nibbler)) ||
+      (v = json::string::parse(nibbler)) ||
+      (v = json::number::parse(nibbler)) ||
+      (v = json::literal::parse(nibbler))) {
     return v;
+  }
 
   return NULL;
 }
@@ -189,16 +189,21 @@ json::jtype json::literal::type ()
 ////////////////////////////////////////////////////////////////////////////////
 std::string json::literal::dump () const
 {
-       if (_lvalue == nullvalue)  return "null";
-  else if (_lvalue == falsevalue) return "false";
-  else                            return "true";
+  if (_lvalue == nullvalue) {
+    return "null";
+  } else if (_lvalue == falsevalue) {
+    return "false";
+  } else {
+    return "true";
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 json::array::~array ()
 {
-  for (auto& i : _data)
+  for (auto& i : _data) {
     delete i;
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -239,9 +244,9 @@ json::array* json::array::parse (Nibbler& nibbler)
     {
       nibbler = n;
       return arr;
+    } else {
+      throw format(STRING_JSON_MISSING_BRACKET, (int)n.cursor());
     }
-    else
-      throw format (STRING_JSON_MISSING_BRACKET, (int) n.cursor ());
 
     delete arr;
   }
@@ -263,8 +268,9 @@ std::string json::array::dump () const
 
   for (auto i = _data.begin (); i != _data.end (); ++i)
   {
-    if (i != _data.begin ())
+    if (i != _data.begin()) {
       output += ",";
+    }
 
     output += (*i)->dump ();
   }
@@ -276,8 +282,9 @@ std::string json::array::dump () const
 ////////////////////////////////////////////////////////////////////////////////
 json::object::~object ()
 {
-  for (auto& i : _data)
+  for (auto& i : _data) {
     delete i.second;
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -320,9 +327,9 @@ json::object* json::object::parse (Nibbler& nibbler)
     {
       nibbler = n;
       return obj;
+    } else {
+      throw format(STRING_JSON_MISSING_BRACE, (int)n.cursor());
     }
-    else
-      throw format (STRING_JSON_MISSING_BRACE, (int) n.cursor ());
 
     delete obj;
   }
@@ -348,12 +355,12 @@ bool json::object::parse_pair (
       {
         nibbler = n;
         return true;
+      } else {
+        throw format(STRING_JSON_MISSING_VALUE2, (int)n.cursor());
       }
-      else
-        throw format (STRING_JSON_MISSING_VALUE2, (int) n.cursor ());
+    } else {
+      throw format(STRING_JSON_MISSING_COLON, (int)n.cursor());
     }
-    else
-      throw format (STRING_JSON_MISSING_COLON, (int) n.cursor ());
   }
 
   return false;
@@ -373,8 +380,9 @@ std::string json::object::dump () const
 
   for (auto i = _data.begin (); i != _data.end (); ++i)
   {
-    if (i != _data.begin ())
+    if (i != _data.begin()) {
       output += ",";
+    }
 
     output += "\"" + i->first + "\":";
     output += i->second->dump ();
@@ -392,10 +400,13 @@ json::value* json::parse (const std::string& input)
   Nibbler n (input);
   n.skipWS ();
 
-       if (n.next () == '{') root = json::object::parse (n);
-  else if (n.next () == '[') root = json::array::parse (n);
-  else
-    throw format (STRING_JSON_MISSING_OPEN, (int) n.cursor ());
+  if (n.next() == '{') {
+    root = json::object::parse(n);
+  } else if (n.next() == '[') {
+    root = json::array::parse(n);
+  } else {
+    throw format(STRING_JSON_MISSING_OPEN, (int)n.cursor());
+  }
 
   // Check for end condition.
   n.skipWS ();

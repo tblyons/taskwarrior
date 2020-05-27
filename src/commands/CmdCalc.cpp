@@ -55,10 +55,11 @@ int CmdCalc::execute (std::string& output)
 {
   // Configurable infix/postfix
   bool infix = true;
-  if (context.config.get ("expressions") == "infix")
+  if (context.config.get("expressions") == "infix") {
     infix = true;
-  else if (context.config.get ("expressions") == "postfix")
+  } else if (context.config.get("expressions") == "postfix") {
     infix = false;
+  }
 
   // Create an evaluator with DOM access.
   Eval e;
@@ -68,15 +69,17 @@ int CmdCalc::execute (std::string& output)
 
   // Compile all the args into one expression.
   std::string expression;
-  for (auto& word : context.cli2.getWords ())
+  for (auto& word : context.cli2.getWords()) {
     expression += word + " ";
+  }
 
   // Evaluate according to preference.
   Variant result;
-  if (infix)
+  if (infix) {
     e.evaluateInfixExpression (expression, result);
-  else
-    e.evaluatePostfixExpression (expression, result);
+  } else {
+    e.evaluatePostfixExpression(expression, result);
+  }
 
   output = (std::string) result + "\n";
   return 0;

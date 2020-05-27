@@ -50,8 +50,9 @@ void ColumnStart::setStyle (const std::string& value)
 {
   _style = value;
 
-  if (_style == "active" && _label == STRING_COLUMN_LABEL_STARTED)
+  if (_style == "active" && _label == STRING_COLUMN_LABEL_STARTED) {
     _label = STRING_COLUMN_LABEL_ACTIVE;
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -64,13 +65,14 @@ void ColumnStart::measure (Task& task, unsigned int& minimum, unsigned int& maxi
   {
     if (_style == "active")
     {
-      if (task.has ("start"))
+      if (task.has("start")) {
         minimum = maximum = utf8_width (context.config.get ("active.indicator"));
-      else
+      } else {
         minimum = maximum = 0;
+      }
+    } else {
+      ColumnTypeDate::measure(task, minimum, maximum);
     }
-    else
-      ColumnTypeDate::measure (task, minimum, maximum);
   }
 }
 
@@ -85,11 +87,13 @@ void ColumnStart::render (
   {
     if (_style == "active")
     {
-      if (! task.has ("end"))
-        renderStringRight (lines, width, color, context.config.get ("active.indicator"));
+      if (!task.has("end")) {
+        renderStringRight(lines, width, color,
+                          context.config.get("active.indicator"));
+      }
+    } else {
+      ColumnTypeDate::render(lines, task, width, color);
     }
-    else
-      ColumnTypeDate::render (lines, task, width, color);
   }
 }
 

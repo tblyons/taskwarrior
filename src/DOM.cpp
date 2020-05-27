@@ -55,8 +55,9 @@ extern Context context;
 bool getDOM (const std::string& name, Variant& value)
 {
   // Special case, blank refs cause problems.
-  if (name == "")
+  if (name == "") {
     return false;
+  }
 
   int len = name.length ();
   Nibbler n (name);
@@ -90,8 +91,9 @@ bool getDOM (const std::string& name, Variant& value)
       std::string commandLine;
       for (auto& arg : context.cli2._original_args)
       {
-        if (commandLine != "")
-           commandLine += " ";
+        if (commandLine != "") {
+          commandLine += " ";
+        }
 
         commandLine += arg.attribute("raw");
       }
@@ -112,9 +114,9 @@ bool getDOM (const std::string& name, Variant& value)
                                            ? context.terminal_height
                                            : context.getHeight ()));
       return true;
+    } else {
+      throw format(STRING_DOM_UNREC, name);
     }
-    else
-      throw format (STRING_DOM_UNREC, name);
   }
 
   // TODO stats.<name>
@@ -157,9 +159,9 @@ bool getDOM (const std::string& name, Variant& value)
       value = Variant (STRING_DOM_UNKNOWN);
 #endif
       return true;
+    } else {
+      throw format(STRING_DOM_UNREC, name);
     }
-    else
-      throw format (STRING_DOM_UNREC, name);
   }
 
   // Empty string if nothing is found.
@@ -197,8 +199,9 @@ bool getDOM (const std::string& name, Variant& value)
 bool getDOM (const std::string& name, const Task& task, Variant& value)
 {
   // Special case, blank refs cause problems.
-  if (name == "")
+  if (name == "") {
     return false;
+  }
 
   // Quickly deal with the most common cases.
   if (task.data.size () && name == "id")
@@ -226,8 +229,9 @@ bool getDOM (const std::string& name, const Task& task, Variant& value)
   // If elements[0] is a UUID, load that task (if necessary), and clobber ref.
   if (n.getPartialUUID (uuid) && n.depleted ())
   {
-    if (uuid != ref.get ("uuid"))
-      context.tdb2.get (uuid, ref);
+    if (uuid != ref.get("uuid")) {
+      context.tdb2.get(uuid, ref);
+    }
 
     // Eat elements[0]/UUID.
     elements.erase (elements.begin ());
@@ -237,8 +241,9 @@ bool getDOM (const std::string& name, const Task& task, Variant& value)
     // If elements[0] is a ID, load that task (if necessary), and clobber ref.
     if (n.getInt (id) && n.depleted ())
     {
-      if (id != ref.id)
-        context.tdb2.get (id, ref);
+      if (id != ref.id) {
+        context.tdb2.get(id, ref);
+      }
 
       // Eat elements[0]/ID.
       elements.erase (elements.begin ());
@@ -277,10 +282,11 @@ bool getDOM (const std::string& name, const Task& task, Variant& value)
       if (column->type () == "date")
       {
         auto numeric = ref.get_date (canonical);
-        if (numeric == 0)
+        if (numeric == 0) {
           value = Variant ("");
-        else
-          value = Variant (numeric, Variant::type_date);
+        } else {
+          value = Variant(numeric, Variant::type_date);
+        }
       }
       else if (column->type () == "duration" || canonical == "recur")
       {
@@ -288,15 +294,17 @@ bool getDOM (const std::string& name, const Task& task, Variant& value)
 
         ISO8601p iso;
         std::string::size_type cursor = 0;
-        if (iso.parse (period, cursor))
+        if (iso.parse(period, cursor)) {
           value = Variant ((time_t) iso, Variant::type_duration);
-        else
-          value = Variant ((time_t) ISO8601p (ref.get (canonical)), Variant::type_duration);
-      }
-      else if (column->type () == "numeric")
+        } else {
+          value = Variant((time_t)ISO8601p(ref.get(canonical)),
+                          Variant::type_duration);
+        }
+      } else if (column->type() == "numeric") {
         value = Variant (ref.get_float (canonical));
-      else
-        value = Variant (ref.get (canonical));
+      } else {
+        value = Variant(ref.get(canonical));
+      }
 
       return true;
     }

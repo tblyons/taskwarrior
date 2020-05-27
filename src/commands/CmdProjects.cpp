@@ -63,9 +63,11 @@ int CmdProjects::execute (std::string& output)
   handleRecurrence ();
   auto tasks = context.tdb2.pending.get_tasks ();
 
-  if (context.config.getBoolean ("list.all.projects"))
-    for (auto& task : context.tdb2.completed.get_tasks ())
-      tasks.push_back (task);
+  if (context.config.getBoolean("list.all.projects")) {
+    for (auto& task : context.tdb2.completed.get_tasks()) {
+      tasks.push_back(task);
+    }
+  }
 
   // Apply the filter.
   Filter filter;
@@ -95,11 +97,13 @@ int CmdProjects::execute (std::string& output)
     std::vector <std::string> projects = extractParents (project);
     projects.push_back (project);
 
-    for (auto& parent : projects)
+    for (auto& parent : projects) {
       unique[parent] += 1;
+    }
 
-    if (project == "")
+    if (project == "") {
       no_project = true;
+    }
   }
 
   if (unique.size ())
@@ -138,8 +142,9 @@ int CmdProjects::execute (std::string& output)
     }
 
     int number_projects = unique.size ();
-    if (no_project)
+    if (no_project) {
       --number_projects;
+    }
 
     out << optionalBlankLine ()
         << view.render ()
@@ -186,9 +191,11 @@ int CmdCompletionProjects::execute (std::string& output)
   handleRecurrence ();
   auto tasks = context.tdb2.pending.get_tasks ();
 
-  if (context.config.getBoolean ("list.all.projects"))
-    for (auto& task : context.tdb2.completed.get_tasks ())
-      tasks.push_back (task);
+  if (context.config.getBoolean("list.all.projects")) {
+    for (auto& task : context.tdb2.completed.get_tasks()) {
+      tasks.push_back(task);
+    }
+  }
 
   // Apply the filter.
   Filter filter;
@@ -198,12 +205,15 @@ int CmdCompletionProjects::execute (std::string& output)
   // Scan all the tasks for their project name, building a map using project
   // names as keys.
   std::map <std::string, int> unique;
-  for (auto& task : filtered)
-    unique[task.get ("project")] = 0;
+  for (auto& task : filtered) {
+    unique[task.get("project")] = 0;
+  }
 
-  for (auto& project : unique)
-    if (project.first.length ())
+  for (auto& project : unique) {
+    if (project.first.length()) {
       output += project.first + "\n";
+    }
+  }
 
   return 0;
 }

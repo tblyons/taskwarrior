@@ -98,23 +98,25 @@ std::string legacyCheckForDeprecatedVariables ()
     // 2014-07-04: report.*.limit removed.
 
     // report.*.annotations
-    if (it.first.length () > 19 &&
-        it.first.substr (0, 7) == "report." &&
-        it.first.substr (it.first.length () - 12) == ".annotations")
-      deprecated.push_back (it.first);
+    if (it.first.length() > 19 && it.first.substr(0, 7) == "report." &&
+        it.first.substr(it.first.length() - 12) == ".annotations") {
+      deprecated.push_back(it.first);
+    }
 
-    if (it.first == "next"              ||
-        it.first == "annotations"       ||
-        it.first == "export.ical.class")
-      deprecated.push_back (it.first);
+    if (it.first == "next" || it.first == "annotations" ||
+        it.first == "export.ical.class") {
+      deprecated.push_back(it.first);
+    }
 
     // Deprecated іn 2.4.0.
-    if (it.first == "alias._query")
-      deprecated.push_back (it.first);
+    if (it.first == "alias._query") {
+      deprecated.push_back(it.first);
+    }
 
     // Deprecated in 2.5.0.
-    if (it.first == "urgency.inherit.coefficient")
-        deprecated.push_back (it.first);
+    if (it.first == "urgency.inherit.coefficient") {
+      deprecated.push_back(it.first);
+    }
   }
 
   std::stringstream out;
@@ -123,8 +125,9 @@ std::string legacyCheckForDeprecatedVariables ()
     out << STRING_CONFIG_DEPRECATED_VAR
         << "\n";
 
-    for (auto& dep : deprecated)
+    for (auto& dep : deprecated) {
       out << "  " << dep << "\n";
+    }
 
     out << "\n";
   }
@@ -141,10 +144,11 @@ std::string legacyCheckForDeprecatedColumns ()
     if (it.first.find ("report") == 0)
     {
       std::string value = context.config.get (it.first);
-      if (value.find ("entry_time") != std::string::npos ||
-          value.find ("start_time") != std::string::npos ||
-          value.find ("end_time")   != std::string::npos)
-        deprecated.push_back (it.first);
+      if (value.find("entry_time") != std::string::npos ||
+          value.find("start_time") != std::string::npos ||
+          value.find("end_time") != std::string::npos) {
+        deprecated.push_back(it.first);
+      }
     }
   }
 
@@ -156,8 +160,9 @@ std::string legacyCheckForDeprecatedColumns ()
     out << STRING_CONFIG_DEPRECATED_COL
         << "\n";
 
-    for (auto& dep : deprecated)
-      out << "  " << dep << "=" << context.config.get (dep) << "\n";
+    for (auto& dep : deprecated) {
+      out << "  " << dep << "=" << context.config.get(dep) << "\n";
+    }
 
     out << "\n";
   }
@@ -169,8 +174,9 @@ std::string legacyCheckForDeprecatedColumns ()
 void legacyAttributeMap (std::string& name)
 {
   // TW-1274, 2.4.0
-  if (name == "modification")
+  if (name == "modification") {
     name = "modified";
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -50,13 +50,16 @@ ColumnUDAString::ColumnUDAString ()
 bool ColumnUDAString::validate (const std::string& value) const
 {
   // No restrictions.
-  if (_values.size () == 0)
+  if (_values.size() == 0) {
     return true;
+  }
 
   // Look for exact match value.
-  for (auto& i : _values)
-    if (i == value)
+  for (auto& i : _values) {
+    if (i == value) {
       return true;
+    }
+  }
 
   // Fail if not found.
   return false;
@@ -86,16 +89,17 @@ void ColumnUDAString::measure (Task& task, unsigned int& minimum, unsigned int& 
       if (task.has (_name))
       {
         auto indicator = context.config.get ("uda." + _name + ".indicator");
-        if (indicator == "")
+        if (indicator == "") {
           indicator = "U";
+        }
 
         minimum = maximum = utf8_width (indicator);
-      }
-      else
+      } else {
         minimum = maximum = 0;
+      }
+    } else {
+      throw format(STRING_COLUMN_BAD_FORMAT, _name, _style);
     }
-    else
-      throw format (STRING_COLUMN_BAD_FORMAT, _name, _style);
   }
 }
 
@@ -114,16 +118,18 @@ void ColumnUDAString::render (
       std::vector <std::string> raw;
       wrapText (raw, value, width, _hyphenate);
 
-      for (auto& i : raw)
-        renderStringLeft (lines, width, color, i);
+      for (auto& i : raw) {
+        renderStringLeft(lines, width, color, i);
+      }
     }
     else if (_style == "indicator")
     {
       if (task.has (_name))
       {
         auto indicator = context.config.get ("uda." + _name + ".indicator");
-        if (indicator == "")
+        if (indicator == "") {
           indicator = "U";
+        }
 
         renderStringRight (lines, width, color, indicator);
       }
@@ -146,13 +152,16 @@ ColumnUDANumeric::ColumnUDANumeric ()
 bool ColumnUDANumeric::validate (const std::string& value) const
 {
   // No restrictions.
-  if (_values.size () == 0)
+  if (_values.size() == 0) {
     return true;
+  }
 
   // Look for exact match value.
-  for (auto& i : _values)
-    if (i == value)
+  for (auto& i : _values) {
+    if (i == value) {
       return true;
+    }
+  }
 
   // Fail if not found.
   return false;
@@ -170,24 +179,26 @@ void ColumnUDANumeric::measure (Task& task, unsigned int& minimum, unsigned int&
     if (_style == "default")
     {
       std::string value = task.get (_name);
-      if (value != "")
-        minimum = maximum = value.length ();
+      if (value != "") {
+        minimum = maximum = value.length();
+      }
     }
     else if (_style == "indicator")
     {
       if (task.has (_name))
       {
         auto indicator = context.config.get ("uda." + _name + ".indicator");
-        if (indicator == "")
+        if (indicator == "") {
           indicator = "U";
+        }
 
         minimum = maximum = utf8_width (indicator);
-      }
-      else
+      } else {
         minimum = maximum = 0;
+      }
+    } else {
+      throw format(STRING_COLUMN_BAD_FORMAT, _name, _style);
     }
-    else
-      throw format (STRING_COLUMN_BAD_FORMAT, _name, _style);
   }
 }
 
@@ -210,8 +221,9 @@ void ColumnUDANumeric::render (
       if (task.has (_name))
       {
         auto indicator = context.config.get ("uda." + _name + ".indicator");
-        if (indicator == "")
+        if (indicator == "") {
           indicator = "U";
+        }
 
         renderStringRight (lines, width, color, indicator);
       }
@@ -234,13 +246,16 @@ ColumnUDADate::ColumnUDADate ()
 bool ColumnUDADate::validate (const std::string& value) const
 {
   // No restrictions.
-  if (_values.size () == 0)
+  if (_values.size() == 0) {
     return true;
+  }
 
   // Look for exact match value.
-  for (auto& i : _values)
-    if (i == value)
+  for (auto& i : _values) {
+    if (i == value) {
       return true;
+    }
+  }
 
   // Fail if not found.
   return false;
@@ -266,10 +281,12 @@ void ColumnUDADate::measure (Task& task, unsigned int& minimum, unsigned int& ma
         //   rc.dateformat
         ISO8601d date ((time_t) strtol (value.c_str (), NULL, 10));
         std::string format = context.config.get ("report." + _report + ".dateformat");
-        if (format == "")
-          format = context.config.get ("dateformat.report");
-        if (format == "")
-          format = context.config.get ("dateformat");
+        if (format == "") {
+          format = context.config.get("dateformat.report");
+        }
+        if (format == "") {
+          format = context.config.get("dateformat");
+        }
 
         minimum = maximum = ISO8601d::length (format);
       }
@@ -279,16 +296,17 @@ void ColumnUDADate::measure (Task& task, unsigned int& minimum, unsigned int& ma
       if (task.has (_name))
       {
         auto indicator = context.config.get ("uda." + _name + ".indicator");
-        if (indicator == "")
+        if (indicator == "") {
           indicator = "U";
+        }
 
         minimum = maximum = utf8_width (indicator);
-      }
-      else
+      } else {
         minimum = maximum = 0;
+      }
+    } else {
+      throw format(STRING_COLUMN_BAD_FORMAT, _name, _style);
     }
-    else
-      throw format (STRING_COLUMN_BAD_FORMAT, _name, _style);
   }
 }
 
@@ -313,8 +331,9 @@ void ColumnUDADate::render (
       if (format == "")
       {
         format = context.config.get ("dateformat.report");
-        if (format == "")
-          format = context.config.get ("dateformat");
+        if (format == "") {
+          format = context.config.get("dateformat");
+        }
       }
 
       renderStringLeft (lines, width, color, ISO8601d ((time_t) strtol (value.c_str (), NULL, 10)).toString (format));
@@ -324,8 +343,9 @@ void ColumnUDADate::render (
       if (task.has (_name))
       {
         auto indicator = context.config.get ("uda." + _name + ".indicator");
-        if (indicator == "")
+        if (indicator == "") {
           indicator = "U";
+        }
 
         renderStringRight (lines, width, color, indicator);
       }
@@ -348,13 +368,16 @@ ColumnUDADuration::ColumnUDADuration ()
 bool ColumnUDADuration::validate (const std::string& value) const
 {
   // No restrictions.
-  if (_values.size () == 0)
+  if (_values.size() == 0) {
     return true;
+  }
 
   // Look for exact match value.
-  for (auto& i : _values)
-    if (i == value)
+  for (auto& i : _values) {
+    if (i == value) {
       return true;
+    }
+  }
 
   // Fail if not found.
   return false;
@@ -372,24 +395,26 @@ void ColumnUDADuration::measure (Task& task, unsigned int& minimum, unsigned int
     if (_style == "default")
     {
       std::string value = task.get (_name);
-      if (value != "")
-        minimum = maximum = ISO8601p (value).format ().length ();
+      if (value != "") {
+        minimum = maximum = ISO8601p(value).format().length();
+      }
     }
     else if (_style == "indicator")
     {
       if (task.has (_name))
       {
         auto indicator = context.config.get ("uda." + _name + ".indicator");
-        if (indicator == "")
+        if (indicator == "") {
           indicator = "U";
+        }
 
         minimum = maximum = utf8_width (indicator);
-      }
-      else
+      } else {
         minimum = maximum = 0;
+      }
+    } else {
+      throw format(STRING_COLUMN_BAD_FORMAT, _name, _style);
     }
-    else
-      throw format (STRING_COLUMN_BAD_FORMAT, _name, _style);
   }
 }
 
@@ -412,8 +437,9 @@ void ColumnUDADuration::render (
       if (task.has (_name))
       {
         auto indicator = context.config.get ("uda." + _name + ".indicator");
-        if (indicator == "")
+        if (indicator == "") {
           indicator = "U";
+        }
 
         renderStringRight (lines, width, color, indicator);
       }

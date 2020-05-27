@@ -92,8 +92,9 @@ int CmdStart::execute (std::string&)
         task.setStatus (Task::pending);
       }
 
-      if (context.config.getBoolean ("journal.time"))
-        task.addAnnotation (context.config.get ("journal.time.start.annotation"));
+      if (context.config.getBoolean("journal.time")) {
+        task.addAnnotation(context.config.get("journal.time.start.annotation"));
+      }
 
       if (permission (taskDifferences (before, task) + question, filtered.size ()))
       {
@@ -101,18 +102,21 @@ int CmdStart::execute (std::string&)
         context.tdb2.modify (task);
         ++count;
         feedback_affected (STRING_CMD_START_TASK, task);
-        if (!nagged)
-          nagged = nag (task);
+        if (!nagged) {
+          nagged = nag(task);
+        }
         dependencyChainOnStart (task);
-        if (context.verbose ("project"))
-          projectChanges[task.get ("project")] = onProjectChange (task, false);
+        if (context.verbose("project")) {
+          projectChanges[task.get("project")] = onProjectChange(task, false);
+        }
       }
       else
       {
         std::cout << STRING_CMD_START_NO << "\n";
         rc = 1;
-        if (_permission_quit)
+        if (_permission_quit) {
           break;
+        }
       }
     }
     else
@@ -126,9 +130,11 @@ int CmdStart::execute (std::string&)
   }
 
   // Now list the project changes.
-  for (auto& change : projectChanges)
-    if (change.first != "")
-      context.footnote (change.second);
+  for (auto& change : projectChanges) {
+    if (change.first != "") {
+      context.footnote(change.second);
+    }
+  }
 
   feedback_affected (count == 1 ? STRING_CMD_START_1 : STRING_CMD_START_N, count);
   return rc;

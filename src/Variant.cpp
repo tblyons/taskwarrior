@@ -135,11 +135,13 @@ bool Variant::operator&& (const Variant& other) const
   Variant left (*this);
   Variant right (other);
 
-  if (left._type == type_string)
-    Lexer::dequote (left._string);
+  if (left._type == type_string) {
+    Lexer::dequote(left._string);
+  }
 
-  if (right._type == type_string)
-    Lexer::dequote (right._string);
+  if (right._type == type_string) {
+    Lexer::dequote(right._string);
+  }
 
   left.cast (type_boolean);
   right.cast (type_boolean);
@@ -153,11 +155,13 @@ bool Variant::operator|| (const Variant& other) const
   Variant left (*this);
   Variant right (other);
 
-  if (left._type == type_string)
-    Lexer::dequote (left._string);
+  if (left._type == type_string) {
+    Lexer::dequote(left._string);
+  }
 
-  if (right._type == type_string)
-    Lexer::dequote (right._string);
+  if (right._type == type_string) {
+    Lexer::dequote(right._string);
+  }
 
   left.cast (type_boolean);
   right.cast (type_boolean);
@@ -171,11 +175,13 @@ bool Variant::operator_xor (const Variant& other) const
   Variant left (*this);
   Variant right (other);
 
-  if (left._type == type_string)
-    Lexer::dequote (left._string);
+  if (left._type == type_string) {
+    Lexer::dequote(left._string);
+  }
 
-  if (right._type == type_string)
-    Lexer::dequote (right._string);
+  if (right._type == type_string) {
+    Lexer::dequote(right._string);
+  }
 
   left.cast (type_boolean);
   right.cast (type_boolean);
@@ -190,11 +196,13 @@ bool Variant::operator< (const Variant& other) const
   Variant left (*this);
   Variant right (other);
 
-  if (left._type == type_string)
-    Lexer::dequote (left._string);
+  if (left._type == type_string) {
+    Lexer::dequote(left._string);
+  }
 
-  if (right._type == type_string)
-    Lexer::dequote (right._string);
+  if (right._type == type_string) {
+    Lexer::dequote(right._string);
+  }
 
   switch (left._type)
   {
@@ -245,8 +253,9 @@ bool Variant::operator< (const Variant& other) const
 
     case type_string:
       {
-        if (left._string == right._string)
-          return false;
+      if (left._string == right._string) {
+        return false;
+      }
 
         auto order = Task::customOrder.find (left.source ());
         if (order != Task::customOrder.end ())
@@ -258,23 +267,26 @@ bool Variant::operator< (const Variant& other) const
         }
         else
         {
-          if (left.trivial () || right.trivial ())
+          if (left.trivial() || right.trivial()) {
             return false;
+          }
 
           return left._string < right._string;
         }
       }
 
     case type_date:
-      if (left.trivial () || right.trivial ())
+      if (left.trivial() || right.trivial()) {
         return false;
+      }
 
       left.cast (type_date);
       return left._date < right._date;
 
     case type_duration:
-      if (left.trivial () || right.trivial ())
+      if (left.trivial() || right.trivial()) {
         return false;
+      }
 
       left.cast (type_duration);
       return left._duration < right._duration;
@@ -290,8 +302,9 @@ bool Variant::operator< (const Variant& other) const
     case type_string:
     case type_date:
     case type_duration:
-      if (left.trivial () || right.trivial ())
+      if (left.trivial() || right.trivial()) {
         return false;
+      }
 
       right.cast (type_date);
       return left._date < right._date;
@@ -307,8 +320,9 @@ bool Variant::operator< (const Variant& other) const
     case type_string:
     case type_date:
     case type_duration:
-      if (left.trivial () || right.trivial ())
+      if (left.trivial() || right.trivial()) {
         return false;
+      }
 
       right.cast (type_duration);
       return left._duration < right._duration;
@@ -325,11 +339,13 @@ bool Variant::operator<= (const Variant& other) const
   Variant left (*this);
   Variant right (other);
 
-  if (left._type == type_string)
-    Lexer::dequote (left._string);
+  if (left._type == type_string) {
+    Lexer::dequote(left._string);
+  }
 
-  if (right._type == type_string)
-    Lexer::dequote (right._string);
+  if (right._type == type_string) {
+    Lexer::dequote(right._string);
+  }
 
   switch (left._type)
   {
@@ -380,8 +396,9 @@ bool Variant::operator<= (const Variant& other) const
 
     case type_string:
       {
-        if (left._string == right._string)
-          return true;
+      if (left._string == right._string) {
+        return true;
+      }
 
         auto order = Task::customOrder.find (left.source ());
         if (order != Task::customOrder.end ())
@@ -393,23 +410,26 @@ bool Variant::operator<= (const Variant& other) const
         }
         else
         {
-          if (left.trivial () || right.trivial ())
+          if (left.trivial() || right.trivial()) {
             return false;
+          }
 
           return left._string <= right._string;
         }
       }
 
     case type_date:
-      if (left.trivial () || right.trivial ())
+      if (left.trivial() || right.trivial()) {
         return false;
+      }
 
       left.cast (type_date);
       return left._date <= right._date;
 
     case type_duration:
-      if (left.trivial () || right.trivial ())
+      if (left.trivial() || right.trivial()) {
         return false;
+      }
 
       left.cast (type_duration);
       return left._duration <= right._duration;
@@ -425,8 +445,9 @@ bool Variant::operator<= (const Variant& other) const
     case type_string:
     case type_date:
     case type_duration:
-      if (left.trivial () || right.trivial ())
+      if (left.trivial() || right.trivial()) {
         return false;
+      }
 
       right.cast (type_date);
       return left._date <= right._date;
@@ -442,8 +463,9 @@ bool Variant::operator<= (const Variant& other) const
     case type_string:
     case type_date:
     case type_duration:
-      if (left.trivial () || right.trivial ())
+      if (left.trivial() || right.trivial()) {
         return false;
+      }
 
       right.cast (type_duration);
       return left._duration <= right._duration;
@@ -460,11 +482,13 @@ bool Variant::operator> (const Variant& other) const
   Variant left (*this);
   Variant right (other);
 
-  if (left._type == type_string)
-    Lexer::dequote (left._string);
+  if (left._type == type_string) {
+    Lexer::dequote(left._string);
+  }
 
-  if (right._type == type_string)
-    Lexer::dequote (right._string);
+  if (right._type == type_string) {
+    Lexer::dequote(right._string);
+  }
 
   switch (left._type)
   {
@@ -515,8 +539,9 @@ bool Variant::operator> (const Variant& other) const
 
     case type_string:
       {
-        if (left._string == right._string)
-          return false;
+      if (left._string == right._string) {
+        return false;
+      }
 
         auto order = Task::customOrder.find (left.source ());
         if (order != Task::customOrder.end ())
@@ -528,23 +553,26 @@ bool Variant::operator> (const Variant& other) const
         }
         else
         {
-          if (left.trivial () || right.trivial ())
+          if (left.trivial() || right.trivial()) {
             return false;
+          }
 
           return left._string > right._string;
         }
       }
 
     case type_date:
-      if (left.trivial () || right.trivial ())
+      if (left.trivial() || right.trivial()) {
         return false;
+      }
 
       left.cast (type_date);
       return left._date > right._date;
 
     case type_duration:
-      if (left.trivial () || right.trivial ())
+      if (left.trivial() || right.trivial()) {
         return false;
+      }
 
       left.cast (type_duration);
       return left._duration > right._duration;
@@ -560,8 +588,9 @@ bool Variant::operator> (const Variant& other) const
     case type_string:
     case type_date:
     case type_duration:
-      if (left.trivial () || right.trivial ())
+      if (left.trivial() || right.trivial()) {
         return false;
+      }
 
       right.cast (type_date);
       return left._date > right._date;
@@ -577,8 +606,9 @@ bool Variant::operator> (const Variant& other) const
     case type_string:
     case type_date:
     case type_duration:
-      if (left.trivial () || right.trivial ())
+      if (left.trivial() || right.trivial()) {
         return false;
+      }
 
       right.cast (type_duration);
       return left._duration > right._duration;
@@ -595,11 +625,13 @@ bool Variant::operator>= (const Variant& other) const
   Variant left (*this);
   Variant right (other);
 
-  if (left._type == type_string)
-    Lexer::dequote (left._string);
+  if (left._type == type_string) {
+    Lexer::dequote(left._string);
+  }
 
-  if (right._type == type_string)
-    Lexer::dequote (right._string);
+  if (right._type == type_string) {
+    Lexer::dequote(right._string);
+  }
 
   switch (left._type)
   {
@@ -650,8 +682,9 @@ bool Variant::operator>= (const Variant& other) const
 
     case type_string:
       {
-        if (left._string == right._string)
-          return true;
+      if (left._string == right._string) {
+        return true;
+      }
 
         auto order = Task::customOrder.find (left.source ());
         if (order != Task::customOrder.end ())
@@ -663,23 +696,26 @@ bool Variant::operator>= (const Variant& other) const
         }
         else
         {
-          if (left.trivial () || right.trivial ())
+          if (left.trivial() || right.trivial()) {
             return false;
+          }
 
           return left._string >= right._string;
         }
       }
 
     case type_date:
-      if (left.trivial () || right.trivial ())
+      if (left.trivial() || right.trivial()) {
         return false;
+      }
 
       left.cast (type_date);
       return left._date >= right._date;
 
     case type_duration:
-      if (left.trivial () || right.trivial ())
+      if (left.trivial() || right.trivial()) {
         return false;
+      }
 
       left.cast (type_duration);
       return left._duration >= right._duration;
@@ -695,8 +731,9 @@ bool Variant::operator>= (const Variant& other) const
     case type_string:
     case type_date:
     case type_duration:
-      if (left.trivial () || right.trivial ())
+      if (left.trivial() || right.trivial()) {
         return false;
+      }
 
       right.cast (type_date);
       return left._date >= right._date;
@@ -712,8 +749,9 @@ bool Variant::operator>= (const Variant& other) const
     case type_string:
     case type_date:
     case type_duration:
-      if (left.trivial () || right.trivial ())
+      if (left.trivial() || right.trivial()) {
         return false;
+      }
 
       right.cast (type_duration);
       return left._duration >= right._duration;
@@ -730,11 +768,13 @@ bool Variant::operator== (const Variant& other) const
   Variant left (*this);
   Variant right (other);
 
-  if (left._type == type_string)
-    Lexer::dequote (left._string);
+  if (left._type == type_string) {
+    Lexer::dequote(left._string);
+  }
 
-  if (right._type == type_string)
-    Lexer::dequote (right._string);
+  if (right._type == type_string) {
+    Lexer::dequote(right._string);
+  }
 
   switch (left._type)
   {
@@ -784,14 +824,16 @@ bool Variant::operator== (const Variant& other) const
       right.cast (type_string);
 
       // Status is always compared caseless.
-      if (left.source () == "status")
-        return compare (left._string, right._string, false);
+      if (left.source() == "status") {
+        return compare(left._string, right._string, false);
+      }
 
       return left._string == right._string;
 
     case type_date:
-      if (left.trivial () || right.trivial ())
+      if (left.trivial() || right.trivial()) {
         return false;
+      }
 
       left.cast (type_date);
       return left._date == right._date;
@@ -811,8 +853,9 @@ bool Variant::operator== (const Variant& other) const
     case type_string:
     case type_date:
     case type_duration:
-      if (left.trivial () || right.trivial ())
+      if (left.trivial() || right.trivial()) {
         return false;
+      }
 
       right.cast (type_date);
       return left._date == right._date;
@@ -850,11 +893,13 @@ bool Variant::operator_match (const Variant& other, const Task& task) const
   Variant left (*this);
   Variant right (other);
 
-  if (left._type == type_string)
-    Lexer::dequote (left._string);
+  if (left._type == type_string) {
+    Lexer::dequote(left._string);
+  }
 
-  if (right._type == type_string)
-    Lexer::dequote (right._string);
+  if (right._type == type_string) {
+    Lexer::dequote(right._string);
+  }
 
   left.cast (type_string);
   right.cast (type_string);
@@ -865,8 +910,9 @@ bool Variant::operator_match (const Variant& other, const Task& task) const
   if (searchUsingRegex)
   {
     RX r (pattern, searchCaseSensitive);
-    if (r.match (left._string))
+    if (r.match(left._string)) {
       return true;
+    }
 
     // If the above did not match, and the left source is "description", then
     // in the annotations.
@@ -875,9 +921,11 @@ bool Variant::operator_match (const Variant& other, const Task& task) const
       std::map <std::string, std::string> annotations;
       task.getAnnotations (annotations);
 
-      for (auto& a : annotations)
-        if (r.match (a.second))
+      for (auto& a : annotations) {
+        if (r.match(a.second)) {
           return true;
+        }
+      }
     }
   }
   else
@@ -900,8 +948,10 @@ bool Variant::operator_match (const Variant& other, const Task& task) const
       return true;
     }
 
-    else if (find (left._string, pattern, searchCaseSensitive) != std::string::npos)
+    else if (find(left._string, pattern, searchCaseSensitive) !=
+             std::string::npos) {
       return true;
+    }
 
     // If the above did not match, and the left source is "description", then
     // in the annotations.
@@ -910,9 +960,11 @@ bool Variant::operator_match (const Variant& other, const Task& task) const
       std::map <std::string, std::string> annotations;
       task.getAnnotations (annotations);
 
-      for (auto& a : annotations)
-        if (find (a.second, pattern, searchCaseSensitive) != std::string::npos)
+      for (auto& a : annotations) {
+        if (find(a.second, pattern, searchCaseSensitive) != std::string::npos) {
           return true;
+        }
+      }
     }
   }
 
@@ -936,11 +988,13 @@ bool Variant::operator_partial (const Variant& other) const
   Variant left (*this);
   Variant right (other);
 
-  if (left._type == type_string)
-    Lexer::dequote (left._string);
+  if (left._type == type_string) {
+    Lexer::dequote(left._string);
+  }
 
-  if (right._type == type_string)
-    Lexer::dequote (right._string);
+  if (right._type == type_string) {
+    Lexer::dequote(right._string);
+  }
 
   switch (left._type)
   {
@@ -1025,19 +1079,22 @@ bool Variant::operator_partial (const Variant& other) const
         right.cast (type_string);
 
         // Status is always compared caseless.
-        if (left.source () == "status")
-          return compare (left._string, right._string, false);
+        if (left.source() == "status") {
+          return compare(left._string, right._string, false);
+        }
 
         int left_len  = left._string.length ();
         int right_len = right._string.length ();
 
         if ((left_len == 0 && right_len != 0) ||
-            (left_len != 0 && right_len == 0))
+            (left_len != 0 && right_len == 0)) {
           return false;
+        }
 
         // Dodgy.
-        if (left._string.length () < right._string.length ())
+        if (left._string.length() < right._string.length()) {
           return false;
+        }
 
         return left._string.substr (0, right._string.length ()) == right._string;
       }
@@ -1045,8 +1102,9 @@ bool Variant::operator_partial (const Variant& other) const
     // Same-day comparison.
     case type_date:
       {
-        if (left.trivial () || right.trivial ())
-          return false;
+      if (left.trivial() || right.trivial()) {
+        return false;
+      }
 
         left.cast (type_date);
         ISO8601d left_date (left._date);
@@ -1065,8 +1123,9 @@ bool Variant::operator_partial (const Variant& other) const
     {
     // Same-day comparison.
     case type_string:
-      if (left.trivial () || right.trivial ())
+      if (left.trivial() || right.trivial()) {
         return false;
+      }
 
     case type_boolean:
     case type_integer:
@@ -1128,8 +1187,9 @@ bool Variant::operator! () const
 {
   Variant left (*this);
 
-  if (left._type == type_string)
-    Lexer::dequote (left._string);
+  if (left._type == type_string) {
+    Lexer::dequote(left._string);
+  }
 
   left.cast (type_boolean);
   return ! left._bool;
@@ -1277,8 +1337,9 @@ Variant& Variant::operator+= (const Variant& other)
 {
   Variant right (other);
 
-  if (right._type == type_string)
-    Lexer::dequote (right._string);
+  if (right._type == type_string) {
+    Lexer::dequote(right._string);
+  }
 
   switch (_type)
   {
@@ -1378,8 +1439,9 @@ Variant& Variant::operator*= (const Variant& other)
 {
   Variant right (other);
 
-  if (right._type == type_string)
-    Lexer::dequote (right._string);
+  if (right._type == type_string) {
+    Lexer::dequote(right._string);
+  }
 
   switch (_type)
   {
@@ -1407,8 +1469,9 @@ Variant& Variant::operator*= (const Variant& other)
         // assert (limit < 128);
         _type = type_string;
         _string = "";
-        while (limit--)
+        while (limit--) {
           _string += right._string;
+        }
       }
       break;
     case type_date:     throw std::string (STRING_VARIANT_MUL_DATE);
@@ -1441,14 +1504,19 @@ Variant& Variant::operator*= (const Variant& other)
   case type_string:
     switch (right._type)
     {
-    case type_boolean:  if (! right._bool) _string = ""; break;
+    case type_boolean:
+      if (!right._bool) {
+        _string = "";
+      }
+      break;
     case type_integer:
       {
         int limit = right._integer - 1;
         // assert (limit < 128);
         std::string fragment = _string;
-        while (limit--)
+        while (limit--) {
           _string += fragment;
+        }
       }
       break;
     case type_real:     throw std::string (STRING_VARIANT_MUL_STR_REAL);
@@ -1505,14 +1573,16 @@ Variant& Variant::operator/= (const Variant& other)
       throw std::string (STRING_VARIANT_DIV_INT_BOOL);
 
     case type_integer:
-      if (right._integer == 0)
-        throw std::string (STRING_VARIANT_DIV_ZERO);
+      if (right._integer == 0) {
+        throw std::string(STRING_VARIANT_DIV_ZERO);
+      }
       _integer /= right._integer;
       break;
 
     case type_real:
-      if (right._real == 0.0)
-        throw std::string (STRING_VARIANT_DIV_ZERO);
+      if (right._real == 0.0) {
+        throw std::string(STRING_VARIANT_DIV_ZERO);
+      }
       cast (type_real);
       _real /= right._real;
       break;
@@ -1524,8 +1594,9 @@ Variant& Variant::operator/= (const Variant& other)
       throw std::string (STRING_VARIANT_DIV_INT_DATE);
 
     case type_duration:
-      if (right._duration == 0)
-        throw std::string (STRING_VARIANT_DIV_ZERO);
+      if (right._duration == 0) {
+        throw std::string(STRING_VARIANT_DIV_ZERO);
+      }
       _type = type_duration;
       _duration = (time_t) (unsigned) (int) (_integer / right._duration);
       break;
@@ -1539,14 +1610,16 @@ Variant& Variant::operator/= (const Variant& other)
       throw std::string (STRING_VARIANT_DIV_REAL_BOOL);
 
     case type_integer:
-      if (right._integer == 0)
-        throw std::string (STRING_VARIANT_DIV_ZERO);
+      if (right._integer == 0) {
+        throw std::string(STRING_VARIANT_DIV_ZERO);
+      }
       _real /= static_cast<double>(right._integer);
       break;
 
     case type_real:
-      if (right._real == 0)
-        throw std::string (STRING_VARIANT_DIV_ZERO);
+      if (right._real == 0) {
+        throw std::string(STRING_VARIANT_DIV_ZERO);
+      }
       _real /= right._real;
       break;
 
@@ -1557,8 +1630,9 @@ Variant& Variant::operator/= (const Variant& other)
       throw std::string (STRING_VARIANT_DIV_REAL_DATE);
 
     case type_duration:
-      if (right._duration == 0)
-        throw std::string (STRING_VARIANT_DIV_ZERO);
+      if (right._duration == 0) {
+        throw std::string(STRING_VARIANT_DIV_ZERO);
+      }
       _type = type_duration;
       _duration = (time_t) (unsigned) (int) (_real / right._duration);
       break;
@@ -1579,14 +1653,16 @@ Variant& Variant::operator/= (const Variant& other)
       throw std::string (STRING_VARIANT_DIV_DUR_BOOL);
 
     case type_integer:
-      if (right._integer == 0)
-        throw std::string (STRING_VARIANT_DIV_ZERO);
+      if (right._integer == 0) {
+        throw std::string(STRING_VARIANT_DIV_ZERO);
+      }
       _duration /= right._integer;
       break;
 
     case type_real:
-      if (right._real == 0)
-        throw std::string (STRING_VARIANT_DIV_ZERO);
+      if (right._real == 0) {
+        throw std::string(STRING_VARIANT_DIV_ZERO);
+      }
       _duration = (time_t) (unsigned) (int) (static_cast<double>(_duration) / right._real);
       break;
 
@@ -1631,14 +1707,16 @@ Variant& Variant::operator%= (const Variant& other)
       throw std::string (STRING_VARIANT_MOD_INT_BOOL);
 
     case type_integer:
-      if (right._integer == 0)
-        throw std::string (STRING_VARIANT_MOD_ZERO);
+      if (right._integer == 0) {
+        throw std::string(STRING_VARIANT_MOD_ZERO);
+      }
       _integer %= right._integer;
       break;
 
     case type_real:
-      if (right._real == 0.0)
-        throw std::string (STRING_VARIANT_MOD_ZERO);
+      if (right._real == 0.0) {
+        throw std::string(STRING_VARIANT_MOD_ZERO);
+      }
       cast (type_real);
       _real = fmod (_real, right._real);
       break;
@@ -1661,14 +1739,16 @@ Variant& Variant::operator%= (const Variant& other)
       throw std::string (STRING_VARIANT_MOD_REAL_BOOL);
 
     case type_integer:
-      if (right._integer == 0)
-        throw std::string (STRING_VARIANT_MOD_ZERO);
+      if (right._integer == 0) {
+        throw std::string(STRING_VARIANT_MOD_ZERO);
+      }
       _real = fmod (_real, static_cast<double>(right._integer));
       break;
 
     case type_real:
-      if (right._real == 0)
-        throw std::string (STRING_VARIANT_MOD_ZERO);
+      if (right._real == 0) {
+        throw std::string(STRING_VARIANT_MOD_ZERO);
+      }
       _real = fmod (_real, right._real);
       break;
 
@@ -1742,12 +1822,14 @@ Variant::operator std::string () const
 ////////////////////////////////////////////////////////////////////////////////
 void Variant::sqrt ()
 {
-  if (_type == type_string)
-    Lexer::dequote (_string);
+  if (_type == type_string) {
+    Lexer::dequote(_string);
+  }
 
   cast (type_real);
-  if (_real < 0.0)
-    throw std::string (STRING_VARIANT_SQRT_NEG);
+  if (_real < 0.0) {
+    throw std::string(STRING_VARIANT_SQRT_NEG);
+  }
   _real = ::sqrt (_real);
 }
 
@@ -1755,8 +1837,9 @@ void Variant::sqrt ()
 void Variant::cast (const enum type new_type)
 {
   // Short circuit.
-  if (_type == new_type)
+  if (_type == new_type) {
     return;
+  }
 
   // From type_boolean
   switch (_type)

@@ -174,16 +174,18 @@ void Command::factory (std::map <std::string, Command*>& all)
     {
       std::string report = i.first.substr (7);
       auto columns = report.find (".columns");
-      if (columns != std::string::npos)
-        reports.push_back (report.substr (0, columns));
+      if (columns != std::string::npos) {
+        reports.push_back(report.substr(0, columns));
+      }
     }
   }
 
   for (auto &report : reports)
   {
     // Make sure a custom report does not clash with a built-in command.
-    if (all.find (report) != all.end ())
-      throw format (STRING_CMD_CONFLICT, report);
+    if (all.find(report) != all.end()) {
+      throw format(STRING_CMD_CONFLICT, report);
+    }
 
     c = new CmdCustom (
               report,
@@ -318,13 +320,14 @@ bool Command::permission (
   // Read-only commands do not need to seek permission.  Write commands are
   // granted permission automatically if the 'all' selection was made in an
   // earlier call.  Or if the 'all' option has already been made.
-  if (_read_only ||
-      _permission_all)
+  if (_read_only || _permission_all) {
     return true;
+  }
 
   // If the 'quit' selection has already been made.
-  if (_permission_quit)
+  if (_permission_quit) {
     return false;
+  }
 
   // What remains are write commands that have not yet selected 'all' or 'quit'.
   // Describe the task.
@@ -334,9 +337,9 @@ bool Command::permission (
   // Quantity 1 modifications have optional confirmation, and only (y/n).
   if (quantity == 1)
   {
-    if (!_needs_confirm ||
-        !confirmation)
+    if (!_needs_confirm || !confirmation) {
       return true;
+    }
 
     bool answer = confirm (question);
     return answer;
@@ -344,11 +347,13 @@ bool Command::permission (
 
   // 1 < Quantity < bulk modifications have optional confirmation, in the (y/n/a/q)
   // style. Bulk = 0 denotes infinite bulk.
-  if ((bulk == 0 || quantity < bulk) && (!_needs_confirm || !confirmation))
+  if ((bulk == 0 || quantity < bulk) && (!_needs_confirm || !confirmation)) {
     return true;
+  }
 
-  if (context.verbose ("blank") && !_first_iteration)
+  if (context.verbose("blank") && !_first_iteration) {
     std::cout << "\n";
+  }
   int answer = confirm4 (question);
   _first_iteration = false;
   switch (answer)

@@ -74,34 +74,35 @@ unsigned int utf8_codepoint (const std::string& input)
 //   - returns the next character
 unsigned int utf8_next_char (const std::string& input, std::string::size_type& i)
 {
-  if (input[i] == '\0')
+  if (input[i] == '\0') {
     return 0;
+  }
 
   // How many bytes in the sequence?
   int length = utf8_sequence (input[i]);
   i += length;
 
   // 0xxxxxxx -> 0xxxxxxx
-  if (length == 1)
+  if (length == 1) {
     return input[i - 1];
+  }
 
   // 110yyyyy 10xxxxxx -> 00000yyy yyxxxxxx
-  if (length == 2)
-    return ((input[i - 2] & 0x1F) << 6) +
-            (input[i - 1] & 0x3F);
+  if (length == 2) {
+    return ((input[i - 2] & 0x1F) << 6) + (input[i - 1] & 0x3F);
+  }
 
   // 1110zzzz 10yyyyyy 10xxxxxx -> zzzzyyyy yyxxxxxx
-  if (length == 3)
-    return ((input[i - 3] & 0xF)  << 12) +
-           ((input[i - 2] & 0x3F) <<  6) +
-            (input[i - 1] & 0x3F);
+  if (length == 3) {
+    return ((input[i - 3] & 0xF) << 12) + ((input[i - 2] & 0x3F) << 6) +
+           (input[i - 1] & 0x3F);
+  }
 
   // 11110www 10zzzzzz 10yyyyyy 10xxxxxx -> 000wwwzz zzzzyyyy yyxxxxxx
-  if (length == 4)
-    return ((input[i - 4] & 0x7)  << 18) +
-           ((input[i - 3] & 0x3F) << 12) +
-           ((input[i - 2] & 0x3F) <<  6) +
-            (input[i - 1] & 0x3F);
+  if (length == 4) {
+    return ((input[i - 4] & 0x7) << 18) + ((input[i - 3] & 0x3F) << 12) +
+           ((input[i - 2] & 0x3F) << 6) + (input[i - 1] & 0x3F);
+  }
 
   // Default: pretend as though it's a single character.
   // TODO Or should this throw?
@@ -150,14 +151,17 @@ std::string utf8_character (unsigned int codepoint)
 ////////////////////////////////////////////////////////////////////////////////
 int utf8_sequence (unsigned int character)
 {
-  if ((character & 0xE0) == 0xC0)
+  if ((character & 0xE0) == 0xC0) {
     return 2;
+  }
 
-  if ((character & 0xF0) == 0xE0)
+  if ((character & 0xF0) == 0xE0) {
     return 3;
+  }
 
-  if ((character & 0xF8) == 0xF0)
+  if ((character & 0xF8) == 0xF0) {
     return 4;
+  }
 
   return 1;
 }
@@ -175,8 +179,9 @@ unsigned int utf8_length (const std::string& str)
   for (int i = 0; i < byteLength; i++)
   {
     // Extract the first two bits and check whether they are 10
-    if ((data[i] & 0xC0) == 0x80)
+    if ((data[i] & 0xC0) == 0x80) {
       charLength--;
+    }
   }
 
   return charLength;
@@ -196,8 +201,9 @@ unsigned int utf8_width (const std::string& str)
     // Since control characters are not displayed in reports, this is a valid
     // choice.
     int l = mk_wcwidth (c);
-    if (l != -1)
+    if (l != -1) {
       length += l;
+    }
   }
 
   return length;
@@ -217,8 +223,9 @@ unsigned int utf8_text_length (const std::string& str)
   {
     if (in_color)
     {
-      if (data[i] == 'm')
+      if (data[i] == 'm') {
         in_color = false;
+      }
 
       --charLength;
     }
@@ -232,8 +239,9 @@ unsigned int utf8_text_length (const std::string& str)
       else
       {
         // Extract the first two bits and check whether they are 10
-        if ((data[i] & 0xC0) == 0x80)
+        if ((data[i] & 0xC0) == 0x80) {
           --charLength;
+        }
       }
     }
   }
@@ -253,15 +261,16 @@ unsigned int utf8_text_width (const std::string& str)
   {
     if (in_color)
     {
-      if (c == 'm')
+      if (c == 'm') {
         in_color = false;
+      }
     }  
     else if (c == 033)
     {
       in_color = true;
+    } else {
+      length += mk_wcwidth(c);
     }
-    else
-      length += mk_wcwidth (c);
   }
 
   return length;
@@ -275,20 +284,22 @@ const std::string utf8_substr (
 {
   // Find the starting index.
   std::string::size_type index_start = 0;
-  for (unsigned int i = 0; i < start; i++)
-    utf8_next_char (input, index_start);
+  for (unsigned int i = 0; i < start; i++) {
+    utf8_next_char(input, index_start);
+  }
 
   std::string result;
   if (length)
   {
     std::string::size_type index_end = index_start;
-    for (unsigned int i = 0; i < length; i++)
-      utf8_next_char (input, index_end);
+    for (unsigned int i = 0; i < length; i++) {
+      utf8_next_char(input, index_end);
+    }
 
     result = input.substr (index_start, index_end - index_start);
+  } else {
+    result = input.substr(index_start);
   }
-  else
-    result = input.substr (index_start);
 
   return result;
 }

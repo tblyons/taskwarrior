@@ -78,18 +78,20 @@ int CmdCustom::execute (std::string& output)
   std::vector <std::string> labels;
   split (labels, reportLabels, ',');
 
-  if (columns.size () != labels.size () && labels.size () != 0)
-    throw format (STRING_CMD_CUSTOM_MISMATCH, _keyword);
+  if (columns.size() != labels.size() && labels.size() != 0) {
+    throw format(STRING_CMD_CUSTOM_MISMATCH, _keyword);
+  }
 
   std::vector <std::string> sortOrder;
   split (sortOrder, reportSort, ',');
-  if (sortOrder.size () != 0 &&
-      sortOrder[0] != "none")
-    validateSortColumns (sortOrder);
+  if (sortOrder.size() != 0 && sortOrder[0] != "none") {
+    validateSortColumns(sortOrder);
+  }
 
   // Add the report filter to any existing filter.
-  if (reportFilter != "")
-    context.cli2.addFilter (reportFilter);
+  if (reportFilter != "") {
+    context.cli2.addFilter(reportFilter);
+  }
 
   // Apply filter.
   handleRecurrence ();
@@ -105,21 +107,26 @@ int CmdCustom::execute (std::string& output)
     // context.cli2._uuid_ranges, in the order in which they appear. This
     // equates to no sorting, just a specified order.
     sortOrder.clear ();
-    for (auto& i : context.cli2._uuid_list)
-      for (unsigned int t = 0; t < filtered.size (); ++t)
-        if (filtered[t].get ("uuid") == i)
-          sequence.push_back (t);
+    for (auto& i : context.cli2._uuid_list) {
+      for (unsigned int t = 0; t < filtered.size(); ++t) {
+        if (filtered[t].get("uuid") == i) {
+          sequence.push_back(t);
+        }
+      }
+    }
   }
   else
   {
     // There is a sortOrder, so sorting will take place, which means the initial
     // order of sequence is ascending.
-    for (unsigned int i = 0; i < filtered.size (); ++i)
-      sequence.push_back (i);
+    for (unsigned int i = 0; i < filtered.size(); ++i) {
+      sequence.push_back(i);
+    }
 
     // Sort the tasks.
-    if (sortOrder.size ())
-      sort_tasks (filtered, sequence, reportSort);
+    if (sortOrder.size()) {
+      sort_tasks(filtered, sequence, reportSort);
+    }
   }
 
   // Configure the view.
@@ -157,8 +164,9 @@ int CmdCustom::execute (std::string& output)
     bool breakIndicator;
     context.decomposeSortField (so, name, ascending, breakIndicator);
 
-    if (breakIndicator)
-      view.addBreak (name);
+    if (breakIndicator) {
+      view.addBreak(name);
+    }
 
     sortColumns.push_back (name);
   }
@@ -167,8 +175,9 @@ int CmdCustom::execute (std::string& output)
   for (unsigned int i = 0; i < columns.size (); ++i)
   {
     Column* c = Column::factory (columns[i], _keyword);
-    if (i < labels.size ())
-      c->setLabel (labels[i]);
+    if (i < labels.size()) {
+      c->setLabel(labels[i]);
+    }
 
     bool sort = std::find (sortColumns.begin (), sortColumns.end (), c->name ()) != sortColumns.end ()
                   ? true
@@ -181,10 +190,11 @@ int CmdCustom::execute (std::string& output)
   int table_header = 0;
   if (context.verbose ("label"))
   {
-    if (context.color () && context.config.getBoolean ("fontunderline"))
+    if (context.color() && context.config.getBoolean("fontunderline")) {
       table_header = 1;  // Underlining doesn't use extra line.
-    else
-      table_header = 2;  // Dashes use an extra line.
+    } else {
+      table_header = 2; // Dashes use an extra line.
+    }
   }
 
   // Report output can be limited by rows or lines.
@@ -193,12 +203,12 @@ int CmdCustom::execute (std::string& output)
   context.getLimits (maxrows, maxlines);
 
   // Adjust for fluff in the output.
-  if (maxlines)
-    maxlines -= table_header
-              + (context.verbose ("blank") ? 1 : 0)
-              + (context.verbose ("footnote") ? context.footnotes.size () : 0)
-              + (context.verbose ("affected") ? 1 : 0)
-              + context.config.getInteger ("reserved.lines");  // For prompt, etc.
+  if (maxlines) {
+    maxlines -= table_header + (context.verbose("blank") ? 1 : 0) +
+                (context.verbose("footnote") ? context.footnotes.size() : 0) +
+                (context.verbose("affected") ? 1 : 0) +
+                context.config.getInteger("reserved.lines"); // For prompt, etc.
+  }
 
   // Render.
   std::stringstream out;
@@ -218,12 +228,14 @@ int CmdCustom::execute (std::string& output)
                 ? STRING_CMD_CUSTOM_COUNT
                 : format (STRING_CMD_CUSTOM_COUNTN, filtered.size ()));
 
-      if (maxrows && maxrows < (int)filtered.size ())
-        out << ", " << format (STRING_CMD_CUSTOM_SHOWN, maxrows);
+      if (maxrows && maxrows < (int)filtered.size()) {
+        out << ", " << format(STRING_CMD_CUSTOM_SHOWN, maxrows);
+      }
 
-      if (maxlines && maxlines < (int)filtered.size ())
+      if (maxlines && maxlines < (int)filtered.size()) {
         out << ", "
-            << format (STRING_CMD_CUSTOM_TRUNCATED, maxlines - table_header);
+            << format(STRING_CMD_CUSTOM_TRUNCATED, maxlines - table_header);
+      }
 
       out << "\n";
     }
@@ -242,15 +254,17 @@ int CmdCustom::execute (std::string& output)
 ////////////////////////////////////////////////////////////////////////////////
 void CmdCustom::validateReportColumns (std::vector <std::string>& columns)
 {
-  for (auto& col : columns)
-    legacyColumnMap (col);
+  for (auto& col : columns) {
+    legacyColumnMap(col);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void CmdCustom::validateSortColumns (std::vector <std::string>& columns)
 {
-  for (auto& col : columns)
-    legacySortColumnMap (col);
+  for (auto& col : columns) {
+    legacySortColumnMap(col);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

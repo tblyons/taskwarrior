@@ -89,8 +89,9 @@ int CmdAppend::execute (std::string&)
       context.tdb2.modify (task);
       ++count;
       feedback_affected (STRING_CMD_APPEND_TASK, task);
-      if (context.verbose ("project"))
-        projectChanges[task.get ("project")] = onProjectChange (task, false);
+      if (context.verbose("project")) {
+        projectChanges[task.get("project")] = onProjectChange(task, false);
+      }
 
       // Append to siblings.
       if (task.has ("parent"))
@@ -120,15 +121,18 @@ int CmdAppend::execute (std::string&)
     {
       std::cout << STRING_CMD_APPEND_NO << "\n";
       rc = 1;
-      if (_permission_quit)
+      if (_permission_quit) {
         break;
+      }
     }
   }
 
   // Now list the project changes.
-  for (auto& change : projectChanges)
-    if (change.first != "")
-      context.footnote (change.second);
+  for (auto& change : projectChanges) {
+    if (change.first != "") {
+      context.footnote(change.second);
+    }
+  }
 
   feedback_affected (count == 1 ? STRING_CMD_APPEND_1 : STRING_CMD_APPEND_N, count);
   return rc;

@@ -63,8 +63,9 @@ int CmdReports::execute (std::string& output)
     {
       std::string report = i.first.substr (7);
       auto columns = report.find (".columns");
-      if (columns != std::string::npos)
-        reports.push_back (report.substr (0, columns));
+      if (columns != std::string::npos) {
+        reports.push_back(report.substr(0, columns));
+      }
     }
   }
 

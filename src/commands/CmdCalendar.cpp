@@ -68,8 +68,9 @@ int CmdCalendar::execute (std::string& output)
   int monthsThatFit = width / 26;
 
   int monthsPerLine = monthsThatFit;
-  if (preferredMonthsPerLine != 0 && preferredMonthsPerLine < monthsThatFit)
+  if (preferredMonthsPerLine != 0 && preferredMonthsPerLine < monthsThatFit) {
     monthsPerLine = preferredMonthsPerLine;
+  }
 
   // Load the pending tasks.
   handleRecurrence ();
@@ -98,8 +99,9 @@ int CmdCalendar::execute (std::string& output)
 
   // Set up a vector of months, for autoComplete.
   std::vector <std::string> monthNames;
-  for (int i = 1; i <= 12; ++i)
-    monthNames.push_back (Lexer::lowerCase (ISO8601d::monthName (i)));
+  for (int i = 1; i <= 12; ++i) {
+    monthNames.push_back(Lexer::lowerCase(ISO8601d::monthName(i)));
+  }
 
   // For autoComplete results.
   std::vector <std::string> matches;
@@ -114,39 +116,45 @@ int CmdCalendar::execute (std::string& output)
   for (auto& arg : words)
   {
     // Some version of "calendar".
-    if (autoComplete (Lexer::lowerCase (arg), commandNames, matches, context.config.getInteger ("abbreviation.minimum")) == 1)
+    if (autoComplete(Lexer::lowerCase(arg), commandNames, matches,
+                     context.config.getInteger("abbreviation.minimum")) == 1) {
       continue;
 
     // "due".
-    else if (autoComplete (Lexer::lowerCase (arg), keywordNames, matches, context.config.getInteger ("abbreviation.minimum")) == 1)
+    } else if (autoComplete(
+                   Lexer::lowerCase(arg), keywordNames, matches,
+                   context.config.getInteger("abbreviation.minimum")) == 1) {
       getpendingdate = true;
 
     // "y".
-    else if (Lexer::lowerCase (arg) == "y")
+    } else if (Lexer::lowerCase(arg) == "y") {
       argWholeYear = true;
 
     // YYYY.
-    else if (Lexer::isAllDigits (arg) && arg.length () == 4)
+    } else if (Lexer::isAllDigits(arg) && arg.length() == 4) {
       argYear = strtol (arg.c_str (), NULL, 10);
 
     // MM.
-    else if (Lexer::isAllDigits (arg) && arg.length () <= 2)
-    {
+    } else if (Lexer::isAllDigits(arg) && arg.length() <= 2) {
       argMonth = strtol (arg.c_str (), NULL, 10);
-      if (argMonth < 1 || argMonth > 12)
-        throw format (STRING_CMD_CAL_BAD_MONTH, arg);
+      if (argMonth < 1 || argMonth > 12) {
+        throw format(STRING_CMD_CAL_BAD_MONTH, arg);
+      }
     }
 
     // "January" etc.
-    else if (autoComplete (Lexer::lowerCase (arg), monthNames, matches, context.config.getInteger ("abbreviation.minimum")) == 1)
-    {
+    else if (autoComplete(Lexer::lowerCase(arg), monthNames, matches,
+                          context.config.getInteger("abbreviation.minimum")) ==
+             1) {
       argMonth = ISO8601d::monthOfYear (matches[0]);
-      if (argMonth == -1)
-        throw format (STRING_CMD_CAL_BAD_MONTH, arg);
+      if (argMonth == -1) {
+        throw format(STRING_CMD_CAL_BAD_MONTH, arg);
+      }
     }
 
-    else
-      throw format (STRING_CMD_CAL_BAD_ARG, arg);
+    else {
+      throw format(STRING_CMD_CAL_BAD_ARG, arg);
+    }
   }
 
   // Supported combinations:
@@ -161,16 +169,19 @@ int CmdCalendar::execute (std::string& output)
   //   cal MM YYYY     monthsPerLine    arg    arg           false
   //   cal MM YYYY y              12    arg    arg           false
 
-  if (argWholeYear || (argYear && !argMonth && !argWholeYear))
+  if (argWholeYear || (argYear && !argMonth && !argWholeYear)) {
     monthsToDisplay = 12;
+  }
 
-  if (!argMonth && argYear)
+  if (!argMonth && argYear) {
     mFrom = 1;
-  else if (argMonth && argYear)
+  } else if (argMonth && argYear) {
     mFrom = argMonth;
+  }
 
-  if (argYear)
+  if (argYear) {
     yFrom = argYear;
+  }
 
   // Now begin the data subset and rendering.
   int countDueDates = 0;
@@ -187,7 +198,9 @@ int CmdCalendar::execute (std::string& output)
         {
           ++countDueDates;
           ISO8601d d (task.get ("due"));
-          if (d < oldest) oldest = d;
+          if (d < oldest) {
+            oldest = d;
+          }
         }
       }
     }
@@ -291,24 +304,16 @@ int CmdCalendar::execute (std::string& output)
   Color color_weeknumber (context.config.get ("color.calendar.weeknumber"));
   Color color_label      (context.config.get ("color.label"));
 
-  if (context.color () && context.config.getBoolean ("calendar.legend"))
-    out << "Legend: "
-        << color_today.colorize ("today")
-        << ", "
-        << color_due.colorize ("due")
-        << ", "
-        << color_duetoday.colorize ("due-today")
-        << ", "
-        << color_overdue.colorize ("overdue")
-        << ", "
-        << color_weekend.colorize ("weekend")
-        << ", "
-        << color_holiday.colorize ("holiday")
-        << ", "
-        << color_weeknumber.colorize ("weeknumber")
-        << "."
-        << optionalBlankLine ()
+  if (context.color() && context.config.getBoolean("calendar.legend")) {
+    out << "Legend: " << color_today.colorize("today") << ", "
+        << color_due.colorize("due") << ", "
+        << color_duetoday.colorize("due-today") << ", "
+        << color_overdue.colorize("overdue") << ", "
+        << color_weekend.colorize("weekend") << ", "
+        << color_holiday.colorize("holiday") << ", "
+        << color_weeknumber.colorize("weeknumber") << "." << optionalBlankLine()
         << "\n";
+  }
 
   if (context.config.get ("calendar.details") == "full" || context.config.get ("calendar.holidays") == "full")
   {
@@ -338,8 +343,9 @@ int CmdCalendar::execute (std::string& output)
     {
       // Assert that 'report' is a valid report.
       std::string report = context.config.get ("calendar.details.report");
-      if (context.commands.find (report) == context.commands.end ())
-        throw std::string (STRING_ERROR_DETAILS);
+      if (context.commands.find(report) == context.commands.end()) {
+        throw std::string(STRING_ERROR_DETAILS);
+      }
 
       // TODO Fix this:  cal      --> task
       //                 calendar --> taskendar
@@ -347,8 +353,9 @@ int CmdCalendar::execute (std::string& output)
       // If the executable was "cal" or equivalent, replace it with "task".
       std::string executable = context.cli2._original_args[0].attribute ("raw");
       auto cal = executable.find ("cal");
-      if (cal != std::string::npos)
-        executable = executable.substr (0, cal) + PACKAGE;
+      if (cal != std::string::npos) {
+        executable = executable.substr(0, cal) + PACKAGE;
+      }
 
       std::vector <std::string> args;
       args.push_back ("rc:" + context.rc_file._data);
@@ -374,25 +381,30 @@ int CmdCalendar::execute (std::string& output)
       holTable.colorHeader (color_label);
 
       std::map <time_t, std::vector<std::string>> hm; // we need to store multiple holidays per day
-      for (auto& it : context.config)
-        if (it.first.substr (0, 8) == "holiday.")
+      for (auto& it : context.config) {
+        if (it.first.substr(0, 8) == "holiday.") {
           if (it.first.substr (it.first.size () - 4) == "name")
           {
             std::string holName = context.config.get ("holiday." + it.first.substr (8, it.first.size () - 13) + ".name");
             std::string holDate = context.config.get ("holiday." + it.first.substr (8, it.first.size () - 13) + ".date");
             ISO8601d hDate (holDate.c_str (), context.config.get ("dateformat.holiday"));
 
-            if (date_after < hDate && hDate < date_before)
+            if (date_after < hDate && hDate < date_before) {
               hm[hDate.toEpoch()].push_back(holName);
+            }
           }
+        }
+      }
 
       std::string format = context.config.get ("report." +
                                                context.config.get ("calendar.details.report") +
                                                ".dateformat");
-      if (format == "")
-        format = context.config.get ("dateformat.report");
-      if (format == "")
-        format = context.config.get ("dateformat");
+      if (format == "") {
+        format = context.config.get("dateformat.report");
+      }
+      if (format == "") {
+        format = context.config.get("dateformat");
+      }
 
       for (auto& hm_it : hm)
       {
@@ -427,8 +439,9 @@ std::string CmdCalendar::renderMonths (
 {
   // What day of the week does the user consider the first?
   int weekStart = ISO8601d::dayOfWeek (context.config.get ("weekstart"));
-  if (weekStart != 0 && weekStart != 1)
-    throw std::string (STRING_CMD_CAL_SUN_MON);
+  if (weekStart != 0 && weekStart != 1) {
+    throw std::string(STRING_CMD_CAL_SUN_MON);
+  }
 
   // Build table for the number of months to be displayed.
   Color label (context.config.get ("color.label"));
@@ -505,8 +518,9 @@ std::string CmdCalendar::renderMonths (
   for (int mpl = 0; mpl < monthsPerLine ; mpl++)
   {
     // Reset row counter for subsequent months
-    if (mpl != 0)
+    if (mpl != 0) {
       row = 0;
+    }
 
     // Loop through days in month and add to table.
     for (int d = 1; d <= daysInMonth[mpl]; ++d)
@@ -515,16 +529,18 @@ std::string CmdCalendar::renderMonths (
       int dow = temp.dayOfWeek ();
       int woy = temp.weekOfYear (weekStart);
 
-      if (context.config.getBoolean ("displayweeknumber"))
-        view.set (row, (8 * mpl), woy, color_weeknumber);
+      if (context.config.getBoolean("displayweeknumber")) {
+        view.set(row, (8 * mpl), woy, color_weeknumber);
+      }
 
       // Calculate column id.
       int thisCol = dow +                       // 0 = Sunday
                     (weekStart == 1 ? 0 : 1) +  // Offset for weekStart
                     (8 * mpl);                  // Columns in 1 month
 
-      if (thisCol == (8 * mpl))
+      if (thisCol == (8 * mpl)) {
         thisCol += 7;
+      }
 
       view.set (row, thisCol, d);
 
@@ -533,30 +549,33 @@ std::string CmdCalendar::renderMonths (
         Color cellColor;
 
         // colorize weekends
-        if (dow == 0 || dow == 6)
-          cellColor.blend (color_weekend);
+        if (dow == 0 || dow == 6) {
+          cellColor.blend(color_weekend);
+        }
 
         // colorize holidays
         if (context.config.get ("calendar.holidays") != "none")
         {
-          for (auto& hol : context.config)
-            if (hol.first.substr (0, 8) == "holiday.")
+          for (auto& hol : context.config) {
+            if (hol.first.substr(0, 8) == "holiday.") {
               if (hol.first.substr (hol.first.size () - 4) == "date")
               {
                 std::string value = hol.second;
                 ISO8601d holDate (value.c_str (), context.config.get ("dateformat.holiday"));
-                if (holDate.day   () == d           &&
-                    holDate.month () == months[mpl] &&
-                    holDate.year  () == years[mpl])
-                  cellColor.blend (color_holiday);
+                if (holDate.day() == d && holDate.month() == months[mpl] &&
+                    holDate.year() == years[mpl]) {
+                  cellColor.blend(color_holiday);
+                }
               }
+            }
+          }
         }
 
         // colorize today
-        if (today.day   () == d                &&
-            today.month () == months.at (mpl)  &&
-            today.year  () == years.at  (mpl))
-          cellColor.blend (color_today);
+        if (today.day() == d && today.month() == months.at(mpl) &&
+            today.year() == years.at(mpl)) {
+          cellColor.blend(color_today);
+        }
 
         // colorize due tasks
         if (context.config.get ("calendar.details") != "none")
@@ -604,10 +623,12 @@ std::string CmdCalendar::renderMonths (
 
       // Check for end of week, and...
       int eow = 6;
-      if (weekStart == 1)
+      if (weekStart == 1) {
         eow = 0;
-      if (dow == eow && d < daysInMonth[mpl])
+      }
+      if (dow == eow && d < daysInMonth[mpl]) {
         row++;
+      }
     }
   }
 

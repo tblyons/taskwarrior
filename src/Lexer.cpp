@@ -58,12 +58,14 @@ Lexer::~Lexer ()
 bool Lexer::token (std::string& token, Lexer::Type& type)
 {
   // Eat white space.
-  while (isWhitespace (_text[_cursor]))
-    utf8_next_char (_text, _cursor);
+  while (isWhitespace(_text[_cursor])) {
+    utf8_next_char(_text, _cursor);
+  }
 
   // Terminate at EOS.
-  if (isEOS ())
+  if (isEOS()) {
     return false;
+  }
 
   // The sequence is specific, and must follow these rules:
   //   - date < duration < uuid < identifier
@@ -75,25 +77,16 @@ bool Lexer::token (std::string& token, Lexer::Type& type)
   //   - path < substitution < pattern
   //   - set < number
   //   - word last
-  if (isString       (token, type, "'\"") ||
-      isDate         (token, type)        ||
-      isDuration     (token, type)        ||
-      isURL          (token, type)        ||
-      isPair         (token, type)        ||
-      isUUID         (token, type, true)  ||
-      isSet          (token, type)        ||
-      isDOM          (token, type)        ||
-      isHexNumber    (token, type)        ||
-      isNumber       (token, type)        ||
-      isSeparator    (token, type)        ||
-      isTag          (token, type)        ||
-      isPath         (token, type)        ||
-      isSubstitution (token, type)        ||
-      isPattern      (token, type)        ||
-      isOperator     (token, type)        ||
-      isIdentifier   (token, type)        ||
-      isWord         (token, type))
+  if (isString(token, type, "'\"") || isDate(token, type) ||
+      isDuration(token, type) || isURL(token, type) || isPair(token, type) ||
+      isUUID(token, type, true) || isSet(token, type) || isDOM(token, type) ||
+      isHexNumber(token, type) || isNumber(token, type) ||
+      isSeparator(token, type) || isTag(token, type) || isPath(token, type) ||
+      isSubstitution(token, type) || isPattern(token, type) ||
+      isOperator(token, type) || isIdentifier(token, type) ||
+      isWord(token, type)) {
     return true;
+  }
 
   return false;
 }
@@ -106,8 +99,9 @@ std::vector <std::string> Lexer::split (const std::string& text)
   std::string token;
   Lexer::Type ignored;
   Lexer l (text);
-  while (l.token (token, ignored))
-    all.push_back (token);
+  while (l.token(token, ignored)) {
+    all.push_back(token);
+  }
 
   return all;
 }
@@ -271,15 +265,25 @@ bool Lexer::isTripleCharOperator (int c0, int c1, int c2, int c3)
 bool Lexer::isBoundary (int left, int right)
 {
   // EOS
-  if (right == '\0')                                 return true;
+  if (right == '\0') {
+    return true;
+  }
 
   // XOR
-  if (isAlpha (left)       != isAlpha (right))       return true;
-  if (isDigit (left)       != isDigit (right))       return true;
-  if (isWhitespace (left)  != isWhitespace (right))  return true;
+  if (isAlpha(left) != isAlpha(right)) {
+    return true;
+  }
+  if (isDigit(left) != isDigit(right)) {
+    return true;
+  }
+  if (isWhitespace(left) != isWhitespace(right)) {
+    return true;
+  }
 
   // OR
-  if (isPunctuation (left) || isPunctuation (right)) return true;
+  if (isPunctuation(left) || isPunctuation(right)) {
+    return true;
+  }
 
   return false;
 }
@@ -288,14 +292,14 @@ bool Lexer::isBoundary (int left, int right)
 bool Lexer::isHardBoundary (int left, int right)
 {
   // EOS
-  if (right == '\0')                                               return true;
+  if (right == '\0') {
+    return true;
+  }
 
   // FILTER operators that don't need to be surrounded by whitespace.
-  if (left == '(' ||
-      left == ')' ||
-      right == '(' ||
-      right == ')')
+  if (left == '(' || left == ')' || right == '(' || right == ')') {
     return true;
+  }
 
   return false;
 }
@@ -322,8 +326,9 @@ void Lexer::dequote (std::string& input, const std::string& quotes)
   if (quotes.find (quote) != std::string::npos)
   {
     size_t len = input.length ();
-    if (quote == input[len - 1])
-      input = input.substr (1, len - 2);
+    if (quote == input[len - 1]) {
+      input = input.substr(1, len - 2);
+    }
   }
 }
 
@@ -332,8 +337,9 @@ void Lexer::dequote (std::string& input, const std::string& quotes)
 // escapes, to get them past the shell.
 bool Lexer::wasQuoted (const std::string& input)
 {
-  if (input.find_first_of (" \t()<>&~") != std::string::npos)
+  if (input.find_first_of(" \t()<>&~") != std::string::npos) {
     return true;
+  }
 
   return false;
 }
@@ -351,9 +357,13 @@ bool Lexer::isEOS () const
 //          'f'/'F' -> 15
 int Lexer::hexToInt (int c)
 {
-       if (c >= '0' && c <= '9') return (c - '0');
-  else if (c >= 'a' && c <= 'f') return (c - 'a' + 10);
-  else                           return (c - 'A' + 10);
+  if (c >= '0' && c <= '9') {
+    return (c - '0');
+  } else if (c >= 'a' && c <= 'f') {
+    return (c - 'a' + 10);
+  } else {
+    return (c - 'A' + 10);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -383,10 +393,10 @@ std::string::size_type Lexer::commonLength (
 {
   std::string::size_type l = 0;
   std::string::size_type r = 0;
-  while (left[l] == right[r]        &&
-         utf8_next_char (left,  l)  &&
-         utf8_next_char (right, r))
+  while (left[l] == right[r] && utf8_next_char(left, l) &&
+         utf8_next_char(right, r)) {
     ;
+  }
 
   return l;
 }
@@ -405,10 +415,10 @@ std::string::size_type Lexer::commonLength (
   const std::string& right,
   std::string::size_type r)
 {
-  while (left[l] == right[r]        &&
-         utf8_next_char (left,  l)  &&
-         utf8_next_char (right, r))
+  while (left[l] == right[r] && utf8_next_char(left, l) &&
+         utf8_next_char(right, r)) {
     ;
+  }
 
   return l;
 }
@@ -423,11 +433,13 @@ std::string Lexer::commify (const std::string& data)
   int i;
   for (int i = 0; i < (int) data.length (); ++i)
   {
-    if (Lexer::isDigit (data[i]))
+    if (Lexer::isDigit(data[i])) {
       end = i;
+    }
 
-    if (data[i] == '.')
+    if (data[i] == '.') {
       decimalPoint = i;
+    }
   }
 
   std::string result;
@@ -435,8 +447,9 @@ std::string Lexer::commify (const std::string& data)
   {
     // In reverse order, transfer all digits up to, and including the decimal
     // point.
-    for (i = (int) data.length () - 1; i >= decimalPoint; --i)
+    for (i = (int)data.length() - 1; i >= decimalPoint; --i) {
       result += data[i];
+    }
 
     int consecutiveDigits = 0;
     for (; i >= 0; --i)
@@ -450,17 +463,18 @@ std::string Lexer::commify (const std::string& data)
           result += ',';
           consecutiveDigits = 0;
         }
-      }
-      else
+      } else {
         result += data[i];
+      }
     }
   }
   else
   {
     // In reverse order, transfer all digits up to, but not including the last
     // digit.
-    for (i = (int) data.length () - 1; i > end; --i)
+    for (i = (int)data.length() - 1; i > end; --i) {
       result += data[i];
+    }
 
     int consecutiveDigits = 0;
     for (; i >= 0; --i)
@@ -474,16 +488,17 @@ std::string Lexer::commify (const std::string& data)
           result += ',';
           consecutiveDigits = 0;
         }
-      }
-      else
+      } else {
         result += data[i];
+      }
     }
   }
 
   // reverse result into data.
   std::string done;
-  for (int i = (int) result.length () - 1; i >= 0; --i)
+  for (int i = (int)result.length() - 1; i >= 0; --i) {
     done += result[i];
+  }
 
   return done;
 }
@@ -501,8 +516,9 @@ std::string Lexer::ucFirst (const std::string& input)
 {
   std::string output = input;
 
-  if (output.length () > 0)
-    output[0] = toupper (output[0]);
+  if (output.length() > 0) {
+    output[0] = toupper(output[0]);
+  }
 
   return output;
 }
@@ -620,11 +636,12 @@ bool Lexer::isUUID (std::string& token, Lexer::Type& type, bool endBoundary)
   {
     if (uuid_pattern[i] == 'x')
     {
-      if (! isHexDigit (_text[marker + i]))
+      if (!isHexDigit(_text[marker + i])) {
         break;
-    }
-    else if (uuid_pattern[i] != _text[marker + i])
+      }
+    } else if (uuid_pattern[i] != _text[marker + i]) {
       break;
+    }
   }
 
   if (i >= uuid_min_length              &&
@@ -655,8 +672,9 @@ bool Lexer::isHexNumber (std::string& token, Lexer::Type& type)
   {
     marker += 2;
 
-    while (isHexDigit (_text[marker]))
+    while (isHexDigit(_text[marker])) {
       ++marker;
+    }
 
     if (marker - _cursor > 2)
     {
@@ -683,8 +701,9 @@ bool Lexer::isNumber (std::string& token, Lexer::Type& type)
   if (isDigit (_text[marker]))
   {
     ++marker;
-    while (isDigit (_text[marker]))
-      utf8_next_char (_text, marker);
+    while (isDigit(_text[marker])) {
+      utf8_next_char(_text, marker);
+    }
 
     if (_text[marker] == '.')
     {
@@ -692,8 +711,9 @@ bool Lexer::isNumber (std::string& token, Lexer::Type& type)
       if (isDigit (_text[marker]))
       {
         ++marker;
-        while (isDigit (_text[marker]))
-          utf8_next_char (_text, marker);
+        while (isDigit(_text[marker])) {
+          utf8_next_char(_text, marker);
+        }
       }
     }
 
@@ -702,15 +722,16 @@ bool Lexer::isNumber (std::string& token, Lexer::Type& type)
     {
       ++marker;
 
-      if (_text[marker] == '+' ||
-          _text[marker] == '-')
+      if (_text[marker] == '+' || _text[marker] == '-') {
         ++marker;
+      }
 
       if (isDigit (_text[marker]))
       {
         ++marker;
-        while (isDigit (_text[marker]))
-          utf8_next_char (_text, marker);
+        while (isDigit(_text[marker])) {
+          utf8_next_char(_text, marker);
+        }
 
         if (_text[marker] == '.')
         {
@@ -718,8 +739,9 @@ bool Lexer::isNumber (std::string& token, Lexer::Type& type)
           if (isDigit (_text[marker]))
           {
             ++marker;
-            while (isDigit (_text[marker]))
-              utf8_next_char (_text, marker);
+            while (isDigit(_text[marker])) {
+              utf8_next_char(_text, marker);
+            }
           }
         }
       }
@@ -727,10 +749,10 @@ bool Lexer::isNumber (std::string& token, Lexer::Type& type)
 
     // Lookahread: !<isWhitespace> | !<isSingleCharOperator>
     // If there is an immediately consecutive character, that is not an operator, fail.
-    if (_eos > marker &&
-        ! isWhitespace (_text[marker]) &&
-        ! isSingleCharOperator (_text[marker]))
+    if (_eos > marker && !isWhitespace(_text[marker]) &&
+        !isSingleCharOperator(_text[marker])) {
       return false;
+    }
 
     token = _text.substr (_cursor, marker - _cursor);
     type = Lexer::Type::number;
@@ -751,8 +773,9 @@ bool Lexer::isInteger (std::string& token, Lexer::Type& type)
   if (isDigit (_text[marker]))
   {
     ++marker;
-    while (isDigit (_text[marker]))
-      utf8_next_char (_text, marker);
+    while (isDigit(_text[marker])) {
+      utf8_next_char(_text, marker);
+    }
 
     token = _text.substr (_cursor, marker - _cursor);
     type = Lexer::Type::number;
@@ -795,8 +818,9 @@ bool Lexer::isURL (std::string& token, Lexer::Type& type)
       (_text[marker + 3] == 'p' || _text[marker + 3] == 'P'))
   {
     marker += 4;
-    if (_text[marker + 0] == 's' || _text[marker + 0] == 'S')
+    if (_text[marker + 0] == 's' || _text[marker + 0] == 'S') {
       ++marker;
+    }
 
     if (_text[marker + 0] == ':' &&
         _text[marker + 1] == '/' &&
@@ -804,9 +828,9 @@ bool Lexer::isURL (std::string& token, Lexer::Type& type)
     {
       marker += 3;
 
-      while (marker < _eos &&
-             ! isWhitespace (_text[marker]))
-        utf8_next_char (_text, marker);
+      while (marker < _eos && !isWhitespace(_text[marker])) {
+        utf8_next_char(_text, marker);
+      }
 
       token = _text.substr (_cursor, marker - _cursor);
       type = Lexer::Type::url;
@@ -832,12 +856,11 @@ bool Lexer::isPair (std::string& token, Lexer::Type& type)
   {
     // Look for a valid separator.
     std::string separator = _text.substr (_cursor, 2);
-    if (separator == "::" || separator == ":=")
+    if (separator == "::" || separator == ":=") {
       _cursor += 2;
-    else if (separator[0] == ':' || separator[0] == '=')
+    } else if (separator[0] == ':' || separator[0] == '=') {
       _cursor++;
-    else
-    {
+    } else {
       _cursor = marker;
       return false;
     }
@@ -880,10 +903,9 @@ bool Lexer::isSet (std::string& token, Lexer::Type& type)
       ++count;
       if (isLiteral ("-", false, false))
       {
-        if (isInteger (dummyToken, dummyType))
+        if (isInteger(dummyToken, dummyType)) {
           ++count;
-        else
-        {
+        } else {
           _cursor = marker;
           return false;
         }
@@ -922,11 +944,10 @@ bool Lexer::isTag (std::string& token, Lexer::Type& type)
   std::size_t marker = _cursor;
 
   // Lookbehind: Assert ^ or preceded by whitespace, (, or ).
-  if (marker > 0                         &&
-      ! isWhitespace (_text[marker - 1]) &&
-      _text[marker - 1] != '('           &&
-      _text[marker - 1] != ')')
+  if (marker > 0 && !isWhitespace(_text[marker - 1]) &&
+      _text[marker - 1] != '(' && _text[marker - 1] != ')') {
     return false;
+  }
 
   if (_text[marker] == '+' ||
       _text[marker] == '-')
@@ -937,8 +958,9 @@ bool Lexer::isTag (std::string& token, Lexer::Type& type)
     {
       utf8_next_char (_text, marker);
 
-      while (isIdentifierNext (_text[marker]))
-          utf8_next_char (_text, marker);
+      while (isIdentifierNext(_text[marker])) {
+        utf8_next_char(_text, marker);
+      }
 
       token = _text.substr (_cursor, marker - _cursor);
       type = Lexer::Type::tag;
@@ -964,22 +986,22 @@ bool Lexer::isPath (std::string& token, Lexer::Type& type)
     {
       ++marker;
       ++slashCount;
-    }
-    else
+    } else {
       break;
+    }
 
     if (_text[marker] &&
         ! isWhitespace (_text[marker]) &&
         _text[marker] != '/')
     {
       utf8_next_char (_text, marker);
-      while (_text[marker] &&
-             ! isWhitespace (_text[marker]) &&
-             _text[marker] != '/')
-        utf8_next_char (_text, marker);
-    }
-    else
+      while (_text[marker] && !isWhitespace(_text[marker]) &&
+             _text[marker] != '/') {
+        utf8_next_char(_text, marker);
+      }
+    } else {
       break;
+    }
   }
 
   if (marker > _cursor &&
@@ -1008,8 +1030,9 @@ bool Lexer::isSubstitution (std::string& token, Lexer::Type& type)
 
     if (readWord (_text, "/", _cursor, word))
     {
-      if (_text[_cursor] == 'g')
+      if (_text[_cursor] == 'g') {
         ++_cursor;
+      }
 
       // Lookahread: <EOS> | <isWhitespace>
       if (_text[_cursor] == '\0' ||
@@ -1174,9 +1197,9 @@ bool Lexer::isDOM (std::string& token, Lexer::Type& type)
     token = _text.substr (marker, _cursor - marker);
     type = Lexer::Type::dom;
     return true;
-  }
-  else
+  } else {
     _cursor = marker;
+  }
 
   if (isOneOf ({"context.program",
                 "context.args",
@@ -1216,9 +1239,9 @@ bool Lexer::isDOM (std::string& token, Lexer::Type& type)
     token = _text.substr (marker, _cursor - marker);
     type = Lexer::Type::dom;
     return true;
-  }
-  else
+  } else {
     _cursor = checkpoint;
+  }
 
   // [prefix]attribute
   if (isOneOf (attributes, false, true))
@@ -1307,8 +1330,9 @@ bool Lexer::isIdentifier (std::string& token, Lexer::Type& type)
   {
     utf8_next_char (_text, marker);
 
-    while (isIdentifierNext (_text[marker]))
-      utf8_next_char (_text, marker);
+    while (isIdentifierNext(_text[marker])) {
+      utf8_next_char(_text, marker);
+    }
 
     token = _text.substr (_cursor, marker - _cursor);
     type = Lexer::Type::identifier;
@@ -1326,10 +1350,10 @@ bool Lexer::isWord (std::string& token, Lexer::Type& type)
 {
   std::size_t marker = _cursor;
 
-  while (_text[marker]                  &&
-         ! isWhitespace (_text[marker]) &&
-         ! isSingleCharOperator (_text[marker]))
-    utf8_next_char (_text, marker);
+  while (_text[marker] && !isWhitespace(_text[marker]) &&
+         !isSingleCharOperator(_text[marker])) {
+    utf8_next_char(_text, marker);
+  }
 
   if (marker > _cursor)
   {
@@ -1351,21 +1375,21 @@ bool Lexer::isLiteral (
   auto common = commonLength (literal, 0, _text, _cursor);
 
   // Without abbreviations, common must equal literal length.
-  if (! allowAbbreviations &&
-      common < literal.length ())
+  if (!allowAbbreviations && common < literal.length()) {
     return false;
+  }
 
   // Abbreviations must meet the minimum size.
-  if (allowAbbreviations &&
-      common < minimumMatchLength)
+  if (allowAbbreviations && common < minimumMatchLength) {
     return false;
+  }
 
   // End boundary conditions must be met.
-  if (endBoundary &&
-      _text[_cursor + common] &&
-      ! Lexer::isWhitespace (_text[_cursor + common]) &&
-      ! Lexer::isSingleCharOperator (_text[_cursor + common]))
+  if (endBoundary && _text[_cursor + common] &&
+      !Lexer::isWhitespace(_text[_cursor + common]) &&
+      !Lexer::isSingleCharOperator(_text[_cursor + common])) {
     return false;
+  }
 
   _cursor += common;
   return true;
@@ -1377,9 +1401,11 @@ bool Lexer::isOneOf (
   bool allowAbbreviations,
   bool endBoundary)
 {
-  for (auto& item : options)
-    if (isLiteral (item, allowAbbreviations, endBoundary))
+  for (auto& item : options) {
+    if (isLiteral(item, allowAbbreviations, endBoundary)) {
       return true;
+    }
+  }
 
   return false;
 }
@@ -1390,9 +1416,11 @@ bool Lexer::isOneOf (
   bool allowAbbreviations,
   bool endBoundary)
 {
-  for (auto& item : options)
-    if (isLiteral (item.first, allowAbbreviations, endBoundary))
+  for (auto& item : options) {
+    if (isLiteral(item.first, allowAbbreviations, endBoundary)) {
       return true;
+    }
+  }
 
   return false;
 }
@@ -1401,25 +1429,46 @@ bool Lexer::isOneOf (
 // Static
 std::string Lexer::typeToString (Lexer::Type type)
 {
-       if (type == Lexer::Type::string)       return std::string ("\033[38;5;7m\033[48;5;3m")    + "string"       + "\033[0m";
-  else if (type == Lexer::Type::uuid)         return std::string ("\033[38;5;7m\033[48;5;10m")   + "uuid"         + "\033[0m";
-  else if (type == Lexer::Type::hex)          return std::string ("\033[38;5;7m\033[48;5;14m")   + "hex"          + "\033[0m";
-  else if (type == Lexer::Type::number)       return std::string ("\033[38;5;7m\033[48;5;6m")    + "number"       + "\033[0m";
-  else if (type == Lexer::Type::separator)    return std::string ("\033[38;5;7m\033[48;5;4m")    + "separator"    + "\033[0m";
-  else if (type == Lexer::Type::url)          return std::string ("\033[38;5;7m\033[48;5;4m")    + "url"          + "\033[0m";
-  else if (type == Lexer::Type::pair)         return std::string ("\033[38;5;7m\033[48;5;1m")    + "pair"         + "\033[0m";
-  else if (type == Lexer::Type::set)          return std::string ("\033[38;5;15m\033[48;5;208m") + "set"          + "\033[0m";
-  else if (type == Lexer::Type::tag)          return std::string ("\033[37;45m")                 + "tag"          + "\033[0m";
-  else if (type == Lexer::Type::path)         return std::string ("\033[37;102m")                + "path"         + "\033[0m";
-  else if (type == Lexer::Type::substitution) return std::string ("\033[37;102m")                + "substitution" + "\033[0m";
-  else if (type == Lexer::Type::pattern)      return std::string ("\033[37;42m")                 + "pattern"      + "\033[0m";
-  else if (type == Lexer::Type::op)           return std::string ("\033[38;5;7m\033[48;5;203m")  + "op"           + "\033[0m";
-  else if (type == Lexer::Type::dom)          return std::string ("\033[38;5;15m\033[48;5;244m") + "dom"          + "\033[0m";
-  else if (type == Lexer::Type::identifier)   return std::string ("\033[38;5;15m\033[48;5;244m") + "identifier"   + "\033[0m";
-  else if (type == Lexer::Type::word)         return std::string ("\033[38;5;15m\033[48;5;236m") + "word"         + "\033[0m";
-  else if (type == Lexer::Type::date)         return std::string ("\033[38;5;15m\033[48;5;34m")  + "date"         + "\033[0m";
-  else if (type == Lexer::Type::duration)     return std::string ("\033[38;5;15m\033[48;5;34m")  + "duration"     + "\033[0m";
-  else                                        return std::string ("\033[37;41m")                 + "unknown"      + "\033[0m";
+  if (type == Lexer::Type::string) {
+    return std::string("\033[38;5;7m\033[48;5;3m") + "string" + "\033[0m";
+  } else if (type == Lexer::Type::uuid) {
+    return std::string("\033[38;5;7m\033[48;5;10m") + "uuid" + "\033[0m";
+  } else if (type == Lexer::Type::hex) {
+    return std::string("\033[38;5;7m\033[48;5;14m") + "hex" + "\033[0m";
+  } else if (type == Lexer::Type::number) {
+    return std::string("\033[38;5;7m\033[48;5;6m") + "number" + "\033[0m";
+  } else if (type == Lexer::Type::separator) {
+    return std::string("\033[38;5;7m\033[48;5;4m") + "separator" + "\033[0m";
+  } else if (type == Lexer::Type::url) {
+    return std::string("\033[38;5;7m\033[48;5;4m") + "url" + "\033[0m";
+  } else if (type == Lexer::Type::pair) {
+    return std::string("\033[38;5;7m\033[48;5;1m") + "pair" + "\033[0m";
+  } else if (type == Lexer::Type::set) {
+    return std::string("\033[38;5;15m\033[48;5;208m") + "set" + "\033[0m";
+  } else if (type == Lexer::Type::tag) {
+    return std::string("\033[37;45m") + "tag" + "\033[0m";
+  } else if (type == Lexer::Type::path) {
+    return std::string("\033[37;102m") + "path" + "\033[0m";
+  } else if (type == Lexer::Type::substitution) {
+    return std::string("\033[37;102m") + "substitution" + "\033[0m";
+  } else if (type == Lexer::Type::pattern) {
+    return std::string("\033[37;42m") + "pattern" + "\033[0m";
+  } else if (type == Lexer::Type::op) {
+    return std::string("\033[38;5;7m\033[48;5;203m") + "op" + "\033[0m";
+  } else if (type == Lexer::Type::dom) {
+    return std::string("\033[38;5;15m\033[48;5;244m") + "dom" + "\033[0m";
+  } else if (type == Lexer::Type::identifier) {
+    return std::string("\033[38;5;15m\033[48;5;244m") + "identifier" +
+           "\033[0m";
+  } else if (type == Lexer::Type::word) {
+    return std::string("\033[38;5;15m\033[48;5;236m") + "word" + "\033[0m";
+  } else if (type == Lexer::Type::date) {
+    return std::string("\033[38;5;15m\033[48;5;34m") + "date" + "\033[0m";
+  } else if (type == Lexer::Type::duration) {
+    return std::string("\033[38;5;15m\033[48;5;34m") + "duration" + "\033[0m";
+  } else {
+    return std::string("\033[37;41m") + "unknown" + "\033[0m";
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1436,8 +1485,9 @@ bool Lexer::isDOM (const std::string& text)
   int count = 0;
   std::string token;
   Lexer::Type type;
-  while (lex.token (token, type))
+  while (lex.token(token, type)) {
     ++count;
+  }
 
   return count == 1 &&
          type == Lexer::Type::dom;
@@ -1457,8 +1507,9 @@ bool Lexer::readWord (
   std::string::size_type& cursor,
   std::string& word)
 {
-  if (quotes.find (text[cursor]) == std::string::npos)
+  if (quotes.find(text[cursor]) == std::string::npos) {
     return false;
+  }
 
   std::string::size_type eos = text.length ();
   int quote = text[cursor++];
@@ -1517,8 +1568,9 @@ bool Lexer::readWord (
     }
 
     // Ordinary character.
-    else
-      word += utf8_character (utf8_next_char (text, cursor));
+    else {
+      word += utf8_character(utf8_next_char(text, cursor));
+    }
   }
 
   // Verify termination.
@@ -1551,22 +1603,20 @@ bool Lexer::readWord (
   while ((c = text[cursor]))  // Handles EOS.
   {
     // Unquoted word ends on white space.
-    if (Lexer::isWhitespace (c))
+    if (Lexer::isWhitespace(c)) {
       break;
+    }
 
     // Parentheses mostly.
-    if (prev && Lexer::isHardBoundary (prev, c))
+    if (prev && Lexer::isHardBoundary(prev, c)) {
       break;
 
     // Unicode U+XXXX or \uXXXX codepoint.
-    else if (eos - cursor >= 6 &&
-             ((text[cursor + 0] == 'U'  && text[cursor + 1] == '+') ||
-              (text[cursor + 0] == '\\' && text[cursor + 1] == 'u')) &&
-             isHexDigit (text[cursor + 2]) &&
-             isHexDigit (text[cursor + 3]) &&
-             isHexDigit (text[cursor + 4]) &&
-             isHexDigit (text[cursor + 5]))
-    {
+    } else if (eos - cursor >= 6 &&
+               ((text[cursor + 0] == 'U' && text[cursor + 1] == '+') ||
+                (text[cursor + 0] == '\\' && text[cursor + 1] == 'u')) &&
+               isHexDigit(text[cursor + 2]) && isHexDigit(text[cursor + 3]) &&
+               isHexDigit(text[cursor + 4]) && isHexDigit(text[cursor + 5])) {
       word += utf8_character (
                 hexToInt (
                   text[cursor + 2],
@@ -1577,8 +1627,7 @@ bool Lexer::readWord (
     }
 
     // An escaped thing.
-    else if (c == '\\')
-    {
+    else if (c == '\\') {
       c = text[++cursor];
 
       switch (c)
@@ -1601,8 +1650,9 @@ bool Lexer::readWord (
     }
 
     // Ordinary character.
-    else
-      word += utf8_character (utf8_next_char (text, cursor));
+    else {
+      word += utf8_character(utf8_next_char(text, cursor));
+    }
 
     prev = c;
   }
@@ -1682,8 +1732,9 @@ bool Lexer::decomposePair (
     value     = text.substr (sep_end);
 
     // An empty name is an error.
-    if (name.length ())
+    if (name.length()) {
       return true;
+    }
   }
 
   return false;

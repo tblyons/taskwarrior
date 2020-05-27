@@ -56,8 +56,9 @@ ViewText::ViewText ()
 ////////////////////////////////////////////////////////////////////////////////
 ViewText::~ViewText ()
 {
-  for (auto& col : _columns)
+  for (auto& col : _columns) {
     delete col;
+  }
 
   _columns.clear ();
 }
@@ -75,9 +76,9 @@ void ViewText::set (int row, int col, const std::string& value, Color color)
 {
   _data[row][col] = value;
 
-  if (color.nontrivial () &&
-      context.color ())
+  if (color.nontrivial() && context.color()) {
     _color[row][col] = color;
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -86,17 +87,17 @@ void ViewText::set (int row, int col, int value, Color color)
   std::string string_value = format (value);
   _data[row][col] = string_value;
 
-  if (color.nontrivial () &&
-      context.color ())
+  if (color.nontrivial() && context.color()) {
     _color[row][col] = color;
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ViewText::set (int row, int col, Color color)
 {
-  if (color.nontrivial () &&
-      context.color ())
+  if (color.nontrivial() && context.color()) {
     _color[row][col] = color;
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -120,13 +121,18 @@ std::string ViewText::render ()
       unsigned int ideal = 0;
       _columns[col]->measure (_data[row][col], min, ideal);
 
-      if (min   > global_min)   global_min   = min;
-      if (ideal > global_ideal) global_ideal = ideal;
+      if (min > global_min) {
+        global_min = min;
+      }
+      if (ideal > global_ideal) {
+        global_ideal = ideal;
+      }
 
       // If a fixed-width column was just measured, there is no point repeating
       // the measurement for all tasks.
-      if (_columns[col]->is_fixed_width ())
+      if (_columns[col]->is_fixed_width()) {
         break;
+      }
     }
 
     minimal.push_back (global_min);
@@ -135,13 +141,15 @@ std::string ViewText::render ()
 
   // Sum the minimal widths.
   int sum_minimal = 0;
-  for (auto& c : minimal)
+  for (auto& c : minimal) {
     sum_minimal += c;
+  }
 
   // Sum the ideal widths.
   int sum_ideal = 0;
-  for (auto& c : ideal)
+  for (auto& c : ideal) {
     sum_ideal += c;
+  }
 
   // Calculate final column widths.
   int overage = _width
@@ -150,12 +158,11 @@ std::string ViewText::render ()
               - ((_columns.size () - 1) * _intra_padding);
 
   std::vector <int> widths;
-  if (sum_ideal <= overage)
+  if (sum_ideal <= overage) {
     widths = ideal;
-  else if (sum_minimal > overage || overage < 0)
+  } else if (sum_minimal > overage || overage < 0) {
     widths = minimal;
-  else if (overage > 0)
-  {
+  } else if (overage > 0) {
     widths = minimal;
     overage -= sum_minimal;
 
@@ -181,8 +188,9 @@ std::string ViewText::render ()
     headers.push_back (std::vector <std::string> ());
     _columns[c]->renderHeader (headers[c], widths[c], _header);
 
-    if (headers[c].size () > max_lines)
-      max_lines = headers[c].size ();
+    if (headers[c].size() > max_lines) {
+      max_lines = headers[c].size();
+    }
   }
 
   // Output string.
@@ -205,13 +213,15 @@ std::string ViewText::render ()
 
     for (unsigned int c = 0; c < _columns.size (); ++c)
     {
-      if (c)
+      if (c) {
         out += intra;
+      }
 
-      if (headers[c].size () < max_lines - i)
+      if (headers[c].size() < max_lines - i) {
         out += _header.colorize (std::string (widths[c], ' '));
-      else
+      } else {
         out += headers[c][i];
+      }
     }
 
     out += extra;
@@ -221,8 +231,9 @@ std::string ViewText::render ()
     out += "\n";
 
     // Stop if the line limit is exceeded.
-    if (++_lines >= _truncate_lines && _truncate_lines != 0)
+    if (++_lines >= _truncate_lines && _truncate_lines != 0) {
       return out;
+    }
   }
 
   // Compose, render columns, in sequence.
@@ -252,13 +263,17 @@ std::string ViewText::render ()
       cells.push_back (std::vector <std::string> ());
       _columns[col]->render (cells[col], _data[row][col], widths[col], cell_color);
 
-      if (cells[col].size () > max_lines)
-        max_lines = cells[col].size ();
+      if (cells[col].size() > max_lines) {
+        max_lines = cells[col].size();
+      }
 
-      if (obfuscate)
-        if (_columns[col]->type () == "string")
-          for (unsigned int line = 0; line < cells[col].size (); ++line)
-            cells[col][line] = obfuscateText (cells[col][line]);
+      if (obfuscate) {
+        if (_columns[col]->type() == "string") {
+          for (unsigned int line = 0; line < cells[col].size(); ++line) {
+            cells[col][line] = obfuscateText(cells[col][line]);
+          }
+        }
+      }
     }
 
     for (unsigned int i = 0; i < max_lines; ++i)
@@ -269,25 +284,25 @@ std::string ViewText::render ()
       {
         if (col)
         {
-          if (row_color.nontrivial ())
+          if (row_color.nontrivial()) {
             out += row_color.colorize (intra);
-          else
+          } else {
             out += (odd ? intra_odd : intra_even);
+          }
         }
 
-        if (i < cells[col].size ())
+        if (i < cells[col].size()) {
           out += cells[col][i];
-        else
-        {
+        } else {
           if (context.color ())
           {
             cell_color = row_color;
             cell_color.blend (_color[row][col]);
 
             out += cell_color.colorize (std::string (widths[col], ' '));
+          } else {
+            out += std::string(widths[col], ' ');
           }
-          else
-            out += std::string (widths[col], ' ');
         }
       }
 
@@ -298,15 +313,17 @@ std::string ViewText::render ()
       out += "\n";
 
       // Stop if the line limit is exceeded.
-      if (++_lines >= _truncate_lines && _truncate_lines != 0)
+      if (++_lines >= _truncate_lines && _truncate_lines != 0) {
         return out;
+      }
     }
 
     cells.clear ();
 
     // Stop if the row limit is exceeded.
-    if (++_rows >= _truncate_rows && _truncate_rows != 0)
+    if (++_rows >= _truncate_rows && _truncate_rows != 0) {
       return out;
+    }
   }
 
   return out;

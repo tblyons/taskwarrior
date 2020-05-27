@@ -42,9 +42,9 @@ void ColumnEntry::setStyle (const std::string& value)
 {
   _style = value;
 
-  if (_style == "age" &&
-      _label == STRING_COLUMN_LABEL_ADDED)
+  if (_style == "age" && _label == STRING_COLUMN_LABEL_ADDED) {
     _label = STRING_COLUMN_LABEL_AGE;
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

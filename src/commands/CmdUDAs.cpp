@@ -67,8 +67,9 @@ int CmdUDAs::execute (std::string& output)
         name.first.find (".type") != std::string::npos)
     {
       auto period = name.first.find ('.', 4);
-      if (period != std::string::npos)
-        udas.push_back (name.first.substr (4, period - 4));
+      if (period != std::string::npos) {
+        udas.push_back(name.first.substr(4, period - 4));
+      }
     }
   }
 
@@ -104,14 +105,17 @@ int CmdUDAs::execute (std::string& output)
       std::string label  = context.config.get ("uda." + uda + ".label");
       std::string values = context.config.get ("uda." + uda + ".values");
       std::string defval = context.config.get ("uda." + uda + ".default");
-      if (label == "")
+      if (label == "") {
         label = uda;
+      }
 
       // Count UDA usage by UDA.
       int count = 0;
-      for (auto& i : filtered)
-        if (i.has (uda))
+      for (auto& i : filtered) {
+        if (i.has(uda)) {
           ++count;
+        }
+      }
 
       int row = view.addRow ();
       view.set (row, 0, uda);
@@ -140,10 +144,12 @@ int CmdUDAs::execute (std::string& output)
   std::map <std::string, int> orphans;
   for (auto& i : filtered)
   {
-    for (auto& att : i.data)
-      if (att.first.substr (0, 11) != "annotation_" &&
-          context.columns.find (att.first) == context.columns.end ())
+    for (auto& att : i.data) {
+      if (att.first.substr(0, 11) != "annotation_" &&
+          context.columns.find(att.first) == context.columns.end()) {
         orphans[att.first]++;
+      }
+    }
   }
 
   if (orphans.size ())
@@ -206,8 +212,9 @@ int CmdCompletionUDAs::execute (std::string& output)
         name.first.find (".type") != std::string::npos)
     {
       auto period = name.first.find ('.', 4);
-      if (period != std::string::npos)
-        udas.push_back (name.first.substr (4, period - 4));
+      if (period != std::string::npos) {
+        udas.push_back(name.first.substr(4, period - 4));
+      }
     }
   }
 

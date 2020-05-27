@@ -59,9 +59,9 @@ TF2::TF2 ()
 ////////////////////////////////////////////////////////////////////////////////
 TF2::~TF2 ()
 {
-  if (_dirty && TDB2::debug_mode)
-    std::cout << format (STRING_TDB2_DIRTY_EXIT, std::string (_file))
-              << "\n";
+  if (_dirty && TDB2::debug_mode) {
+    std::cout << format(STRING_TDB2_DIRTY_EXIT, std::string(_file)) << "\n";
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -71,15 +71,17 @@ void TF2::target (const std::string& f)
 
   // A missing file is not considered unwritable.
   _read_only = false;
-  if (_file.exists () && ! _file.writable ())
+  if (_file.exists() && !_file.writable()) {
     _read_only = true;
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 const std::vector <Task>& TF2::get_tasks ()
 {
-  if (! _loaded_tasks)
-    load_tasks ();
+  if (!_loaded_tasks) {
+    load_tasks();
+  }
 
   return _tasks;
 }
@@ -87,8 +89,9 @@ const std::vector <Task>& TF2::get_tasks ()
 ////////////////////////////////////////////////////////////////////////////////
 const std::vector <std::string>& TF2::get_lines ()
 {
-  if (! _loaded_lines)
-    load_lines ();
+  if (!_loaded_lines) {
+    load_lines();
+  }
 
   return _lines;
 }
@@ -97,8 +100,9 @@ const std::vector <std::string>& TF2::get_lines ()
 // Locate task by id.
 bool TF2::get (int id, Task& task)
 {
-  if (! _loaded_tasks)
-    load_tasks ();
+  if (!_loaded_tasks) {
+    load_tasks();
+  }
 
   // This is an optimization.  Since the 'id' is based on the line number of
   // pending.data file, the task in question cannot appear earlier than line
@@ -120,8 +124,9 @@ bool TF2::get (int id, Task& task)
 // Locate task by uuid, which may be a partial UUID.
 bool TF2::get (const std::string& uuid, Task& task)
 {
-  if (! _loaded_tasks)
-    load_tasks ();
+  if (!_loaded_tasks) {
+    load_tasks();
+  }
 
   if (_tasks_map.size () > 0 && uuid.size () == 36)
   {
@@ -152,12 +157,15 @@ bool TF2::get (const std::string& uuid, Task& task)
 ////////////////////////////////////////////////////////////////////////////////
 bool TF2::has (const std::string& uuid)
 {
-  if (! _loaded_tasks)
-    load_tasks ();
+  if (!_loaded_tasks) {
+    load_tasks();
+  }
 
-  for (auto& i : _tasks)
-    if (i.get ("uuid") == uuid)
+  for (auto& i : _tasks) {
+    if (i.get("uuid") == uuid) {
       return true;
+    }
+  }
 
   return false;
 }
@@ -169,8 +177,9 @@ void TF2::add_task (Task& task)
   _added_tasks.push_back (task);     // For commit/synch
 
   // For faster lookup
-  if (context.cli2.getCommand () == "import")
-    _tasks_map.insert (std::pair<std::string, Task> (task.get("uuid"), task));
+  if (context.cli2.getCommand() == "import") {
+    _tasks_map.insert(std::pair<std::string, Task>(task.get("uuid"), task));
+  }
 
   Task::status status = task.getStatus ();
   if (task.id == 0 &&
@@ -253,13 +262,15 @@ void TF2::commit ()
     {
       if (_file.open ())
       {
-        if (context.config.getBoolean ("locking"))
-          _file.lock ();
+        if (context.config.getBoolean("locking")) {
+          _file.lock();
+        }
 
         // Write out all the added tasks.
         _file.append (std::string(""));  // Seek to end of file
-        for (auto& task : _added_tasks)
-          _file.write_raw (task.composeF4 () + "\n");
+        for (auto& task : _added_tasks) {
+          _file.write_raw(task.composeF4() + "\n");
+        }
 
         _added_tasks.clear ();
 
@@ -275,16 +286,18 @@ void TF2::commit ()
     {
       if (_file.open ())
       {
-        if (context.config.getBoolean ("locking"))
-          _file.lock ();
+        if (context.config.getBoolean("locking")) {
+          _file.lock();
+        }
 
         // Truncate the file and rewrite.
         _file.truncate ();
 
         // Only write out _tasks, because any deltas have already been applied.
         _file.append (std::string(""));  // Seek to end of file
-        for (auto& task : _tasks)
-          _file.write_raw (task.composeF4 () + "\n");
+        for (auto& task : _tasks) {
+          _file.write_raw(task.composeF4() + "\n");
+        }
 
         // Write out all the added lines.
         _file.append (_added_lines);
@@ -308,9 +321,10 @@ Task TF2::load_task (const std::string& line)
   {
     Task::status status = task.getStatus ();
     // Completed / deleted tasks in pending.data get an ID if GC is off.
-    if (! context.run_gc ||
-        (status != Task::completed && status != Task::deleted))
-      task.id = context.tdb2.next_id ();
+    if (!context.run_gc ||
+        (status != Task::completed && status != Task::deleted)) {
+      task.id = context.tdb2.next_id();
+    }
   }
 
   // Maintain mapping for ease of link/dependency resolution.
@@ -349,8 +363,9 @@ void TF2::load_gc (Task& task)
       // checks in TDB2::gc(), so we need to signal it here.
       context.tdb2.pending._dirty = true;
 
-      if (context.verbose ("unwait"))
-        context.footnote (format (STRING_TDB2_UNWAIT, task.get ("description")));
+      if (context.verbose("unwait")) {
+        context.footnote(format(STRING_TDB2_UNWAIT, task.get("description")));
+      }
     }
 
     context.tdb2.pending._tasks.push_back (task);
@@ -371,8 +386,9 @@ void TF2::load_tasks (bool from_gc /* = false */)
     load_lines ();
 
     // Apply previously added lines.
-    for (auto& line : _added_lines)
-      _lines.push_back (line);
+    for (auto& line : _added_lines) {
+      _lines.push_back(line);
+    }
   }
 
   // Reduce unnecessary allocations/copies.
@@ -387,18 +403,21 @@ void TF2::load_tasks (bool from_gc /* = false */)
       ++line_number;
       auto task = load_task (line);
 
-      if (from_gc)
+      if (from_gc) {
         load_gc (task);
-      else
-        _tasks.push_back (task);
+      } else {
+        _tasks.push_back(task);
+      }
 
-      if (context.cli2.getCommand () == "import")  // For faster lookup only
-        _tasks_map.insert (std::pair<std::string, Task> (task.get("uuid"), task));
+      if (context.cli2.getCommand() == "import") { // For faster lookup only
+        _tasks_map.insert(std::pair<std::string, Task>(task.get("uuid"), task));
+      }
     }
 
     // TDB2::gc() calls this after loading both pending and completed
-    if (_auto_dep_scan && !from_gc)
-      dependency_scan ();
+    if (_auto_dep_scan && !from_gc) {
+      dependency_scan();
+    }
 
     _loaded_tasks = true;
   }
@@ -416,8 +435,9 @@ void TF2::load_lines ()
 {
   if (_file.open ())
   {
-    if (context.config.getBoolean ("locking"))
-      _file.lock ();
+    if (context.config.getBoolean("locking")) {
+      _file.lock();
+    }
 
     _file.read (_lines);
     _file.close ();
@@ -433,13 +453,15 @@ std::string TF2::uuid (int id)
     load_tasks ();
 
     // Apply previously added tasks.
-    for (auto& task : _added_tasks)
-      _tasks.push_back (task);
+    for (auto& task : _added_tasks) {
+      _tasks.push_back(task);
+    }
   }
 
   auto i = _I2U.find (id);
-  if (i != _I2U.end ())
+  if (i != _I2U.end()) {
     return i->second;
+  }
 
   return "";
 }
@@ -452,13 +474,15 @@ int TF2::id (const std::string& uuid)
     load_tasks ();
 
     // Apply previously added tasks.
-    for (auto& task : _added_tasks)
-      _tasks.push_back (task);
+    for (auto& task : _added_tasks) {
+      _tasks.push_back(task);
+    }
   }
 
   auto i = _U2I.find (uuid);
-  if (i != _U2I.end ())
+  if (i != _U2I.end()) {
     return i->second;
+  }
 
   return 0;
 }
@@ -549,15 +573,20 @@ const std::string TF2::dump ()
   // File label.
   std::string label;
   auto slash = _file._data.rfind ('/');
-  if (slash != std::string::npos)
-    label = rightJustify (_file._data.substr (slash + 1), 14);
+  if (slash != std::string::npos) {
+    label = rightJustify(_file._data.substr(slash + 1), 14);
+  }
 
   // File mode.
   std::string mode = std::string (_file.readable () ? "r" : "-") +
                      std::string (_file.writable () ? "w" : "-");
-       if (mode == "r-") mode = red.colorize (mode);
-  else if (mode == "rw") mode = green.colorize (mode);
-  else                   mode = yellow.colorize (mode);
+  if (mode == "r-") {
+    mode = red.colorize(mode);
+  } else if (mode == "rw") {
+    mode = green.colorize(mode);
+  } else {
+    mode = yellow.colorize(mode);
+  }
 
   // Hygiene.
   std::string hygiene = _dirty ? red.colorize ("O") : green.colorize ("-");
@@ -620,13 +649,15 @@ void TDB2::add (Task& task, bool add_to_backlog /* = true */)
 
   // If the tasks are loaded, then verify that this uuid is not already in
   // the file.
-  if (!verifyUniqueUUID (uuid))
-    throw format (STRING_TDB2_UUID_NOT_UNIQUE, uuid);
+  if (!verifyUniqueUUID(uuid)) {
+    throw format(STRING_TDB2_UUID_NOT_UNIQUE, uuid);
+  }
 
   // Only locally-added tasks trigger hooks.  This means that tasks introduced
   // via 'sync' do not trigger hooks.
-  if (add_to_backlog)
-    context.hooks.onAdd (task);
+  if (add_to_backlog) {
+    context.hooks.onAdd(task);
+  }
 
   update (task, add_to_backlog, true);
 }
@@ -663,8 +694,9 @@ void TDB2::update (
   if (not addition && get (task.get ("uuid"), original))
   {
     // Update only if the tasks differ
-    if (task == original)
+    if (task == original) {
       return;
+    }
 
     if (add_to_backlog)
     {
@@ -674,8 +706,9 @@ void TDB2::update (
     }
 
     // Update the task, wherever it is.
-    if (!pending.modify_task (task))
-      completed.modify_task (task);
+    if (!pending.modify_task(task)) {
+      completed.modify_task(task);
+    }
 
     // time <time>
     // old <task>
@@ -690,11 +723,11 @@ void TDB2::update (
   {
     // Add new task to either pending or completed.
     std::string status = task.get ("status");
-    if (status == "completed" ||
-        status == "deleted")
+    if (status == "completed" || status == "deleted") {
       completed.add_task (task);
-    else
-      pending.add_task (task);
+    } else {
+      pending.add_task(task);
+    }
 
     // Add undo data lines:
     //   time <time>
@@ -706,8 +739,9 @@ void TDB2::update (
   }
 
   // Add task to backlog.
-  if (add_to_backlog)
-    backlog.add_line (task.composeJSON () + "\n");
+  if (add_to_backlog) {
+    backlog.add_line(task.composeJSON() + "\n");
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -746,17 +780,21 @@ void TDB2::commit ()
 void TDB2::gather_changes ()
 {
   _changes.clear ();
-  for (auto& task : pending._added_tasks)
-    _changes.push_back (task);
+  for (auto& task : pending._added_tasks) {
+    _changes.push_back(task);
+  }
 
-  for (auto& task : pending._modified_tasks)
-    _changes.push_back (task);
+  for (auto& task : pending._modified_tasks) {
+    _changes.push_back(task);
+  }
 
-  for (auto& task : completed._added_tasks)
-    _changes.push_back (task);
+  for (auto& task : completed._added_tasks) {
+    _changes.push_back(task);
+  }
 
-  for (auto& task : completed._modified_tasks)
-    _changes.push_back (task);
+  for (auto& task : completed._modified_tasks) {
+    _changes.push_back(task);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -832,9 +870,9 @@ void TDB2::revert ()
     File::write (pending._file._data, p);
     File::write (completed._file._data, c);
     File::write (backlog._file._data, b);
-  }
-  else
+  } else {
     std::cout << STRING_CMD_CONFIG_NO_CHANGE << "\n";
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -845,8 +883,9 @@ void TDB2::revert_undo (
   std::string& current,
   std::string& prior)
 {
-  if (u.size () < 3)
-    throw std::string (STRING_TDB2_NO_UNDO);
+  if (u.size() < 3) {
+    throw std::string(STRING_TDB2_NO_UNDO);
+  }
 
   // pop last tx
   u.pop_back (); // separator.
@@ -870,10 +909,11 @@ void TDB2::revert_undo (
 
   // Extract identifying uuid.
   auto uuidAtt = current.find ("uuid:\"");
-  if (uuidAtt != std::string::npos)
+  if (uuidAtt != std::string::npos) {
     uuid = current.substr (uuidAtt + 6, 36); // "uuid:"<uuid>" --> <uuid>
-  else
-    throw std::string (STRING_TDB2_MISSING_UUID);
+  } else {
+    throw std::string(STRING_TDB2_MISSING_UUID);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -993,8 +1033,9 @@ void TDB2::revert_backlog (
     }
   }
 
-  if (!found)
-    throw std::string (STRING_TDB2_UNDO_SYNCED);
+  if (!found) {
+    throw std::string(STRING_TDB2_UNDO_SYNCED);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1034,12 +1075,14 @@ void TDB2::show_diff (
       Task before (prior);
 
       std::vector <std::string> beforeAtts;
-      for (auto& att : before.data)
-        beforeAtts.push_back (att.first);
+      for (auto& att : before.data) {
+        beforeAtts.push_back(att.first);
+      }
 
       std::vector <std::string> afterAtts;
-      for (auto& att : after.data)
-        afterAtts.push_back (att.first);
+      for (auto& att : after.data) {
+        afterAtts.push_back(att.first);
+      }
 
       std::vector <std::string> beforeOnly;
       std::vector <std::string> afterOnly;
@@ -1109,8 +1152,9 @@ void TDB2::show_diff (
   {
     // Create reference tasks.
     Task before;
-    if (prior != "")
-      before.parse (prior);
+    if (prior != "") {
+      before.parse(prior);
+    }
 
     Task after (current);
 
@@ -1137,13 +1181,17 @@ void TDB2::show_diff (
     std::vector <std::string> all = context.getColumns ();
 
     // Now factor in the annotation attributes.
-    for (auto& it : before.data)
-      if (it.first.substr (0, 11) == "annotation_")
-        all.push_back (it.first);
+    for (auto& it : before.data) {
+      if (it.first.substr(0, 11) == "annotation_") {
+        all.push_back(it.first);
+      }
+    }
 
-    for (auto& it : after.data)
-      if (it.first.substr (0, 11) == "annotation_")
-        all.push_back (it.first);
+    for (auto& it : after.data) {
+      if (it.first.substr(0, 11) == "annotation_") {
+        all.push_back(it.first);
+      }
+    }
 
     // Now render all the attributes.
     std::sort (all.begin (), all.end ());
@@ -1258,10 +1306,12 @@ void TDB2::gc ()
     }
 
     // Update blocked/blocking status after GC is finished
-    if (pending._auto_dep_scan)
-      pending.dependency_scan ();
-    if (completed._auto_dep_scan)
-      completed.dependency_scan ();
+    if (pending._auto_dep_scan) {
+      pending.dependency_scan();
+    }
+    if (completed._auto_dep_scan) {
+      completed.dependency_scan();
+    }
   }
 
   // Stop and remove accumulated load time from the GC time, because they
@@ -1297,8 +1347,9 @@ const std::vector <Task> TDB2::all_tasks ()
                             completed._added_tasks.size ());
   extra = completed.get_tasks ();
 
-  for (auto& task : extra)
-    all.push_back (task);
+  for (auto& task : extra) {
+    all.push_back(task);
+  }
 
   return all;
 }
@@ -1336,8 +1387,9 @@ const std::vector <Task> TDB2::siblings (Task& task)
     std::string parent = task.get ("parent");
 
     // First load and scan pending.
-    if (! pending._loaded_tasks)
-      pending.load_tasks ();
+    if (!pending._loaded_tasks) {
+      pending.load_tasks();
+    }
 
     for (auto& i : pending._tasks)
     {
@@ -1369,8 +1421,9 @@ const std::vector <Task> TDB2::children (Task& task)
   std::string parent = task.get ("uuid");
 
   // First load and scan pending.
-  if (! pending._loaded_tasks)
-    pending.load_tasks ();
+  if (!pending._loaded_tasks) {
+    pending.load_tasks();
+  }
 
   for (auto& i : pending._tasks)
   {
@@ -1382,8 +1435,9 @@ const std::vector <Task> TDB2::children (Task& task)
           i.getStatus () != Task::deleted)
       {
         // If task has the same parent, it is a sibling.
-        if (i.get ("parent") == parent)
-          results.push_back (i);
+        if (i.get("parent") == parent) {
+          results.push_back(i);
+        }
       }
     }
   }
@@ -1395,8 +1449,9 @@ const std::vector <Task> TDB2::children (Task& task)
 std::string TDB2::uuid (int id)
 {
   std::string result = pending.uuid (id);
-  if (result == "")
-    result = completed.uuid (id);
+  if (result == "") {
+    result = completed.uuid(id);
+  }
 
   return result;
 }
@@ -1405,8 +1460,9 @@ std::string TDB2::uuid (int id)
 int TDB2::id (const std::string& uuid)
 {
   int result = pending.id (uuid);
-  if (result == 0)
-    result = completed.id (uuid);
+  if (result == 0) {
+    result = completed.id(uuid);
+  }
 
   return result;
 }

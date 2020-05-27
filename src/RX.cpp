@@ -56,8 +56,9 @@ RX::RX (const RX& other)
 ////////////////////////////////////////////////////////////////////////////////
 RX::~RX ()
 {
-  if (_compiled)
-    regfree (&_regex);
+  if (_compiled) {
+    regfree(&_regex);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -98,8 +99,9 @@ void RX::compile ()
 ////////////////////////////////////////////////////////////////////////////////
 bool RX::match (const std::string& in)
 {
-  if (! _compiled)
-    compile ();
+  if (!_compiled) {
+    compile();
+  }
 
   return regexec (&_regex, in.c_str (), 0, nullptr, 0) == 0 ? true : false;
 }
@@ -109,8 +111,9 @@ bool RX::match (
   std::vector<std::string>& matches,
   const std::string& in)
 {
-  if (! _compiled)
-    compile ();
+  if (!_compiled) {
+    compile();
+  }
 
   regmatch_t rm[2];
   int offset = 0;
@@ -122,8 +125,9 @@ bool RX::match (
     offset += rm[0].rm_eo;
 
     // Protection against zero-width patterns causing infinite loops.
-    if (rm[0].rm_so == rm[0].rm_eo)
+    if (rm[0].rm_so == rm[0].rm_eo) {
       ++offset;
+    }
   }
 
   return matches.size () ? true : false;
@@ -135,8 +139,9 @@ bool RX::match (
   std::vector <int>& end,
   const std::string& in)
 {
-  if (! _compiled)
-    compile ();
+  if (!_compiled) {
+    compile();
+  }
 
   regmatch_t rm[2];
   int offset = 0;
@@ -149,8 +154,9 @@ bool RX::match (
     offset += rm[0].rm_eo;
 
     // Protection against zero-width patterns causing infinite loops.
-    if (rm[0].rm_so == rm[0].rm_eo)
+    if (rm[0].rm_so == rm[0].rm_eo) {
       ++offset;
+    }
   }
 
   return start.size () ? true : false;

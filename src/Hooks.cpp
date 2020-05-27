@@ -69,19 +69,20 @@ void Hooks::initialize ()
         if (! p.is_directory ())
         {
           std::string name = p.name ();
-          if (name.substr (0, 6) == "on-add"    ||
-              name.substr (0, 9) == "on-modify" ||
-              name.substr (0, 9) == "on-launch" ||
-              name.substr (0, 7) == "on-exit")
+          if (name.substr(0, 6) == "on-add" ||
+              name.substr(0, 9) == "on-modify" ||
+              name.substr(0, 9) == "on-launch" ||
+              name.substr(0, 7) == "on-exit") {
             context.debug ("Found hook script " + i);
-          else
-            context.debug ("Found misnamed hook script " + i);
+          } else {
+            context.debug("Found misnamed hook script " + i);
+          }
         }
       }
     }
+  } else if (_debug >= 1) {
+    context.debug("Hook directory not readable: " + d._data);
   }
-  else if (_debug >= 1)
-    context.debug ("Hook directory not readable: " + d._data);
 
   _enabled = context.config.getBoolean ("hooks");
 }
@@ -108,8 +109,9 @@ bool Hooks::enable (bool value)
 //
 void Hooks::onLaunch () const
 {
-  if (! _enabled)
+  if (!_enabled) {
     return;
+  }
 
   context.timer_hooks.start ();
 
@@ -130,14 +132,16 @@ void Hooks::onLaunch () const
 
       if (status == 0)
       {
-        for (auto& message : outputFeedback)
-          context.footnote (message);
+        for (auto& message : outputFeedback) {
+          context.footnote(message);
+        }
       }
       else
       {
         assertFeedback (outputFeedback);
-        for (auto& message : outputFeedback)
-          context.error (message);
+        for (auto& message : outputFeedback) {
+          context.error(message);
+        }
 
         throw 0;  // This is how hooks silently terminate processing.
       }
@@ -161,8 +165,9 @@ void Hooks::onLaunch () const
 //
 void Hooks::onExit () const
 {
-  if (! _enabled)
+  if (!_enabled) {
     return;
+  }
 
   context.timer_hooks.start ();
 
@@ -175,8 +180,9 @@ void Hooks::onExit () const
 
     // Convert to a vector of strings.
     std::vector <std::string> input;
-    for (auto& t : tasks)
-      input.push_back (t.composeJSON ());
+    for (auto& t : tasks) {
+      input.push_back(t.composeJSON());
+    }
 
     // Call the hook scripts, with the invariant input.
     for (auto& script : matchingScripts)
@@ -192,14 +198,16 @@ void Hooks::onExit () const
 
       if (status == 0)
       {
-        for (auto& message : outputFeedback)
-          context.footnote (message);
+        for (auto& message : outputFeedback) {
+          context.footnote(message);
+        }
       }
       else
       {
         assertFeedback (outputFeedback);
-        for (auto& message : outputFeedback)
-          context.error (message);
+        for (auto& message : outputFeedback) {
+          context.error(message);
+        }
 
         throw 0;  // This is how hooks silently terminate processing.
       }
@@ -223,8 +231,9 @@ void Hooks::onExit () const
 //
 void Hooks::onAdd (Task& task) const
 {
-  if (! _enabled)
+  if (!_enabled) {
     return;
+  }
 
   context.timer_hooks.start ();
 
@@ -254,14 +263,16 @@ void Hooks::onAdd (Task& task) const
         // Propagate forward to the next script.
         input[0] = outputJSON[0];
 
-        for (auto& message : outputFeedback)
-          context.footnote (message);
+        for (auto& message : outputFeedback) {
+          context.footnote(message);
+        }
       }
       else
       {
         assertFeedback (outputFeedback);
-        for (auto& message : outputFeedback)
-          context.error (message);
+        for (auto& message : outputFeedback) {
+          context.error(message);
+        }
 
         throw 0;  // This is how hooks silently terminate processing.
       }
@@ -289,8 +300,9 @@ void Hooks::onAdd (Task& task) const
 //
 void Hooks::onModify (const Task& before, Task& after) const
 {
-  if (! _enabled)
+  if (!_enabled) {
     return;
+  }
 
   context.timer_hooks.start ();
 
@@ -321,14 +333,16 @@ void Hooks::onModify (const Task& before, Task& after) const
         // Propagate accepted changes forward to the next script.
         input[1] = outputJSON[0];
 
-        for (auto& message : outputFeedback)
-          context.footnote (message);
+        for (auto& message : outputFeedback) {
+          context.footnote(message);
+        }
       }
       else
       {
         assertFeedback (outputFeedback);
-        for (auto& message : outputFeedback)
-          context.error (message);
+        for (auto& message : outputFeedback) {
+          context.error(message);
+        }
 
         throw 0;  // This is how hooks silently terminate processing.
       }
@@ -355,8 +369,9 @@ std::vector <std::string> Hooks::scripts (const std::string& event) const
     if (i.find ("/" + event) != std::string::npos)
     {
       File script (i);
-      if (script.executable ())
-        matching.push_back (i);
+      if (script.executable()) {
+        matching.push_back(i);
+      }
     }
   }
 
@@ -371,10 +386,11 @@ void Hooks::separateOutput (
 {
   for (auto& i : output)
   {
-    if (isJSON (i))
+    if (isJSON(i)) {
       json.push_back (i);
-    else
-      feedback.push_back (i);
+    } else {
+      feedback.push_back(i);
+    }
   }
 }
 
@@ -426,8 +442,9 @@ void Hooks::assertValidJSON (const std::vector <std::string>& input) const
     catch (const std::string& e)
     {
       context.error (format (STRING_HOOK_ERROR_SYNTAX, i));
-      if (_debug)
-        context.error (STRING_HOOK_ERROR_JSON + e);
+      if (_debug) {
+        context.error(STRING_HOOK_ERROR_JSON + e);
+      }
       throw 0;
     }
 
@@ -483,9 +500,11 @@ void Hooks::assertSameTask (const std::vector <std::string>& input, const Task& 
 void Hooks::assertFeedback (const std::vector <std::string>& input) const
 {
   bool foundSomething = false;
-  for (auto& i : input)
-    if (nontrivial (i))
+  for (auto& i : input) {
+    if (nontrivial(i)) {
       foundSomething = true;
+    }
+  }
 
   if (! foundSomething)
   {
@@ -527,27 +546,31 @@ int Hooks::callHookScript (
   const std::vector <std::string>& input,
   std::vector <std::string>& output) const
 {
-  if (_debug >= 1)
-    context.debug ("Hook: Calling " + script);
+  if (_debug >= 1) {
+    context.debug("Hook: Calling " + script);
+  }
 
   if (_debug >= 2)
   {
     context.debug ("Hook: input");
-    for (const auto& i : input)
-      context.debug ("  " + i);
+    for (const auto& i : input) {
+      context.debug("  " + i);
+    }
   }
 
   std::string inputStr;
-  for (const auto& i : input)
+  for (const auto& i : input) {
     inputStr += i + "\n";
+  }
 
   std::vector <std::string> args;
   buildHookScriptArgs (args);
   if (_debug >= 2)
   {
     context.debug ("Hooks: args");
-    for (const auto& arg: args)
-      context.debug ("  " + arg);
+    for (const auto& arg : args) {
+      context.debug("  " + arg);
+    }
   }
 
   // Measure time for each hook if running in debug
@@ -559,18 +582,20 @@ int Hooks::callHookScript (
     timer_per_hook.start();
 
     status = execute (script, args, inputStr, outputStr);
+  } else {
+    status = execute(script, args, inputStr, outputStr);
   }
-  else
-    status = execute (script, args, inputStr, outputStr);
 
   split (output, outputStr, '\n');
 
   if (_debug >= 2)
   {
     context.debug ("Hook: output");
-    for (const auto& i : output)
-      if (i != "")
-        context.debug ("  " + i);
+    for (const auto& i : output) {
+      if (i != "") {
+        context.debug("  " + i);
+      }
+    }
 
     context.debug (format ("Hook: Completed with status {1}", status));
     context.debug (" "); // Blank line

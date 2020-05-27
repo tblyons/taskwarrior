@@ -51,8 +51,9 @@ ColumnDescription::ColumnDescription ()
              "truncated_count"};
 
   _dateformat = context.config.get ("dateformat.annotation");
-  if (_dateformat == "")
-    _dateformat = context.config.get ("dateformat");
+  if (_dateformat == "") {
+    _dateformat = context.config.get("dateformat");
+  }
 
   std::string t  = ISO8601d ().toString (_dateformat);
   std::string d  = STRING_COLUMN_EXAMPLES_DESC;
@@ -97,16 +98,18 @@ void ColumnDescription::measure (Task& task, unsigned int& minimum, unsigned int
     if (task.annotation_count)
     {
       unsigned int min_anno = _indent + ISO8601d::length (_dateformat);
-      if (min_anno > minimum)
+      if (min_anno > minimum) {
         minimum = min_anno;
+      }
 
       std::map <std::string, std::string> annos;
       task.getAnnotations (annos);
       for (auto& i : annos)
       {
         unsigned int len = min_anno + 1 + utf8_width (i.second);
-        if (len > maximum)
+        if (len > maximum) {
           maximum = len;
+        }
       }
     }
   }
@@ -129,8 +132,9 @@ void ColumnDescription::measure (Task& task, unsigned int& minimum, unsigned int
       auto min_anno = ISO8601d::length (_dateformat);
       std::map <std::string, std::string> annos;
       task.getAnnotations (annos);
-      for (auto& i : annos)
-        maximum += min_anno + 1 + utf8_width (i.second);
+      for (auto& i : annos) {
+        maximum += min_anno + 1 + utf8_width(i.second);
+      }
     }
   }
 
@@ -156,8 +160,9 @@ void ColumnDescription::measure (Task& task, unsigned int& minimum, unsigned int
     maximum = utf8_width (description) + 1 + 1 + format (task.annotation_count).length () + 1;
   }
 
-  else
-    throw format (STRING_COLUMN_BAD_FORMAT, _name, _style);
+  else {
+    throw format(STRING_COLUMN_BAD_FORMAT, _name, _style);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -189,8 +194,9 @@ void ColumnDescription::render (
     std::vector <std::string> raw;
     wrapText (raw, description, width, _hyphenate);
 
-    for (const auto& i : raw)
-      renderStringLeft (lines, width, color, i);
+    for (const auto& i : raw) {
+      renderStringLeft(lines, width, color, i);
+    }
   }
 
   // This is a description
@@ -199,8 +205,9 @@ void ColumnDescription::render (
     std::vector <std::string> raw;
     wrapText (raw, description, width, _hyphenate);
 
-    for (const auto& i : raw)
-      renderStringLeft (lines, width, color, i);
+    for (const auto& i : raw) {
+      renderStringLeft(lines, width, color, i);
+    }
   }
 
   // This is a description <date> <anno> ...
@@ -220,31 +227,35 @@ void ColumnDescription::render (
     std::vector <std::string> raw;
     wrapText (raw, description, width, _hyphenate);
 
-    for (const auto& i : raw)
-      renderStringLeft (lines, width, color, i);
+    for (const auto& i : raw) {
+      renderStringLeft(lines, width, color, i);
+    }
   }
 
   // This is a des...
   else if (_style == "truncated")
   {
     int len = utf8_width (description);
-    if (len > width)
+    if (len > width) {
       renderStringLeft (lines, width, color, description.substr (0, width - 3) + "...");
-    else
-      renderStringLeft (lines, width, color, description);
+    } else {
+      renderStringLeft(lines, width, color, description);
+    }
   }
 
   // This is a description [2]
   else if (_style == "count")
   {
-    if (task.annotation_count)
-      description += " [" + format (task.annotation_count) + "]";
+    if (task.annotation_count) {
+      description += " [" + format(task.annotation_count) + "]";
+    }
 
     std::vector <std::string> raw;
     wrapText (raw, description, width, _hyphenate);
 
-    for (const auto& i : raw)
-      renderStringLeft (lines, width, color, i);
+    for (const auto& i : raw) {
+      renderStringLeft(lines, width, color, i);
+    }
   }
 
   // This is a des... [2]
@@ -261,10 +272,11 @@ void ColumnDescription::render (
       len += len_annos;
     }
 
-    if (len > width)
+    if (len > width) {
       renderStringLeft (lines, width, color, description.substr (0, width - len_annos - 3) + "..." + annos_count);
-    else
-      renderStringLeft (lines, width, color, description + annos_count);
+    } else {
+      renderStringLeft(lines, width, color, description + annos_count);
+    }
   }
 }
 

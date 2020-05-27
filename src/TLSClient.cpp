@@ -106,8 +106,9 @@ void TLSClient::limit (int max)
 // std::cout, labelled with 'c: ...'.
 void TLSClient::debug (int level)
 {
-  if (level)
+  if (level) {
     _debug = true;
+  }
 
   gnutls_global_set_log_function (gnutls_log_function);
   gnutls_global_set_log_level (level);
@@ -119,12 +120,13 @@ void TLSClient::trust (const enum trust_level value)
   _trust = value;
   if (_debug)
   {
-    if (_trust == allow_all)
+    if (_trust == allow_all) {
       std::cout << "c: INFO Server certificate will be trusted automatically.\n";
-    else if (_trust == ignore_hostname)
+    } else if (_trust == ignore_hostname) {
       std::cout << "c: INFO Server certificate will be verified but hostname ignored.\n";
-    else
+    } else {
       std::cout << "c: INFO Server certificate will be verified.\n";
+    }
   }
 }
 
@@ -145,21 +147,26 @@ void TLSClient::init (
   _key  = key;
 
   int ret = gnutls_global_init ();
-  if (ret < 0)
-    throw format ("TLS init error. {1}", gnutls_strerror (ret));
+  if (ret < 0) {
+    throw format("TLS init error. {1}", gnutls_strerror(ret));
+  }
 
   ret = gnutls_certificate_allocate_credentials (&_credentials);
-  if (ret < 0)
-    throw format ("TLS allocation error. {1}", gnutls_strerror (ret));
+  if (ret < 0) {
+    throw format("TLS allocation error. {1}", gnutls_strerror(ret));
+  }
 
-  if (_ca != "" &&
-      (ret = gnutls_certificate_set_x509_trust_file (_credentials, _ca.c_str (), GNUTLS_X509_FMT_PEM)) < 0)
-    throw format ("Bad CA file. {1}", gnutls_strerror (ret));
+  if (_ca != "" && (ret = gnutls_certificate_set_x509_trust_file(
+                        _credentials, _ca.c_str(), GNUTLS_X509_FMT_PEM)) < 0) {
+    throw format("Bad CA file. {1}", gnutls_strerror(ret));
+  }
 
-  if (_cert != "" &&
-      _key != "" &&
-      (ret = gnutls_certificate_set_x509_key_file (_credentials, _cert.c_str (), _key.c_str (), GNUTLS_X509_FMT_PEM)) < 0)
-    throw format ("Bad CERT file. {1}", gnutls_strerror (ret));
+  if (_cert != "" && _key != "" &&
+      (ret = gnutls_certificate_set_x509_key_file(_credentials, _cert.c_str(),
+                                                  _key.c_str(),
+                                                  GNUTLS_X509_FMT_PEM)) < 0) {
+    throw format("Bad CERT file. {1}", gnutls_strerror(ret));
+  }
 
 #if GNUTLS_VERSION_NUMBER >= 0x02090a
   // The automatic verification for the server certificate with
@@ -169,27 +176,31 @@ void TLSClient::init (
   gnutls_certificate_set_verify_function (_credentials, verify_certificate_callback);
 #endif
   ret = gnutls_init (&_session, GNUTLS_CLIENT);
-  if (ret < 0)
-    throw format ("TLS client init error. {1}", gnutls_strerror (ret));
+  if (ret < 0) {
+    throw format("TLS client init error. {1}", gnutls_strerror(ret));
+  }
 
   // Use default priorities unless overridden.
-  if (_ciphers == "")
+  if (_ciphers == "") {
     _ciphers = "NORMAL";
+  }
 
   const char *err;
   ret = gnutls_priority_set_direct (_session, _ciphers.c_str (), &err);
   if (ret < 0)
   {
-    if (_debug && ret == GNUTLS_E_INVALID_REQUEST)
+    if (_debug && ret == GNUTLS_E_INVALID_REQUEST) {
       std::cout << "c: ERROR Priority error at: " << err << "\n";
+    }
 
     throw format (STRING_TLS_INIT_FAIL, gnutls_strerror (ret));
   }
 
   // Apply the x509 credentials to the current session.
   ret = gnutls_credentials_set (_session, GNUTLS_CRD_CERTIFICATE, _credentials);
-  if (ret < 0)
-    throw format ("TLS credentials error. {1}", gnutls_strerror (ret));
+  if (ret < 0) {
+    throw format("TLS credentials error. {1}", gnutls_strerror(ret));
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -210,37 +221,40 @@ void TLSClient::connect (const std::string& host, const std::string& port)
 
   struct addrinfo* res;
   int ret = ::getaddrinfo (host.c_str (), port.c_str (), &hints, &res);
-  if (ret != 0)
-    throw std::string (::gai_strerror (ret));
+  if (ret != 0) {
+    throw std::string(::gai_strerror(ret));
+  }
 
   // Try them all, stop on success.
   struct addrinfo* p;
   for (p = res; p != NULL; p = p->ai_next)
   {
-    if ((_socket = ::socket (p->ai_family, p->ai_socktype, p->ai_protocol)) == -1)
+    if ((_socket = ::socket(p->ai_family, p->ai_socktype, p->ai_protocol)) ==
+        -1) {
       continue;
+    }
 
     // When a socket is closed, it remains unavailable for a while (netstat -an).
     // Setting SO_REUSEADDR allows this program to assume control of a closed,
     // but unavailable socket.
     int on = 1;
-    if (::setsockopt (_socket,
-                      SOL_SOCKET,
-                      SO_REUSEADDR,
-                      (const void*) &on,
-                      sizeof (on)) == -1)
-      throw std::string (::strerror (errno));
+    if (::setsockopt(_socket, SOL_SOCKET, SO_REUSEADDR, (const void*)&on,
+                     sizeof(on)) == -1) {
+      throw std::string(::strerror(errno));
+    }
 
-    if (::connect (_socket, p->ai_addr, p->ai_addrlen) == -1)
+    if (::connect(_socket, p->ai_addr, p->ai_addrlen) == -1) {
       continue;
+    }
 
     break;
   }
 
   free (res);
 
-  if (p == NULL)
-    throw format (STRING_CMD_SYNC_CONNECT, host, port);
+  if (p == NULL) {
+    throw format(STRING_CMD_SYNC_CONNECT, host, port);
+  }
 
 #if GNUTLS_VERSION_NUMBER >= 0x030109
   gnutls_transport_set_int (_session, _socket);
@@ -254,8 +268,9 @@ void TLSClient::connect (const std::string& host, const std::string& port)
     ret = gnutls_handshake (_session);
   }
   while (ret < 0 && gnutls_error_is_fatal (ret) == 0);
-  if (ret < 0)
-    throw format (STRING_CMD_SYNC_HANDSHAKE, gnutls_strerror (ret));
+  if (ret < 0) {
+    throw format(STRING_CMD_SYNC_HANDSHAKE, gnutls_strerror(ret));
+  }
 
 #if GNUTLS_VERSION_NUMBER < 0x02090a
   // The automatic verification for the server certificate with
@@ -292,25 +307,30 @@ void TLSClient::bye ()
 ////////////////////////////////////////////////////////////////////////////////
 int TLSClient::verify_certificate () const
 {
-  if (_trust == TLSClient::allow_all)
+  if (_trust == TLSClient::allow_all) {
     return 0;
+  }
 
-  if (_debug)
+  if (_debug) {
     std::cout << "c: INFO Verifying certificate.\n";
+  }
 
   // This verification function uses the trusted CAs in the credentials
   // structure. So you must have installed one or more CA certificates.
   unsigned int status = 0;
   const char* hostname = _host.c_str();
 #if GNUTLS_VERSION_NUMBER >= 0x030104
-  if (_trust == TLSClient::ignore_hostname)
+  if (_trust == TLSClient::ignore_hostname) {
     hostname = NULL;
+  }
 
   int ret = gnutls_certificate_verify_peers3 (_session, hostname, &status);
   if (ret < 0)
   {
-    if (_debug)
-      std::cout << "c: ERROR Certificate verification peers3 failed. " << gnutls_strerror (ret) << "\n";
+    if (_debug) {
+      std::cout << "c: ERROR Certificate verification peers3 failed. "
+                << gnutls_strerror(ret) << "\n";
+    }
     return GNUTLS_E_CERTIFICATE_ERROR;
   }
 
@@ -319,8 +339,9 @@ int TLSClient::verify_certificate () const
   //   GNUTLS_CERT_SIGNER_NOT_FOUND    1<<6
   //   GNUTLS_CERT_UNEXPECTED_OWNER    1<<14  Hostname does not match
 
-  if (_debug && status)
+  if (_debug && status) {
     std::cout << "c: ERROR Certificate status=" << status << "\n";
+  }
 #else
   int ret = gnutls_certificate_verify_peers2 (_session, &status);
   if (ret < 0)
@@ -385,18 +406,22 @@ int TLSClient::verify_certificate () const
   ret = gnutls_certificate_verification_status_print (status, type, &out, 0);
   if (ret < 0)
   {
-    if (_debug)
-      std::cout << "c: ERROR certificate verification status. " << gnutls_strerror (ret) << "\n";
+    if (_debug) {
+      std::cout << "c: ERROR certificate verification status. "
+                << gnutls_strerror(ret) << "\n";
+    }
     return GNUTLS_E_CERTIFICATE_ERROR;
   }
 
-  if (_debug)
+  if (_debug) {
     std::cout << "c: INFO " << out.data << "\n";
+  }
   gnutls_free (out.data);
 #endif
 
-  if (status != 0)
+  if (status != 0) {
     return GNUTLS_E_CERTIFICATE_ERROR;
+  }
 
   // Continue handshake.
   return 0;
@@ -427,18 +452,18 @@ void TLSClient::send (const std::string& data)
     while (errno == GNUTLS_E_INTERRUPTED ||
            errno == GNUTLS_E_AGAIN);
 
-    if (status == -1)
+    if (status == -1) {
       break;
+    }
 
     total     += (unsigned int) status;
     remaining -= (unsigned int) status;
   }
 
-  if (_debug)
-    std::cout << "c: INFO Sending 'XXXX"
-              << data.c_str ()
-              << "' (" << total << " bytes)"
-              << std::endl;
+  if (_debug) {
+    std::cout << "c: INFO Sending 'XXXX" << data.c_str() << "' (" << total
+              << " bytes)" << std::endl;
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -464,8 +489,9 @@ void TLSClient::recv (std::string& data)
                            (header[1]<<16) |
                            (header[2]<<8) |
                             header[3];
-  if (_debug)
+  if (_debug) {
     std::cout << "c: INFO expecting " << expected << " bytes.\n";
+  }
 
   // TODO This would be a good place to assert 'expected < _limit'.
 
@@ -488,35 +514,37 @@ void TLSClient::recv (std::string& data)
     // Other end closed the connection.
     if (received == 0)
     {
-      if (_debug)
+      if (_debug) {
         std::cout << "c: INFO Peer has closed the TLS connection\n";
+      }
       break;
     }
 
     // Something happened.
     if (received < 0 && gnutls_error_is_fatal (received) == 0)
     {
-      if (_debug)
-        std::cout << "c: WARNING " << gnutls_strerror (received) << "\n";
+      if (_debug) {
+        std::cout << "c: WARNING " << gnutls_strerror(received) << "\n";
+      }
+    } else if (received < 0) {
+      throw std::string(gnutls_strerror(received));
     }
-    else if (received < 0)
-      throw std::string (gnutls_strerror (received));
 
     buffer [received] = '\0';
     data += buffer;
     total += received;
 
     // Stop at defined limit.
-    if (_limit && total > _limit)
+    if (_limit && total > _limit) {
       break;
+    }
   }
   while (received > 0 && total < (int) expected);
 
-  if (_debug)
-    std::cout << "c: INFO Receiving 'XXXX"
-              << data.c_str ()
-              << "' (" << total << " bytes)"
-              << std::endl;
+  if (_debug) {
+    std::cout << "c: INFO Receiving 'XXXX" << data.c_str() << "' (" << total
+              << " bytes)" << std::endl;
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

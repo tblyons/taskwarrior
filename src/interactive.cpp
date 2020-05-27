@@ -45,8 +45,9 @@ int Context::getWidth ()
   int width = config.getInteger ("defaultwidth");
 
   // A zero width value means 'infinity', which is approximated here by 2^16.
-  if (width == 0)
+  if (width == 0) {
     return 65536;
+  }
 
   if (config.getBoolean ("detection"))
   {
@@ -66,8 +67,9 @@ int Context::getWidth ()
     // Ncurses does this, and perhaps we need to as well, to avoid a problem on
     // Cygwin where the display goes right up to the terminal width, and causes
     // an odd color wrapping problem.
-    if (config.getBoolean ("avoidlastcolumn"))
+    if (config.getBoolean("avoidlastcolumn")) {
       --width;
+    }
   }
 
   return width;
@@ -80,8 +82,9 @@ int Context::getHeight ()
   int height = config.getInteger ("defaultheight");
 
   // A zero height value means 'infinity', which is approximated here by 2^16.
-  if (height == 0)
+  if (height == 0) {
     return 65536;
+  }
 
   if (config.getBoolean ("detection"))
   {

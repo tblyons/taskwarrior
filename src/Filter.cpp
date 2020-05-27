@@ -65,9 +65,12 @@ void Filter::subset (const std::vector <Task>& input, std::vector <Task>& output
   context.cli2.prepareFilter ();
 
   std::vector <std::pair <std::string, Lexer::Type>> precompiled;
-  for (auto& a : context.cli2._args)
-    if (a.hasTag ("FILTER"))
-      precompiled.push_back (std::pair <std::string, Lexer::Type> (a.getToken (), a._lextype));
+  for (auto& a : context.cli2._args) {
+    if (a.hasTag("FILTER")) {
+      precompiled.push_back(
+          std::pair<std::string, Lexer::Type>(a.getToken(), a._lextype));
+    }
+  }
 
   if (precompiled.size ())
   {
@@ -87,14 +90,15 @@ void Filter::subset (const std::vector <Task>& input, std::vector <Task>& output
 
       Variant var;
       eval.evaluateCompiledExpression (var);
-      if (var.get_bool ())
-        output.push_back (task);
+      if (var.get_bool()) {
+        output.push_back(task);
+      }
     }
 
     eval.debug (false);
-  }
-  else
+  } else {
     output = input;
+  }
 
   _endCount = (int) output.size ();
   context.debug (format ("Filtered {1} tasks --> {2} tasks [list subset]", _startCount, _endCount));
@@ -110,9 +114,12 @@ void Filter::subset (std::vector <Task>& output)
   context.cli2.prepareFilter ();
 
   std::vector <std::pair <std::string, Lexer::Type>> precompiled;
-  for (auto& a : context.cli2._args)
-    if (a.hasTag ("FILTER"))
-      precompiled.push_back (std::pair <std::string, Lexer::Type> (a.getToken (), a._lextype));
+  for (auto& a : context.cli2._args) {
+    if (a.hasTag("FILTER")) {
+      precompiled.push_back(
+          std::pair<std::string, Lexer::Type>(a.getToken(), a._lextype));
+    }
+  }
 
   // Shortcut indicates that only pending.data needs to be loaded.
   bool shortcut = false;
@@ -141,8 +148,9 @@ void Filter::subset (std::vector <Task>& output)
 
       Variant var;
       eval.evaluateCompiledExpression (var);
-      if (var.get_bool ())
-        output.push_back (task);
+      if (var.get_bool()) {
+        output.push_back(task);
+      }
     }
 
     shortcut = pendingOnly ();
@@ -160,8 +168,9 @@ void Filter::subset (std::vector <Task>& output)
 
         Variant var;
         eval.evaluateCompiledExpression (var);
-        if (var.get_bool ())
-          output.push_back (task);
+        if (var.get_bool()) {
+          output.push_back(task);
+        }
       }
     }
 
@@ -172,11 +181,13 @@ void Filter::subset (std::vector <Task>& output)
     safety ();
     context.timer_filter.stop ();
 
-    for (auto& task : context.tdb2.pending.get_tasks ())
-      output.push_back (task);
+    for (auto& task : context.tdb2.pending.get_tasks()) {
+      output.push_back(task);
+    }
 
-    for (auto& task : context.tdb2.completed.get_tasks ())
-      output.push_back (task);
+    for (auto& task : context.tdb2.completed.get_tasks()) {
+      output.push_back(task);
+    }
 
     context.timer_filter.start ();
   }
@@ -189,9 +200,11 @@ void Filter::subset (std::vector <Task>& output)
 ////////////////////////////////////////////////////////////////////////////////
 bool Filter::hasFilter () const
 {
-  for (const auto& a : context.cli2._args)
-    if (a.hasTag ("FILTER"))
+  for (const auto& a : context.cli2._args) {
+    if (a.hasTag("FILTER")) {
       return true;
+    }
+  }
 
   return false;
 }
@@ -203,8 +216,9 @@ bool Filter::hasFilter () const
 bool Filter::pendingOnly () const
 {
   // When GC is off, there are no shortcuts.
-  if (! context.config.getBoolean ("gc"))
+  if (!context.config.getBoolean("gc")) {
     return false;
+  }
 
   // To skip loading completed.data, there should be:
   // - 'status' in filter
@@ -229,32 +243,50 @@ bool Filter::pendingOnly () const
       std::string raw       = a.attribute ("raw");
       std::string canonical = a.attribute ("canonical");
 
-      if (a._lextype == Lexer::Type::op  && raw == "or")           ++countOr;
-      if (a._lextype == Lexer::Type::op  && raw == "xor")          ++countXor;
-      if (a._lextype == Lexer::Type::op  && raw == "not")          ++countNot;
-      if (a._lextype == Lexer::Type::dom && canonical == "status") ++countStatus;
-      if (                                  raw == "pending")      ++countPending;
-      if (                                  raw == "waiting")      ++countPending;
-      if (                                  raw == "recurring")    ++countPending;
+      if (a._lextype == Lexer::Type::op && raw == "or") {
+        ++countOr;
+      }
+      if (a._lextype == Lexer::Type::op && raw == "xor") {
+        ++countXor;
+      }
+      if (a._lextype == Lexer::Type::op && raw == "not") {
+        ++countNot;
+      }
+      if (a._lextype == Lexer::Type::dom && canonical == "status") {
+        ++countStatus;
+      }
+      if (raw == "pending") {
+        ++countPending;
+      }
+      if (raw == "waiting") {
+        ++countPending;
+      }
+      if (raw == "recurring") {
+        ++countPending;
+      }
     }
   }
 
-  if (countUUID)
+  if (countUUID) {
     return false;
+  }
 
-  if (countOr || countXor || countNot)
+  if (countOr || countXor || countNot) {
     return false;
+  }
 
   if (countStatus)
   {
-    if (!countPending && !countWaiting && !countRecurring)
+    if (!countPending && !countWaiting && !countRecurring) {
       return false;
+    }
 
     return true;
   }
 
-  if (countId)
+  if (countId) {
     return true;
+  }
 
   return false;
 }
@@ -270,24 +302,27 @@ void Filter::safety () const
     bool filter = false;
     for (const auto& a : context.cli2._args)
     {
-      if (a.hasTag ("CMD") &&
-          ! a.hasTag ("READONLY"))
+      if (a.hasTag("CMD") && !a.hasTag("READONLY")) {
         readonly = false;
+      }
 
-      if (a.hasTag ("FILTER"))
+      if (a.hasTag("FILTER")) {
         filter = true;
+      }
     }
 
     if (! readonly &&
         ! filter)
     {
-      if (! context.config.getBoolean ("allow.empty.filter"))
-         throw std::string (STRING_TASK_SAFETY_ALLOW);
+      if (!context.config.getBoolean("allow.empty.filter")) {
+        throw std::string(STRING_TASK_SAFETY_ALLOW);
+      }
 
       // If user is willing to be asked, this can be avoided.
-      if (context.config.getBoolean ("confirmation") &&
-          confirm (STRING_TASK_SAFETY_VALVE))
+      if (context.config.getBoolean("confirmation") &&
+          confirm(STRING_TASK_SAFETY_VALVE)) {
         return;
+      }
 
       // Sound the alarm.
       throw std::string (STRING_TASK_SAFETY_FAIL);

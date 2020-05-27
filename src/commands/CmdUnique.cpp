@@ -67,27 +67,31 @@ int CmdUnique::execute (std::string& output)
 
   // Just the first arg.
   auto words = context.cli2.getWords ();
-  if (words.size () == 0)
-    throw std::string (STRING_CMD_UNIQUE_MISSING);
+  if (words.size() == 0) {
+    throw std::string(STRING_CMD_UNIQUE_MISSING);
+  }
   attribute = words[0];
 
   std::string canonical;
-  if (! context.cli2.canonicalize (canonical, "attribute", attribute))
-    throw std::string (STRING_CMD_UNIQUE_VALID);
+  if (!context.cli2.canonicalize(canonical, "attribute", attribute)) {
+    throw std::string(STRING_CMD_UNIQUE_VALID);
+  }
 
   // Find number of matching tasks.
   std::set <std::string> values;
-  for (auto& task : filtered)
-    if (task.has (canonical))
+  for (auto& task : filtered) {
+    if (task.has(canonical)) {
       values.insert (task.get (canonical));
-    else if (canonical == "id"                  &&
-             task.getStatus () != Task::deleted &&
-             task.getStatus () != Task::completed)
-      values.insert (format (task.id));
+    } else if (canonical == "id" && task.getStatus() != Task::deleted &&
+               task.getStatus() != Task::completed) {
+      values.insert(format(task.id));
+    }
+  }
 
   // Generate list of unique values.
-  for (auto& value : values)
+  for (auto& value : values) {
     output += value + "\n";
+  }
 
   context.headers.clear ();
   return 0;

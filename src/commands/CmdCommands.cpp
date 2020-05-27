@@ -90,28 +90,35 @@ int CmdCommands::execute (std::string& output)
     view.set (row, 0, command.first);
     view.set (row, 1, Command::categoryNames.at (command.second->category ()));
 
-    if (command.second->read_only ())
+    if (command.second->read_only()) {
       view.set (row, 2, "RO");
-    else
-      view.set (row, 2, "RW");
+    } else {
+      view.set(row, 2, "RW");
+    }
 
-    if (command.second->displays_id ())
-      view.set (row, 3, "ID");
+    if (command.second->displays_id()) {
+      view.set(row, 3, "ID");
+    }
 
-    if (command.second->needs_gc ())
-      view.set (row, 4, "GC");
+    if (command.second->needs_gc()) {
+      view.set(row, 4, "GC");
+    }
 
-    if (command.second->uses_context ())
-      view.set (row, 5, "Ctxt");
+    if (command.second->uses_context()) {
+      view.set(row, 5, "Ctxt");
+    }
 
-    if (command.second->accepts_filter ())
-      view.set (row, 6, "Filt");
+    if (command.second->accepts_filter()) {
+      view.set(row, 6, "Filt");
+    }
 
-    if (command.second->accepts_modifications ())
-      view.set (row, 7, "Mods");
+    if (command.second->accepts_modifications()) {
+      view.set(row, 7, "Mods");
+    }
 
-    if (command.second->accepts_miscellaneous ())
-      view.set (row, 8, "Misc");
+    if (command.second->accepts_miscellaneous()) {
+      view.set(row, 8, "Misc");
+    }
 
     view.set (row, 9, command.second->description ());
   }
@@ -146,15 +153,17 @@ int CmdCompletionCommands::execute (std::string& output)
   // Get a list of all commands.
   std::vector <std::string> commands;
 
-  for (auto& command : context.commands)
-    commands.push_back (command.first);
+  for (auto& command : context.commands) {
+    commands.push_back(command.first);
+  }
 
   // Sort alphabetically.
   std::sort (commands.begin (), commands.end ());
 
   std::stringstream out;
-  for (auto& c : commands)
+  for (auto& c : commands) {
     out << c << "\n";
+  }
 
   output = out.str ();
   return 0;
@@ -189,14 +198,17 @@ struct ZshCommand
 bool ZshCommand::operator< (const struct ZshCommand& other) const
 {
   // Lexicographical comparison.
-  if (_category != other._category)
+  if (_category != other._category) {
     return (_category < other._category);
+  }
 
-  if (_command != other._command)
+  if (_command != other._command) {
     return (_command < other._command);
+  }
 
-  if (_description != other._description)
+  if (_description != other._description) {
     return (_description < other._description);
+  }
 
   return false;
 }
@@ -223,10 +235,10 @@ int CmdZshCommands::execute (std::string& output)
 
   // Emit the commands in order.
   std::stringstream out;
-  for (auto& zc : commands)
-    out << zc._command << ":"
-        << Command::categoryNames.at (zc._category) << ":"
+  for (auto& zc : commands) {
+    out << zc._command << ":" << Command::categoryNames.at(zc._category) << ":"
         << zc._description << "\n";
+  }
 
   output = out.str ();
   return 0;

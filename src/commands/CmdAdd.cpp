@@ -60,25 +60,23 @@ int CmdAdd::execute (std::string& output)
 
   // Do not display ID 0, users cannot query by that
   auto status = task.getStatus ();
-  if (context.verbose ("new-id") &&
-      (status == Task::pending ||
-       status == Task::waiting))
+  if (context.verbose("new-id") &&
+      (status == Task::pending || status == Task::waiting)) {
     output += format (STRING_CMD_ADD_FEEDBACK, task.id) + "\n";
 
-  else if (context.verbose ("new-id") &&
-           status == Task::recurring)
+  } else if (context.verbose("new-id") && status == Task::recurring) {
     output += format (STRING_CMD_ADD_RECUR, task.id) + "\n";
 
-  else if (context.verbose ("new-uuid") &&
-           status != Task::recurring)
+  } else if (context.verbose("new-uuid") && status != Task::recurring) {
     output += format (STRING_CMD_ADD_FEEDBACK, task.get ("uuid")) + "\n";
 
-  else if (context.verbose ("new-uuid") &&
-           status == Task::recurring)
-    output += format (STRING_CMD_ADD_RECUR, task.get ("uuid")) + "\n";
+  } else if (context.verbose("new-uuid") && status == Task::recurring) {
+    output += format(STRING_CMD_ADD_RECUR, task.get("uuid")) + "\n";
+  }
 
-  if (context.verbose ("project"))
-    context.footnote (onProjectChange (task));
+  if (context.verbose("project")) {
+    context.footnote(onProjectChange(task));
+  }
 
   return 0;
 }

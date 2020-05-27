@@ -60,8 +60,9 @@ ViewTask::ViewTask ()
 ////////////////////////////////////////////////////////////////////////////////
 ViewTask::~ViewTask ()
 {
-  for (auto& col : _columns)
+  for (auto& col : _columns) {
     delete col;
+  }
 
   _columns.clear ();
 }
@@ -130,31 +131,42 @@ std::string ViewTask::render (std::vector <Task>& data, std::vector <int>& seque
 
     for (unsigned int s = 0; s < sequence.size (); ++s)
     {
-      if ((int)s >= _truncate_lines && _truncate_lines != 0)
+      if ((int)s >= _truncate_lines && _truncate_lines != 0) {
         break;
+      }
 
-      if ((int)s >= _truncate_rows && _truncate_rows != 0)
+      if ((int)s >= _truncate_rows && _truncate_rows != 0) {
         break;
+      }
 
       // Determine minimum and ideal width for this column.
       unsigned int min = 0;
       unsigned int ideal = 0;
       _columns[i]->measure (data[sequence[s]], min, ideal);
 
-      if (min   > global_min)   global_min   = min;
-      if (ideal > global_ideal) global_ideal = ideal;
+      if (min > global_min) {
+        global_min = min;
+      }
+      if (ideal > global_ideal) {
+        global_ideal = ideal;
+      }
 
       // If a fixed-width column was just measured, there is no point repeating
       // the measurement for all tasks.
-      if (_columns[i]->is_fixed_width ())
+      if (_columns[i]->is_fixed_width()) {
         break;
+      }
     }
 
     if (print_empty_columns || global_min != 0)
     {
       unsigned int label_length = utf8_width (_columns[i]->label ());
-      if (label_length > global_min)   global_min   = label_length;
-      if (label_length > global_ideal) global_ideal = label_length;
+      if (label_length > global_min) {
+        global_min = label_length;
+      }
+      if (label_length > global_ideal) {
+        global_ideal = label_length;
+      }
       minimal.push_back (global_min);
       ideal.push_back (global_ideal);
     }
@@ -247,8 +259,9 @@ std::string ViewTask::render (std::vector <Task>& data, std::vector <int>& seque
     headers.push_back (std::vector <std::string> ());
     _columns[c]->renderHeader (headers[c], widths[c], _sort[c] ? _sort_header : _header);
 
-    if (headers[c].size () > max_lines)
-      max_lines = headers[c].size ();
+    if (headers[c].size() > max_lines) {
+      max_lines = headers[c].size();
+    }
   }
 
   // Render column headers.
@@ -269,13 +282,15 @@ std::string ViewTask::render (std::vector <Task>& data, std::vector <int>& seque
 
     for (unsigned int c = 0; c < _columns.size (); ++c)
     {
-      if (c)
+      if (c) {
         out += intra;
+      }
 
-      if (headers[c].size () < max_lines - i)
+      if (headers[c].size() < max_lines - i) {
         out += _header.colorize (std::string (widths[c], ' '));
-      else
+      } else {
         out += headers[c][i];
+      }
     }
 
     out += extra;
@@ -318,13 +333,17 @@ std::string ViewTask::render (std::vector <Task>& data, std::vector <int>& seque
       cells.push_back (std::vector <std::string> ());
       _columns[c]->render (cells[c], data[sequence[s]], widths[c]+off, row_color);
 
-      if (cells[c].size () > max_lines)
-        max_lines = cells[c].size ();
+      if (cells[c].size() > max_lines) {
+        max_lines = cells[c].size();
+      }
 
-      if (obfuscate)
-        if (_columns[c]->type () == "string")
-          for (unsigned int line = 0; line < cells[c].size (); ++line)
-            cells[c][line] = obfuscateText (cells[c][line]);
+      if (obfuscate) {
+        if (_columns[c]->type() == "string") {
+          for (unsigned int line = 0; line < cells[c].size(); ++line) {
+            cells[c][line] = obfuscateText(cells[c][line]);
+          }
+        }
+      }
     }
 
     // Listing breaks are simply blank lines inserted when a column value
@@ -353,16 +372,18 @@ std::string ViewTask::render (std::vector <Task>& data, std::vector <int>& seque
       {
         if (c)
         {
-          if (row_color.nontrivial ())
+          if (row_color.nontrivial()) {
             row_color._colorize (out, intra);
-          else
+          } else {
             out += (odd ? intra_odd : intra_even);
+          }
         }
 
-        if (i < cells[c].size ())
+        if (i < cells[c].size()) {
           out += cells[c][i];
-        else
-          row_color._colorize (out, std::string (widths[c], ' '));
+        } else {
+          row_color._colorize(out, std::string(widths[c], ' '));
+        }
       }
 
       out += (odd ? extra_odd : extra_even);

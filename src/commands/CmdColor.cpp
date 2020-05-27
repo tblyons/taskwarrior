@@ -60,9 +60,11 @@ int CmdColor::execute (std::string& output)
   // Get the non-attribute, non-fancy command line arguments.
   bool legend = false;
   std::vector <std::string> words = context.cli2.getWords ();
-  for (auto& word : words)
-    if (closeEnough ("legend", word))
+  for (auto& word : words) {
+    if (closeEnough("legend", word)) {
       legend = true;
+    }
+  }
 
   std::stringstream out;
   if (context.color ())
@@ -111,8 +113,9 @@ int CmdColor::execute (std::string& output)
       std::string swatch;
       for (auto word = words.begin (); word != words.end (); ++word)
       {
-        if (word != words.begin ())
+        if (word != words.begin()) {
           swatch += " ";
+        }
 
         swatch += *word;
       }

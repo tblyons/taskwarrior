@@ -117,8 +117,9 @@ std::string Path::name () const
   if (_data.length ())
   {
     auto slash = _data.rfind ('/');
-    if (slash != std::string::npos)
-      return _data.substr (slash + 1, std::string::npos);
+    if (slash != std::string::npos) {
+      return _data.substr(slash + 1, std::string::npos);
+    }
   }
 
  return _data;
@@ -130,8 +131,9 @@ std::string Path::parent () const
   if (_data.length ())
   {
     auto slash = _data.rfind ('/');
-    if (slash != std::string::npos)
-      return _data.substr (0, slash);
+    if (slash != std::string::npos) {
+      return _data.substr(0, slash);
+    }
   }
 
   return "";
@@ -143,8 +145,9 @@ std::string Path::extension () const
   if (_data.length ())
   {
     auto dot = _data.rfind ('.');
-    if (dot != std::string::npos)
-      return _data.substr (dot + 1, std::string::npos);
+    if (dot != std::string::npos) {
+      return _data.substr(dot + 1, std::string::npos);
+    }
   }
 
   return "";
@@ -160,9 +163,9 @@ bool Path::exists () const
 bool Path::is_directory () const
 {
   struct stat s {};
-  if (! stat (_data.c_str (), &s) &&
-      S_ISDIR (s.st_mode))
+  if (!stat(_data.c_str(), &s) && S_ISDIR(s.st_mode)) {
     return true;
+  }
 
   return false;
 }
@@ -170,8 +173,9 @@ bool Path::is_directory () const
 ////////////////////////////////////////////////////////////////////////////////
 bool Path::is_absolute () const
 {
-  if (_data.length () && _data[0] == '/')
+  if (_data.length() && _data[0] == '/') {
     return true;
+  }
 
   return false;
 }
@@ -180,9 +184,9 @@ bool Path::is_absolute () const
 bool Path::is_link () const
 {
   struct stat s {};
-  if (! lstat (_data.c_str (), &s) &&
-      S_ISLNK (s.st_mode))
+  if (!lstat(_data.c_str(), &s) && S_ISLNK(s.st_mode)) {
     return true;
+  }
 
   return false;
 }
@@ -244,23 +248,21 @@ std::string Path::expand (const std::string& in)
     }
 
     // Convert: ~ --> /home/user
-    if (copy.length () == 1)
+    if (copy.length() == 1) {
       copy = home;
 
     // Convert: ~/x --> /home/user/x
-    else if (copy.length () > tilde + 1 &&
-             copy[tilde + 1] == '/')
-    {
+    } else if (copy.length() > tilde + 1 && copy[tilde + 1] == '/') {
       copy.replace (tilde, 1, home);
     }
 
     // Convert: ~foo/x --> /home/foo/x
-    else if ((slash = copy.find  ("/", tilde)) != std::string::npos)
-    {
+    else if ((slash = copy.find("/", tilde)) != std::string::npos) {
       std::string name = copy.substr (tilde + 1, slash - tilde - 1);
       struct passwd* pw = getpwnam (name.c_str ());
-      if (pw)
-        copy.replace (tilde, slash - tilde, pw->pw_dir);
+      if (pw) {
+        copy.replace(tilde, slash - tilde, pw->pw_dir);
+      }
     }
   }
 
@@ -289,10 +291,13 @@ std::vector <std::string> Path::glob (const std::string& pattern)
 #ifdef SOLARIS
   if (!::glob (pattern.c_str (), GLOB_ERR, nullptr, &g))
 #else
-  if (!::glob (pattern.c_str (), GLOB_ERR | GLOB_BRACE | GLOB_TILDE, nullptr, &g))
+  if (!::glob(pattern.c_str(), GLOB_ERR | GLOB_BRACE | GLOB_TILDE, nullptr,
+              &g)) {
 #endif
-    for (int i = 0; i < (int) g.gl_pathc; ++i)
-      results.push_back (g.gl_pathv[i]);
+    for (int i = 0; i < (int)g.gl_pathc; ++i) {
+      results.push_back(g.gl_pathv[i]);
+    }
+}
 
   globfree (&g);
   return results;
@@ -337,15 +342,17 @@ File::File (const std::string& in)
 ////////////////////////////////////////////////////////////////////////////////
 File::~File ()
 {
-  if (_fh)
-    close ();
+  if (_fh) {
+    close();
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 File& File::operator= (const File& other)
 {
-  if (this != &other)
-    Path::operator= (other);
+  if (this != &other) {
+    Path::operator=(other);
+  }
 
   _locked = false;
   return *this;
@@ -373,10 +380,10 @@ bool File::remove () const
 ////////////////////////////////////////////////////////////////////////////////
 std::string File::removeBOM (const std::string& input)
 {
-  if (input[0] && input[0] == '\xEF' &&
-      input[1] && input[1] == '\xBB' &&
-      input[2] && input[2] == '\xBF')
-    return input.substr (3);
+  if (input[0] && input[0] == '\xEF' && input[1] && input[1] == '\xBB' &&
+      input[2] && input[2] == '\xBF') {
+    return input.substr(3);
+  }
 
   return input;
 }
@@ -389,9 +396,11 @@ bool File::open ()
     if (! _fh)
     {
       bool already_exists = exists ();
-      if (already_exists)
-        if (!readable () || !writable ())
-          throw std::string (format (STRING_FILE_PERMS, _data));
+      if (already_exists) {
+        if (!readable() || !writable()) {
+          throw std::string(format(STRING_FILE_PERMS, _data));
+        }
+      }
 
       _fh = fopen (_data.c_str (), (already_exists ? "r+" : "w+"));
       if (_fh)
@@ -400,9 +409,9 @@ bool File::open ()
         _locked = false;
         return true;
       }
-    }
-    else
+    } else {
       return true;
+    }
   }
 
   return false;
@@ -413,8 +422,9 @@ void File::close ()
 {
   if (_fh)
   {
-    if (_locked)
-      unlock ();
+    if (_locked) {
+      unlock();
+    }
 
     fclose (_fh);
     _fh = nullptr;
@@ -432,8 +442,9 @@ bool File::lock ()
                     // l_type   l_whence  l_start  l_len  l_pid
     struct flock fl = {F_WRLCK, SEEK_SET, 0,       0,     0 };
     fl.l_pid = getpid ();
-    if (fcntl (_h, F_SETLKW, &fl) == 0)
+    if (fcntl(_h, F_SETLKW, &fl) == 0) {
       _locked = true;
+    }
   }
 
   return _locked;
@@ -514,8 +525,9 @@ void File::read (std::vector <std::string>& contents)
 // Opens if necessary.
 void File::append (const std::string& line)
 {
-  if (!_fh)
-    open ();
+  if (!_fh) {
+    open();
+  }
 
   if (_fh)
   {
@@ -528,35 +540,41 @@ void File::append (const std::string& line)
 // Opens if necessary.
 void File::append (const std::vector <std::string>& lines)
 {
-  if (!_fh)
-    open ();
+  if (!_fh) {
+    open();
+  }
 
   if (_fh)
   {
     fseek (_fh, 0, SEEK_END);
-    for (auto& line : lines)
-      fputs (line.c_str (), _fh);
+    for (auto& line : lines) {
+      fputs(line.c_str(), _fh);
+    }
   }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void File::write_raw (const std::string& line)
 {
-  if (!_fh)
-    open ();
+  if (!_fh) {
+    open();
+  }
 
-  if (_fh)
-    fputs (line.c_str (), _fh);
+  if (_fh) {
+    fputs(line.c_str(), _fh);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void File::truncate ()
 {
-  if (!_fh)
-    open ();
+  if (!_fh) {
+    open();
+  }
 
-  if (_fh)
-    (void) ftruncate (_h, 0);
+  if (_fh) {
+    (void)ftruncate(_h, 0);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -578,8 +596,9 @@ void File::truncate ()
 mode_t File::mode ()
 {
   struct stat s;
-  if (!stat (_data.c_str (), &s))
+  if (!stat(_data.c_str(), &s)) {
     return s.st_mode;
+  }
 
   return 0;
 }
@@ -588,8 +607,9 @@ mode_t File::mode ()
 size_t File::size () const
 {
   struct stat s;
-  if (!stat (_data.c_str (), &s))
+  if (!stat(_data.c_str(), &s)) {
     return s.st_size;
+  }
 
   return 0;
 }
@@ -598,8 +618,9 @@ size_t File::size () const
 time_t File::mtime () const
 {
   struct stat s;
-  if (!stat (_data.c_str (), &s))
+  if (!stat(_data.c_str(), &s)) {
     return s.st_mtime;
+  }
 
   return 0;
 }
@@ -608,8 +629,9 @@ time_t File::mtime () const
 time_t File::ctime () const
 {
   struct stat s;
-  if (!stat (_data.c_str (), &s))
+  if (!stat(_data.c_str(), &s)) {
     return s.st_ctime;
+  }
 
   return 0;
 }
@@ -618,15 +640,16 @@ time_t File::ctime () const
 time_t File::btime () const
 {
   struct stat s;
-  if (!stat (_data.c_str (), &s))
+  if (!stat(_data.c_str(), &s)) {
 #ifdef HAVE_ST_BIRTHTIME
     return s.st_birthtime;
 #else
     return s.st_ctime;
+  }
 #endif
 
   return 0;
-}
+  }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool File::create (const std::string& name, int mode /* = 0640 */)
@@ -732,8 +755,9 @@ bool File::write (
     {
       out << line;
 
-      if (addNewlines)
+      if (addNewlines) {
         out << "\n";
+      }
     }
 
     out.close ();
@@ -769,9 +793,11 @@ bool File::copy (const std::string& from, const std::string& to)
 bool File::move (const std::string& from, const std::string& to)
 {
   auto expanded = expand (to);
-  if (from != expanded)
-    if (std::rename (from.c_str (), to.c_str ()) == 0)
+  if (from != expanded) {
+    if (std::rename(from.c_str(), to.c_str()) == 0) {
       return true;
+    }
+  }
 
   return false;
 }
@@ -808,8 +834,9 @@ Directory::Directory (const std::string& in)
 ////////////////////////////////////////////////////////////////////////////////
 Directory& Directory::operator= (const Directory& other)
 {
-  if (this != &other)
-    File::operator= (other);
+  if (this != &other) {
+    File::operator=(other);
+  }
 
   return *this;
 }
@@ -835,9 +862,9 @@ bool Directory::remove_directory (const std::string& dir) const
     struct dirent* de;
     while ((de = readdir (dp)) != nullptr)
     {
-      if (!strcmp (de->d_name, ".") ||
-          !strcmp (de->d_name, ".."))
+      if (!strcmp(de->d_name, ".") || !strcmp(de->d_name, "..")) {
         continue;
+      }
 
 #if defined (SOLARIS) || defined (HAIKU)
       struct stat s;
@@ -851,13 +878,15 @@ bool Directory::remove_directory (const std::string& dir) const
       {
         struct stat s;
         lstat ((dir + "/" + de->d_name).c_str (), &s);
-        if (S_ISDIR (s.st_mode))
+        if (S_ISDIR(s.st_mode)) {
           de->d_type = DT_DIR;
+        }
       }
-      if (de->d_type == DT_DIR)
+      if (de->d_type == DT_DIR) {
         remove_directory (dir + "/" + de->d_name);
-      else
-        unlink ((dir + "/" + de->d_name).c_str ());
+      } else {
+        unlink((dir + "/" + de->d_name).c_str());
+      }
 #endif
     }
 
@@ -888,8 +917,9 @@ std::string Directory::cwd ()
 {
 #ifdef HAVE_GET_CURRENT_DIR_NAME
   char *buf = get_current_dir_name ();
-  if (buf == nullptr)
-    throw std::bad_alloc ();
+  if (buf == nullptr) {
+    throw std::bad_alloc();
+  }
   std::string result (buf);
   free (buf);
   return result;
@@ -903,8 +933,9 @@ std::string Directory::cwd ()
 ////////////////////////////////////////////////////////////////////////////////
 bool Directory::up ()
 {
-  if (_data == "/")
+  if (_data == "/") {
     return false;
+  }
 
   auto slash = _data.rfind ('/');
   if (slash == 0)
@@ -939,9 +970,9 @@ void Directory::list (
     struct dirent* de;
     while ((de = readdir (dp)) != nullptr)
     {
-      if (!strcmp (de->d_name, ".") ||
-          !strcmp (de->d_name, ".."))
+      if (!strcmp(de->d_name, ".") || !strcmp(de->d_name, "..")) {
         continue;
+      }
 
 #if defined (SOLARIS) || defined (HAIKU)
       struct stat s;
@@ -955,13 +986,15 @@ void Directory::list (
       {
         struct stat s;
         lstat ((base + "/" + de->d_name).c_str (), &s);
-        if (S_ISDIR (s.st_mode))
+        if (S_ISDIR(s.st_mode)) {
           de->d_type = DT_DIR;
+        }
       }
-      if (recursive && de->d_type == DT_DIR)
+      if (recursive && de->d_type == DT_DIR) {
         list (base + "/" + de->d_name, results, recursive);
-      else
-        results.push_back (base + "/" + de->d_name);
+      } else {
+        results.push_back(base + "/" + de->d_name);
+      }
 #endif
     }
 

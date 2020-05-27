@@ -65,8 +65,9 @@ int CmdTimesheet::execute (std::string& output)
 
   // What day of the week does the user consider the first?
   int weekStart = ISO8601d::dayOfWeek (context.config.get ("weekstart"));
-  if (weekStart != 0 && weekStart != 1)
-    throw std::string (STRING_DATE_BAD_WEEKSTART);
+  if (weekStart != 0 && weekStart != 1) {
+    throw std::string(STRING_DATE_BAD_WEEKSTART);
+  }
 
   // Determine the date of the first day of the most recent report.
   ISO8601d today;
@@ -80,8 +81,9 @@ int CmdTimesheet::execute (std::string& output)
   // Determine how many reports to run.
   int quantity = 1;
   std::vector <std::string> words = context.cli2.getWords ();
-  if (words.size () == 1)
-    quantity = strtol (words[0].c_str (), NULL, 10);;
+  if (words.size() == 1) {
+    quantity = strtol(words[0].c_str(), NULL, 10);
+  };
 
   std::stringstream out;
   for (int week = 0; week < quantity; ++week)
@@ -94,8 +96,9 @@ int CmdTimesheet::execute (std::string& output)
                         + endString.toString (context.config.get ("dateformat"));
 
     Color bold;
-    if (context.color ())
-      bold = Color ("bold");
+    if (context.color()) {
+      bold = Color("bold");
+    }
 
     out << "\n"
         << bold.colorize (title)
@@ -129,8 +132,9 @@ int CmdTimesheet::execute (std::string& output)
 
           int row = completed.addRow ();
           std::string format = context.config.get ("dateformat.report");
-          if (format == "")
-            format = context.config.get ("dateformat");
+          if (format == "") {
+            format = context.config.get("dateformat");
+          }
           completed.set (row, 1, task.get ("project"), c);
 
           if(task.has ("due"))
@@ -144,12 +148,12 @@ int CmdTimesheet::execute (std::string& output)
 
           std::map <std::string, std::string> annotations;
           task.getAnnotations (annotations);
-          for (auto& ann : annotations)
-            description += "\n"
-                         + std::string (indent, ' ')
-                         + ISO8601d (ann.first.substr (11)).toString (context.config.get ("dateformat"))
-                         + " "
-                         + ann.second;
+          for (auto& ann : annotations) {
+            description += "\n" + std::string(indent, ' ') +
+                           ISO8601d(ann.first.substr(11))
+                               .toString(context.config.get("dateformat")) +
+                           " " + ann.second;
+          }
 
           completed.set (row, 3, description, c);
         }
@@ -158,9 +162,9 @@ int CmdTimesheet::execute (std::string& output)
 
     out << "  " << format (STRING_CMD_TIMESHEET_DONE, completed.rows ()) << "\n";
 
-    if (completed.rows ())
-      out << completed.render ()
-          << "\n";
+    if (completed.rows()) {
+      out << completed.render() << "\n";
+    }
 
     // Now render the started table.
     ViewText started;
@@ -185,8 +189,9 @@ int CmdTimesheet::execute (std::string& output)
 
           int row = started.addRow ();
           std::string format = context.config.get ("dateformat.report");
-          if (format == "")
-            format = context.config.get ("dateformat");
+          if (format == "") {
+            format = context.config.get("dateformat");
+          }
           started.set (row, 1, task.get ("project"), c);
 
           if (task.has ("due"))
@@ -200,12 +205,12 @@ int CmdTimesheet::execute (std::string& output)
 
           std::map <std::string, std::string> annotations;
           task.getAnnotations (annotations);
-          for (auto& ann : annotations)
-            description += "\n"
-                         + std::string (indent, ' ')
-                         + ISO8601d (ann.first.substr (11)).toString (context.config.get ("dateformat"))
-                         + " "
-                         + ann.second;
+          for (auto& ann : annotations) {
+            description += "\n" + std::string(indent, ' ') +
+                           ISO8601d(ann.first.substr(11))
+                               .toString(context.config.get("dateformat")) +
+                           " " + ann.second;
+          }
 
           started.set (row, 3, description, c);
         }
@@ -214,9 +219,9 @@ int CmdTimesheet::execute (std::string& output)
 
     out << "  " << format (STRING_CMD_TIMESHEET_STARTED, started.rows ()) << "\n";
 
-    if (started.rows ())
-      out << started.render ()
-          << "\n\n";
+    if (started.rows()) {
+      out << started.render() << "\n\n";
+    }
 
     // Prior week.
     start -= 7 * 86400;

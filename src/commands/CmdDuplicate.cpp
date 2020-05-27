@@ -115,31 +115,34 @@ int CmdDuplicate::execute (std::string&)
       feedback_affected (STRING_CMD_DUPLICATE_TASK, task);
 
       auto status = dup.getStatus ();
-      if (context.verbose ("new-id") &&
-          (status == Task::pending ||
-           status == Task::waiting))
+      if (context.verbose("new-id") &&
+          (status == Task::pending || status == Task::waiting)) {
         std::cout << format (STRING_CMD_ADD_FEEDBACK, dup.id) + "\n";
 
-      else if (context.verbose ("new-uuid") &&
-               status != Task::recurring)
-        std::cout << format (STRING_CMD_ADD_FEEDBACK, dup.get ("uuid")) + "\n";
+      } else if (context.verbose("new-uuid") && status != Task::recurring) {
+        std::cout << format(STRING_CMD_ADD_FEEDBACK, dup.get("uuid")) + "\n";
+      }
 
-      if (context.verbose ("project"))
-        projectChanges[task.get ("project")] = onProjectChange (task);
+      if (context.verbose("project")) {
+        projectChanges[task.get("project")] = onProjectChange(task);
+      }
     }
     else
     {
       std::cout << STRING_CMD_DUPLICATE_NO << "\n";
       rc = 1;
-      if (_permission_quit)
+      if (_permission_quit) {
         break;
+      }
     }
   }
 
   // Now list the project changes.
-  for (auto& change : projectChanges)
-    if (change.first != "")
-      context.footnote (change.second);
+  for (auto& change : projectChanges) {
+    if (change.first != "") {
+      context.footnote(change.second);
+    }
+  }
 
   feedback_affected (count == 1 ? STRING_CMD_DUPLICATE_1 : STRING_CMD_DUPLICATE_N, count);
   return rc;

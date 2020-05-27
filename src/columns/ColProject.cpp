@@ -66,17 +66,17 @@ void ColumnProject::measure (Task& task, unsigned int& minimum, unsigned int& ma
     if (_style == "parent")
     {
       auto period = project.find ('.');
-      if (period != std::string::npos)
-        project = project.substr (0, period);
+      if (period != std::string::npos) {
+        project = project.substr(0, period);
+      }
     }
     else if (_style == "indented")
     {
       project = indentProject (project, "  ", '.');
+    } else if (_style != "default" && _style != "full" &&
+               _style != "indented") {
+      throw format(STRING_COLUMN_BAD_FORMAT, _name, _style);
     }
-    else if (_style != "default"  &&
-             _style != "full"     &&
-             _style != "indented")
-      throw format (STRING_COLUMN_BAD_FORMAT, _name, _style);
 
     minimum = longestWord (project);
     maximum = utf8_width (project);
@@ -96,8 +96,9 @@ void ColumnProject::render (
     if (_style == "parent")
     {
       auto period = project.find ('.');
-      if (period != std::string::npos)
-        project = project.substr (0, period);
+      if (period != std::string::npos) {
+        project = project.substr(0, period);
+      }
     }
     else if (_style == "indented")
     {
@@ -107,8 +108,9 @@ void ColumnProject::render (
     std::vector <std::string> raw;
     wrapText (raw, project, width, _hyphenate);
 
-    for (const auto& i : raw)
-      renderStringLeft (lines, width, color, i);
+    for (const auto& i : raw) {
+      renderStringLeft(lines, width, color, i);
+    }
   }
 }
 

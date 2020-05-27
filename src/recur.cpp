@@ -56,8 +56,9 @@ void handleRecurrence ()
 {
   // Recurrence can be disabled.
   // Note: This is currently a workaround for TD-44, TW-1520.
-  if (! context.config.getBoolean ("recurrence"))
+  if (!context.config.getBoolean("recurrence")) {
     return;
+  }
 
   auto tasks = context.tdb2.pending.get_tasks ();
   ISO8601d now;
@@ -137,8 +138,9 @@ void handleRecurrence ()
         t.set ("mask", mask);
         context.tdb2.modify (t);
 
-        if (context.verbose ("recur"))
-          context.footnote (format (STRING_RECUR_CREATE, t.get ("description")));
+        if (context.verbose("recur")) {
+          context.footnote(format(STRING_RECUR_CREATE, t.get("description")));
+        }
       }
     }
 
@@ -165,8 +167,9 @@ bool generateDueDates (Task& parent, std::vector <ISO8601d>& allDue)
 {
   // Determine due date, recur period and until date.
   ISO8601d due (parent.get_date ("due"));
-  if (due._date == 0)
+  if (due._date == 0) {
     return false;
+  }
 
   std::string recur = parent.get ("recur");
 
@@ -191,18 +194,21 @@ bool generateDueDates (Task& parent, std::vector <ISO8601d>& allDue)
       // parent mask contains all + or X, then there never will be another task
       // to generate, and this parent task may be safely reaped.
       std::string mask = parent.get ("mask");
-      if (mask.length () == allDue.size () &&
-          mask.find ('-') == std::string::npos)
+      if (mask.length() == allDue.size() &&
+          mask.find('-') == std::string::npos) {
         return false;
+      }
 
       return true;
     }
 
-    if (i > now)
+    if (i > now) {
       ++recurrence_counter;
+    }
 
-    if (recurrence_counter >= recurrence_limit)
+    if (recurrence_counter >= recurrence_limit) {
       return true;
+    }
   }
 
   return true;
@@ -228,8 +234,9 @@ ISO8601d getNextRecurrence (ISO8601d& current, std::string& period)
        ++y;
     }
 
-    while (! ISO8601d::valid (m, d, y))
+    while (!ISO8601d::valid(m, d, y)) {
       --d;
+    }
 
     return ISO8601d (m, d, y, ho, mi, se);
   }
@@ -239,9 +246,13 @@ ISO8601d getNextRecurrence (ISO8601d& current, std::string& period)
     int dow = current.dayOfWeek ();
     int days;
 
-         if (dow == 5) days = 3;
-    else if (dow == 6) days = 2;
-    else               days = 1;
+    if (dow == 5) {
+      days = 3;
+    } else if (dow == 6) {
+      days = 2;
+    } else {
+      days = 1;
+    }
 
     return current + (days * 86400);
   }
@@ -258,8 +269,9 @@ ISO8601d getNextRecurrence (ISO8601d& current, std::string& period)
        ++y;
     }
 
-    while (! ISO8601d::valid (m, d, y))
+    while (!ISO8601d::valid(m, d, y)) {
       --d;
+    }
 
     return ISO8601d (m, d, y, ho, mi, se);
   }
@@ -277,8 +289,9 @@ ISO8601d getNextRecurrence (ISO8601d& current, std::string& period)
        ++y;
     }
 
-    while (! ISO8601d::valid (m, d, y))
+    while (!ISO8601d::valid(m, d, y)) {
       --d;
+    }
 
     return ISO8601d (m, d, y);
   }
@@ -293,8 +306,9 @@ ISO8601d getNextRecurrence (ISO8601d& current, std::string& period)
        ++y;
     }
 
-    while (! ISO8601d::valid (m, d, y))
+    while (!ISO8601d::valid(m, d, y)) {
       --d;
+    }
 
     return ISO8601d (m, d, y, ho, mi, se);
   }
@@ -310,8 +324,9 @@ ISO8601d getNextRecurrence (ISO8601d& current, std::string& period)
        ++y;
     }
 
-    while (! ISO8601d::valid (m, d, y))
+    while (!ISO8601d::valid(m, d, y)) {
       --d;
+    }
 
     return ISO8601d (m, d, y, ho, mi, se);
   }
@@ -326,8 +341,9 @@ ISO8601d getNextRecurrence (ISO8601d& current, std::string& period)
        ++y;
     }
 
-    while (! ISO8601d::valid (m, d, y))
+    while (!ISO8601d::valid(m, d, y)) {
       --d;
+    }
 
     return ISO8601d (m, d, y, ho, mi, se);
   }
@@ -342,8 +358,9 @@ ISO8601d getNextRecurrence (ISO8601d& current, std::string& period)
        ++y;
     }
 
-    while (! ISO8601d::valid (m, d, y))
+    while (!ISO8601d::valid(m, d, y)) {
       --d;
+    }
 
     return ISO8601d (m, d, y, ho, mi, se);
   }
@@ -365,8 +382,9 @@ ISO8601d getNextRecurrence (ISO8601d& current, std::string& period)
 
     // If the due data just happens to be 2/29 in a leap year, then simply
     // incrementing y is going to create an invalid date.
-    if (m == 2 && d == 29)
+    if (m == 2 && d == 29) {
       d = 28;
+    }
 
     return ISO8601d (m, d, y, ho, mi, se);
   }
@@ -375,8 +393,9 @@ ISO8601d getNextRecurrence (ISO8601d& current, std::string& period)
   int secs = 0;
   std::string::size_type idx = 0;
   ISO8601p p;
-  if (! p.parse (period, idx))
-    throw std::string (format (STRING_TASK_VALID_RECUR, period));
+  if (!p.parse(period, idx)) {
+    throw std::string(format(STRING_TASK_VALID_RECUR, period));
+  }
 
   secs = (time_t) p;
   return current + secs;
@@ -406,8 +425,9 @@ void updateRecurrenceMask (Task& task)
     else
     {
       std::string mask;
-      for (unsigned int i = 0; i < index; ++i)
+      for (unsigned int i = 0; i < index; ++i) {
         mask += "?";
+      }
 
       mask += (task.getStatus () == Task::pending)   ? '-'
             : (task.getStatus () == Task::completed) ? '+'
@@ -431,8 +451,9 @@ void updateRecurrenceMask (Task& task)
 bool nag (Task& task)
 {
   // Special tag overrides nagging.
-  if (task.hasTag ("nonag"))
+  if (task.hasTag("nonag")) {
     return false;
+  }
 
   std::string nagMessage = context.config.get ("nag");
   if (nagMessage != "")

@@ -15,8 +15,10 @@ int main (int argc, char** argv)
     Lexer l (argv[i]);
     std::string token;
     Lexer::Type type;
-    while (l.token (token, type))
-      std::cout << "  token '" << token << "' " << Lexer::typeToString (type) << "\n";
+    while (l.token(token, type)) {
+      std::cout << "  token '" << token << "' " << Lexer::typeToString(type)
+                << "\n";
+    }
   }
 }
 

@@ -68,11 +68,13 @@ int CmdImport::execute (std::string&)
 
     std::string json;
     std::string line;
-    while (std::getline (std::cin, line))
+    while (std::getline(std::cin, line)) {
       json += line + "\n";
+    }
 
-    if (nontrivial (json))
-      count = import (json);
+    if (nontrivial(json)) {
+      count = import(json);
+    }
   }
   else
   {
@@ -80,16 +82,18 @@ int CmdImport::execute (std::string&)
     for (auto& word : words)
     {
       File incoming (word);
-      if (! incoming.exists ())
-        throw format (STRING_CMD_IMPORT_MISSING, word);
+      if (!incoming.exists()) {
+        throw format(STRING_CMD_IMPORT_MISSING, word);
+      }
 
       std::cout << format (STRING_CMD_IMPORT_FILE, word) << "\n";
 
       // Load the file.
       std::string json;
       incoming.read (json);
-      if (nontrivial (json))
-        count += import (json);
+      if (nontrivial(json)) {
+        count += import(json);
+      }
     }
   }
 
@@ -199,11 +203,13 @@ void CmdImport::importSingleTask (json::object* obj)
 
     // Other generated values are replaced by values from existing task,
     // so that they are ignored on comparison.
-    if (hasGeneratedEntry)
-      task.set ("entry", before.get ("entry"));
+    if (hasGeneratedEntry) {
+      task.set("entry", before.get("entry"));
+    }
 
-    if (hasGeneratedEnd)
-      task.set ("end", before.get ("end"));
+    if (hasGeneratedEnd) {
+      task.set("end", before.get("end"));
+    }
 
     if (before.data != task.data)
     {

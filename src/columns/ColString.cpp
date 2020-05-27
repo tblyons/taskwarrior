@@ -72,12 +72,11 @@ void ColumnString::measure (const std::string& value, unsigned int& minimum, uns
     std::string stripped = Color::strip (value);
     maximum = longestLine (stripped);
     minimum = longestWord (stripped);
-  }
-  else if (_style == "left_fixed" ||
-           _style == "right_fixed")
+  } else if (_style == "left_fixed" || _style == "right_fixed") {
     minimum = maximum = strippedLength (value);
-  else
-    throw format (STRING_COLUMN_BAD_FORMAT, _name, _style);
+  } else {
+    throw format(STRING_COLUMN_BAD_FORMAT, _name, _style);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -92,23 +91,26 @@ void ColumnString::render (
     std::vector <std::string> raw;
     wrapText (raw, value, width, _hyphenate);
 
-    for (auto& i : raw)
-      renderStringLeft (lines, width, color, i);
+    for (auto& i : raw) {
+      renderStringLeft(lines, width, color, i);
+    }
   }
   else if (_style == "right")
   {
     std::vector <std::string> raw;
     wrapText (raw, value, width, _hyphenate);
 
-    for (auto& i : raw)
-      renderStringRight (lines, width, color, i);
+    for (auto& i : raw) {
+      renderStringRight(lines, width, color, i);
+    }
   }
 
-  else if (_style == "left_fixed")
+  else if (_style == "left_fixed") {
     renderStringLeft (lines, width, color, value);
 
-  else if (_style == "right_fixed")
-    renderStringRight (lines, width, color, value);
+  } else if (_style == "right_fixed") {
+    renderStringRight(lines, width, color, value);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

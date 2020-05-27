@@ -59,8 +59,9 @@ int CmdZshAttributes::execute (std::string& output)
   std::sort (columns.begin (), columns.end ());
 
   std::stringstream out;
-  for (auto& col : columns)
+  for (auto& col : columns) {
     out << col << ":" << col << "\n";
+  }
 
   output = out.str ();
   return 0;

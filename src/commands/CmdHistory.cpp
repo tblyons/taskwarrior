@@ -74,15 +74,17 @@ int CmdHistoryMonthly::execute (std::string& output)
     ISO8601d entry (task.get_date ("entry"));
 
     ISO8601d end;
-    if (task.has ("end"))
-      end = ISO8601d (task.get_date ("end"));
+    if (task.has("end")) {
+      end = ISO8601d(task.get_date("end"));
+    }
 
     time_t epoch = entry.startOfMonth ().toEpoch ();
     groups[epoch] = 0;
 
     // Every task has an entry date, but exclude templates.
-    if (task.getStatus () != Task::recurring)
+    if (task.getStatus() != Task::recurring) {
       ++addedGroup[epoch];
+    }
 
     // All deleted tasks have an end date.
     if (task.getStatus () == Task::deleted)
@@ -163,10 +165,9 @@ int CmdHistoryMonthly::execute (std::string& output)
     }
 
     Color net_color;
-    if (context.color () && net)
-      net_color = net > 0
-                    ? Color (Color::red)
-                    : Color (Color::green);
+    if (context.color() && net) {
+      net_color = net > 0 ? Color(Color::red) : Color(Color::green);
+    }
 
     view.set (row, 5, net, net_color);
   }
@@ -178,8 +179,9 @@ int CmdHistoryMonthly::execute (std::string& output)
     row = view.addRow ();
 
     Color row_color;
-    if (context.color ())
-      row_color = Color (Color::nocolor, Color::nocolor, false, true, false);
+    if (context.color()) {
+      row_color = Color(Color::nocolor, Color::nocolor, false, true, false);
+    }
 
     view.set (row, 1, STRING_CMD_HISTORY_AVERAGE, row_color);
     view.set (row, 2, totalAdded     / (view.rows () - 2), row_color);
@@ -189,12 +191,11 @@ int CmdHistoryMonthly::execute (std::string& output)
   }
 
   std::stringstream out;
-  if (view.rows ())
+  if (view.rows()) {
     out << optionalBlankLine ()
         << view.render ()
         << "\n";
-  else
-  {
+  } else {
     context.footnote (STRING_FEEDBACK_NO_TASKS);
     rc = 1;
   }
@@ -239,15 +240,17 @@ int CmdHistoryAnnual::execute (std::string& output)
     ISO8601d entry (task.get_date ("entry"));
 
     ISO8601d end;
-    if (task.has ("end"))
-      end = ISO8601d (task.get_date ("end"));
+    if (task.has("end")) {
+      end = ISO8601d(task.get_date("end"));
+    }
 
     time_t epoch = entry.startOfYear ().toEpoch ();
     groups[epoch] = 0;
 
     // Every task has an entry date, but exclude templates.
-    if (task.getStatus () != Task::recurring)
+    if (task.getStatus() != Task::recurring) {
       ++addedGroup[epoch];
+    }
 
     // All deleted tasks have an end date.
     if (task.getStatus () == Task::deleted)
@@ -326,10 +329,9 @@ int CmdHistoryAnnual::execute (std::string& output)
     }
 
     Color net_color;
-    if (context.color () && net)
-      net_color = net > 0
-                    ? Color (Color::red)
-                    : Color (Color::green);
+    if (context.color() && net) {
+      net_color = net > 0 ? Color(Color::red) : Color(Color::green);
+    }
 
     view.set (row, 4, net, net_color);
   }
@@ -340,8 +342,9 @@ int CmdHistoryAnnual::execute (std::string& output)
     row = view.addRow ();
 
     Color row_color;
-    if (context.color ())
-      row_color = Color (Color::nocolor, Color::nocolor, false, true, false);
+    if (context.color()) {
+      row_color = Color(Color::nocolor, Color::nocolor, false, true, false);
+    }
 
     view.set (row, 0, STRING_CMD_HISTORY_AVERAGE, row_color);
     view.set (row, 1, totalAdded     / (view.rows () - 2), row_color);
@@ -351,12 +354,11 @@ int CmdHistoryAnnual::execute (std::string& output)
   }
 
   std::stringstream out;
-  if (view.rows ())
+  if (view.rows()) {
     out << optionalBlankLine ()
         << view.render ()
         << "\n";
-  else
-  {
+  } else {
     context.footnote (STRING_FEEDBACK_NO_TASKS);
     rc = 1;
   }
@@ -401,15 +403,17 @@ int CmdGHistoryMonthly::execute (std::string& output)
     ISO8601d entry (task.get_date ("entry"));
 
     ISO8601d end;
-    if (task.has ("end"))
-      end = ISO8601d (task.get_date ("end"));
+    if (task.has("end")) {
+      end = ISO8601d(task.get_date("end"));
+    }
 
     time_t epoch = entry.startOfMonth ().toEpoch ();
     groups[epoch] = 0;
 
     // Every task has an entry date, but exclude templates.
-    if (task.getStatus () != Task::recurring)
+    if (task.getStatus() != Task::recurring) {
       ++addedGroup[epoch];
+    }
 
     // All deleted tasks have an end date.
     if (task.getStatus () == Task::deleted)
@@ -449,11 +453,13 @@ int CmdGHistoryMonthly::execute (std::string& output)
   int maxRemovedLine = 0;
   for (auto& i : groups)
   {
-    if (completedGroup[i.first] + deletedGroup[i.first] > maxRemovedLine)
+    if (completedGroup[i.first] + deletedGroup[i.first] > maxRemovedLine) {
       maxRemovedLine = completedGroup[i.first] + deletedGroup[i.first];
+    }
 
-    if (addedGroup[i.first] > maxAddedLine)
+    if (addedGroup[i.first] > maxAddedLine) {
       maxAddedLine = addedGroup[i.first];
+    }
   }
 
   int maxLine = maxAddedLine + maxRemovedLine;
@@ -497,24 +503,27 @@ int CmdGHistoryMonthly::execute (std::string& output)
         if (addedGroup[i.first])
         {
           aBar = format (addedGroup[i.first]);
-          while (aBar.length () < addedBar)
+          while (aBar.length() < addedBar) {
             aBar = " " + aBar;
+          }
         }
 
         std::string cBar = "";
         if (completedGroup[i.first])
         {
           cBar = format (completedGroup[i.first]);
-          while (cBar.length () < completedBar)
+          while (cBar.length() < completedBar) {
             cBar = " " + cBar;
+          }
         }
 
         std::string dBar = "";
         if (deletedGroup[i.first])
         {
           dBar = format (deletedGroup[i.first]);
-          while (dBar.length () < deletedBar)
+          while (dBar.length() < deletedBar) {
             dBar = " " + dBar;
+          }
         }
 
         bar += std::string (leftOffset - aBar.length (), ' ');
@@ -525,9 +534,18 @@ int CmdGHistoryMonthly::execute (std::string& output)
       }
       else
       {
-        std::string aBar = ""; while (aBar.length () < addedBar)     aBar += "+";
-        std::string cBar = ""; while (cBar.length () < completedBar) cBar += "X";
-        std::string dBar = ""; while (dBar.length () < deletedBar)   dBar += "-";
+        std::string aBar = "";
+        while (aBar.length() < addedBar) {
+          aBar += "+";
+        }
+        std::string cBar = "";
+        while (cBar.length() < completedBar) {
+          cBar += "X";
+        }
+        std::string dBar = "";
+        while (dBar.length() < deletedBar) {
+          dBar += "-";
+        }
 
         bar += std::string (leftOffset - aBar.length (), ' ');
         bar += aBar + cBar + dBar;
@@ -544,16 +562,16 @@ int CmdGHistoryMonthly::execute (std::string& output)
         << view.render ()
         << "\n";
 
-    if (context.color ())
+    if (context.color()) {
       out << format (STRING_CMD_HISTORY_LEGEND,
                      color_add.colorize (STRING_CMD_HISTORY_ADDED),
                      color_done.colorize (STRING_CMD_HISTORY_COMP),
                      color_delete.colorize (STRING_CMD_HISTORY_DEL))
           << optionalBlankLine ()
           << "\n";
-    else
-      out << STRING_CMD_HISTORY_LEGEND_A
-          << "\n";
+    } else {
+      out << STRING_CMD_HISTORY_LEGEND_A << "\n";
+    }
   }
   else
   {
@@ -601,15 +619,17 @@ int CmdGHistoryAnnual::execute (std::string& output)
     ISO8601d entry (task.get_date ("entry"));
 
     ISO8601d end;
-    if (task.has ("end"))
-      end = ISO8601d (task.get_date ("end"));
+    if (task.has("end")) {
+      end = ISO8601d(task.get_date("end"));
+    }
 
     time_t epoch = entry.startOfYear ().toEpoch ();
     groups[epoch] = 0;
 
     // Every task has an entry date, but exclude templates.
-    if (task.getStatus () != Task::recurring)
+    if (task.getStatus() != Task::recurring) {
       ++addedGroup[epoch];
+    }
 
     // All deleted tasks have an end date.
     if (task.getStatus () == Task::deleted)
@@ -648,11 +668,13 @@ int CmdGHistoryAnnual::execute (std::string& output)
   int maxRemovedLine = 0;
   for (auto& i : groups)
   {
-    if (completedGroup[i.first] + deletedGroup[i.first] > maxRemovedLine)
+    if (completedGroup[i.first] + deletedGroup[i.first] > maxRemovedLine) {
       maxRemovedLine = completedGroup[i.first] + deletedGroup[i.first];
+    }
 
-    if (addedGroup[i.first] > maxAddedLine)
+    if (addedGroup[i.first] > maxAddedLine) {
       maxAddedLine = addedGroup[i.first];
+    }
   }
 
   int maxLine = maxAddedLine + maxRemovedLine;
@@ -695,24 +717,27 @@ int CmdGHistoryAnnual::execute (std::string& output)
         if (addedGroup[i.first])
         {
           aBar = format (addedGroup[i.first]);
-          while (aBar.length () < addedBar)
+          while (aBar.length() < addedBar) {
             aBar = " " + aBar;
+          }
         }
 
         std::string cBar = "";
         if (completedGroup[i.first])
         {
           cBar = format (completedGroup[i.first]);
-          while (cBar.length () < completedBar)
+          while (cBar.length() < completedBar) {
             cBar = " " + cBar;
+          }
         }
 
         std::string dBar = "";
         if (deletedGroup[i.first])
         {
           dBar = format (deletedGroup[i.first]);
-          while (dBar.length () < deletedBar)
+          while (dBar.length() < deletedBar) {
             dBar = " " + dBar;
+          }
         }
 
         bar += std::string (leftOffset - aBar.length (), ' ');
@@ -722,9 +747,18 @@ int CmdGHistoryAnnual::execute (std::string& output)
       }
       else
       {
-        std::string aBar = ""; while (aBar.length () < addedBar)     aBar += "+";
-        std::string cBar = ""; while (cBar.length () < completedBar) cBar += "X";
-        std::string dBar = ""; while (dBar.length () < deletedBar)   dBar += "-";
+        std::string aBar = "";
+        while (aBar.length() < addedBar) {
+          aBar += "+";
+        }
+        std::string cBar = "";
+        while (cBar.length() < completedBar) {
+          cBar += "X";
+        }
+        std::string dBar = "";
+        while (dBar.length() < deletedBar) {
+          dBar += "-";
+        }
 
         bar += std::string (leftOffset - aBar.length (), ' ');
         bar += aBar + cBar + dBar;
@@ -741,16 +775,16 @@ int CmdGHistoryAnnual::execute (std::string& output)
         << view.render ()
         << "\n";
 
-    if (context.color ())
+    if (context.color()) {
       out << format (STRING_CMD_HISTORY_LEGEND,
                      color_add.colorize (STRING_CMD_HISTORY_ADDED),
                      color_done.colorize (STRING_CMD_HISTORY_COMP),
                      color_delete.colorize (STRING_CMD_HISTORY_DEL))
           << optionalBlankLine ()
           << "\n";
-    else
-      out << STRING_CMD_HISTORY_LEGEND_A
-          << "\n";
+    } else {
+      out << STRING_CMD_HISTORY_LEGEND_A << "\n";
+    }
   }
   else
   {

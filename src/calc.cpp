@@ -65,7 +65,7 @@ int main (int argc, char** argv)
 
     // Combine all the arguments into one expression string.
     std::string expression;
-    for (int i = 1; i < argc; i++)
+    for (int i = 1; i < argc; i++) {
       if (!strcmp (argv[i], "-h") || ! strcmp (argv[i], "--help"))
       {
         std::cout << "\n"
@@ -115,25 +115,28 @@ int main (int argc, char** argv)
                   << "\n";
 
         exit (1);
-      }
-      else if (!strcmp (argv[i], "-d") || !strcmp (argv[i], "--debug"))
+      } else if (!strcmp(argv[i], "-d") || !strcmp(argv[i], "--debug")) {
         e.debug (true);
-      else if (!strcmp (argv[i], "-i") || !strcmp (argv[i], "--infix"))
+      } else if (!strcmp(argv[i], "-i") || !strcmp(argv[i], "--infix")) {
         infix = true;
-      else if (!strcmp (argv[i], "-p") || !strcmp (argv[i], "--postfix"))
+      } else if (!strcmp(argv[i], "-p") || !strcmp(argv[i], "--postfix")) {
         infix = false;
-      else
-        expression += std::string (argv[i]) + " ";
+      } else {
+        expression += std::string(argv[i]) + " ";
+      }
+    }
 
     Variant result;
-    if (infix)
+    if (infix) {
       e.evaluateInfixExpression (expression, result);
-    else
-      e.evaluatePostfixExpression (expression, result);
+    } else {
+      e.evaluatePostfixExpression(expression, result);
+    }
 
     // Show any debug output.
-    for (auto& i : context.debugMessages)
+    for (auto& i : context.debugMessages) {
       std::cout << i << "\n";
+    }
 
     // Show the result in string form.
     std::cout << (std::string) result

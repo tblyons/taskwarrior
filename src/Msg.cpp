@@ -39,8 +39,9 @@ void Msg::set (const std::string& name, const std::string& value)
 std::string Msg::get (const std::string& name) const
 {
   auto i = _header.find (name);
-  if (i != _header.end ())
+  if (i != _header.end()) {
     return i->second;
+  }
 
   return "";
 }
@@ -61,8 +62,9 @@ std::string Msg::getPayload () const
 std::vector <std::string> Msg::all () const
 {
   std::vector <std::string> names;
-  for (auto& i : _header)
-    names.push_back (i.first);
+  for (auto& i : _header) {
+    names.push_back(i.first);
+  }
 
   return names;
 }
@@ -71,8 +73,9 @@ std::vector <std::string> Msg::all () const
 std::string Msg::serialize () const
 {
   std::string output;
-  for (auto& i : _header)
+  for (auto& i : _header) {
     output += i.first + ": " + i.second + "\n";
+  }
 
   output += "\n" + _payload + "\n";
   return output;
@@ -85,8 +88,9 @@ bool Msg::parse (const std::string& input)
   _payload = "";
 
   auto separator = input.find ("\n\n");
-  if (separator == std::string::npos)
-    throw std::string ("ERROR: Malformed message");
+  if (separator == std::string::npos) {
+    throw std::string("ERROR: Malformed message");
+  }
 
   // Parse header.
   std::vector <std::string> lines;
@@ -94,8 +98,9 @@ bool Msg::parse (const std::string& input)
   for (auto& i : lines)
   {
     auto delimiter = i.find (':');
-    if (delimiter == std::string::npos)
-      throw std::string ("ERROR: Malformed message header '") + i + "'";
+    if (delimiter == std::string::npos) {
+      throw std::string("ERROR: Malformed message header '") + i + "'";
+    }
 
     _header[Lexer::trim (i.substr (0, delimiter))] = Lexer::trim (i.substr (delimiter + 1));
   }

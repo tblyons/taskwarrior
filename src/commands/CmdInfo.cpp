@@ -78,19 +78,22 @@ int CmdInfo::execute (std::string& output)
 
   // Get the undo data.
   std::vector <std::string> undo;
-  if (context.config.getBoolean ("journal.info"))
-    undo = context.tdb2.undo.get_lines ();
+  if (context.config.getBoolean("journal.info")) {
+    undo = context.tdb2.undo.get_lines();
+  }
 
   // Determine the output date format, which uses a hierarchy of definitions.
   //   rc.dateformat.info
   //   rc.dateformat
   std::string dateformat = context.config.get ("dateformat.info");
-  if (dateformat == "")
-    dateformat = context.config.get ("dateformat");
+  if (dateformat == "") {
+    dateformat = context.config.get("dateformat");
+  }
 
   std::string dateformatanno = context.config.get ("dateformat.annotation");
-  if (dateformatanno == "")
+  if (dateformatanno == "") {
     dateformatanno = dateformat;
+  }
 
   // Render each task.
   std::stringstream out;
@@ -129,12 +132,11 @@ int CmdInfo::execute (std::string& output)
 
     std::map <std::string, std::string> annotations;
     task.getAnnotations (annotations);
-    for (auto& anno : annotations)
-      description += "\n"
-                   + std::string (indent, ' ')
-                   + ISO8601d (anno.first.substr (11)).toString (dateformatanno)
-                   + " "
-                   + anno.second;
+    for (auto& anno : annotations) {
+      description += "\n" + std::string(indent, ' ') +
+                     ISO8601d(anno.first.substr(11)).toString(dateformatanno) +
+                     " " + anno.second;
+    }
 
     row = view.addRow ();
     view.set (row, 0, STRING_COLUMN_LABEL_DESC);
@@ -160,8 +162,9 @@ int CmdInfo::execute (std::string& output)
       if (blocked.size ())
       {
         std::stringstream message;
-        for (auto& block : blocked)
-          message << block.id << " " << block.get ("description") << "\n";
+        for (auto& block : blocked) {
+          message << block.id << " " << block.get("description") << "\n";
+        }
 
         row = view.addRow ();
         view.set (row, 0, STRING_CMD_INFO_BLOCKED);
@@ -176,8 +179,9 @@ int CmdInfo::execute (std::string& output)
       if (blocking.size ())
       {
         std::stringstream message;
-        for (auto& block : blocking)
-          message << block.id << " " << block.get ("description") << "\n";
+        for (auto& block : blocking) {
+          message << block.id << " " << block.get("description") << "\n";
+        }
 
         row = view.addRow ();
         view.set (row, 0, STRING_CMD_INFO_BLOCKING);
@@ -310,35 +314,93 @@ int CmdInfo::execute (std::string& output)
       // Note: This list must match that in Task::hasTag.
       // Note: This list must match that in ::feedback_reserved_tags.
       std::string virtualTags = "";
-      if (task.hasTag ("ACTIVE"))    virtualTags += "ACTIVE ";
-      if (task.hasTag ("ANNOTATED")) virtualTags += "ANNOTATED ";
-      if (task.hasTag ("BLOCKED"))   virtualTags += "BLOCKED ";
-      if (task.hasTag ("BLOCKING"))  virtualTags += "BLOCKING ";
-      if (task.hasTag ("CHILD"))     virtualTags += "CHILD ";
-      if (task.hasTag ("COMPLETED")) virtualTags += "COMPLETED ";
-      if (task.hasTag ("DELETED"))   virtualTags += "DELETED ";
-      if (task.hasTag ("DUE"))       virtualTags += "DUE ";
-      if (task.hasTag ("DUETODAY"))  virtualTags += "DUETODAY ";
-      if (task.hasTag ("MONTH"))     virtualTags += "MONTH ";
-      if (task.hasTag ("ORPHAN"))    virtualTags += "ORPHAN ";
-      if (task.hasTag ("OVERDUE"))   virtualTags += "OVERDUE ";
-      if (task.hasTag ("PARENT"))    virtualTags += "PARENT ";
-      if (task.hasTag ("PENDING"))   virtualTags += "PENDING ";
-      if (task.hasTag ("READY"))     virtualTags += "READY ";
-      if (task.hasTag ("SCHEDULED")) virtualTags += "SCHEDULED ";
-      if (task.hasTag ("TAGGED"))    virtualTags += "TAGGED ";
-      if (task.hasTag ("TODAY"))     virtualTags += "TODAY ";
-      if (task.hasTag ("TOMORROW"))  virtualTags += "TOMORROW ";
-      if (task.hasTag ("UDA"))       virtualTags += "UDA ";
-      if (task.hasTag ("UNBLOCKED")) virtualTags += "UNBLOCKED ";
-      if (task.hasTag ("UNTIL"))     virtualTags += "UNTIL ";
-      if (task.hasTag ("WAITING"))   virtualTags += "WAITING ";
-      if (task.hasTag ("WEEK"))      virtualTags += "WEEK ";
-      if (task.hasTag ("YEAR"))      virtualTags += "YEAR ";
-      if (task.hasTag ("YESTERDAY")) virtualTags += "YESTERDAY ";
-      if (task.hasTag ("LATEST"))    virtualTags += "LATEST ";
-      if (task.hasTag ("PROJECT"))   virtualTags += "PROJECT ";
-      if (task.hasTag ("PRIORITY"))  virtualTags += "PRIORITY ";
+      if (task.hasTag("ACTIVE")) {
+        virtualTags += "ACTIVE ";
+      }
+      if (task.hasTag("ANNOTATED")) {
+        virtualTags += "ANNOTATED ";
+      }
+      if (task.hasTag("BLOCKED")) {
+        virtualTags += "BLOCKED ";
+      }
+      if (task.hasTag("BLOCKING")) {
+        virtualTags += "BLOCKING ";
+      }
+      if (task.hasTag("CHILD")) {
+        virtualTags += "CHILD ";
+      }
+      if (task.hasTag("COMPLETED")) {
+        virtualTags += "COMPLETED ";
+      }
+      if (task.hasTag("DELETED")) {
+        virtualTags += "DELETED ";
+      }
+      if (task.hasTag("DUE")) {
+        virtualTags += "DUE ";
+      }
+      if (task.hasTag("DUETODAY")) {
+        virtualTags += "DUETODAY ";
+      }
+      if (task.hasTag("MONTH")) {
+        virtualTags += "MONTH ";
+      }
+      if (task.hasTag("ORPHAN")) {
+        virtualTags += "ORPHAN ";
+      }
+      if (task.hasTag("OVERDUE")) {
+        virtualTags += "OVERDUE ";
+      }
+      if (task.hasTag("PARENT")) {
+        virtualTags += "PARENT ";
+      }
+      if (task.hasTag("PENDING")) {
+        virtualTags += "PENDING ";
+      }
+      if (task.hasTag("READY")) {
+        virtualTags += "READY ";
+      }
+      if (task.hasTag("SCHEDULED")) {
+        virtualTags += "SCHEDULED ";
+      }
+      if (task.hasTag("TAGGED")) {
+        virtualTags += "TAGGED ";
+      }
+      if (task.hasTag("TODAY")) {
+        virtualTags += "TODAY ";
+      }
+      if (task.hasTag("TOMORROW")) {
+        virtualTags += "TOMORROW ";
+      }
+      if (task.hasTag("UDA")) {
+        virtualTags += "UDA ";
+      }
+      if (task.hasTag("UNBLOCKED")) {
+        virtualTags += "UNBLOCKED ";
+      }
+      if (task.hasTag("UNTIL")) {
+        virtualTags += "UNTIL ";
+      }
+      if (task.hasTag("WAITING")) {
+        virtualTags += "WAITING ";
+      }
+      if (task.hasTag("WEEK")) {
+        virtualTags += "WEEK ";
+      }
+      if (task.hasTag("YEAR")) {
+        virtualTags += "YEAR ";
+      }
+      if (task.hasTag("YESTERDAY")) {
+        virtualTags += "YESTERDAY ";
+      }
+      if (task.hasTag("LATEST")) {
+        virtualTags += "LATEST ";
+      }
+      if (task.hasTag("PROJECT")) {
+        virtualTags += "PROJECT ";
+      }
+      if (task.hasTag("PRIORITY")) {
+        virtualTags += "PRIORITY ";
+      }
       // If you update the above list, update src/commands/CmdInfo.cpp and src/commands/CmdTags.cpp as well.
 
       row = view.addRow ();
@@ -373,16 +435,16 @@ int CmdInfo::execute (std::string& output)
             row = view.addRow ();
             view.set (row, 0, col->label ());
 
-            if (type == "date")
+            if (type == "date") {
               value = ISO8601d (value).toString (dateformat);
-            else if (type == "duration")
-            {
+            } else if (type == "duration") {
               ISO8601p iso;
               std::string::size_type cursor = 0;
-              if (iso.parse (value, cursor))
+              if (iso.parse(value, cursor)) {
                 value = (std::string) Variant ((time_t) iso, Variant::type_duration);
-              else
+              } else {
                 value = "PT0S";
+              }
             }
 
             view.set (row, 1, value);
@@ -448,8 +510,10 @@ int CmdInfo::execute (std::string& output)
               (end = var.first.find (".coefficient")) != std::string::npos)
           {
             std::string project = var.first.substr (21, end - 21);
-            if (task.get ("project").find (project) == 0)
-              urgencyTerm (urgencyDetails, "PROJECT " + project, 1.0, var.second);
+            if (task.get("project").find(project) == 0) {
+              urgencyTerm(urgencyDetails, "PROJECT " + project, 1.0,
+                          var.second);
+            }
           }
 
           // urgency.user.tag.<tag>.coefficient
@@ -457,8 +521,9 @@ int CmdInfo::execute (std::string& output)
               (end = var.first.find (".coefficient")) != std::string::npos)
           {
             std::string name = var.first.substr (17, end - 17);
-            if (task.hasTag (name))
-              urgencyTerm (urgencyDetails, "TAG " + name, 1.0, var.second);
+            if (task.hasTag(name)) {
+              urgencyTerm(urgencyDetails, "TAG " + name, 1.0, var.second);
+            }
           }
 
           // urgency.user.keyword.<keyword>.coefficient
@@ -466,8 +531,10 @@ int CmdInfo::execute (std::string& output)
               (end = var.first.find (".coefficient")) != std::string::npos)
           {
             std::string keyword = var.first.substr (21, end - 21);
-            if (task.get ("description").find (keyword) != std::string::npos)
-              urgencyTerm (urgencyDetails, "KEYWORD " + keyword, 1.0, var.second);
+            if (task.get("description").find(keyword) != std::string::npos) {
+              urgencyTerm(urgencyDetails, "KEYWORD " + keyword, 1.0,
+                          var.second);
+            }
           }
         }
 
@@ -484,14 +551,18 @@ int CmdInfo::execute (std::string& output)
             if (dot == std::string::npos)
             {
               // urgency.uda.<name>.coefficient
-              if (task.has (uda))
-                urgencyTerm (urgencyDetails, std::string ("UDA ") + uda, 1.0, var.second);
+              if (task.has(uda)) {
+                urgencyTerm(urgencyDetails, std::string("UDA ") + uda, 1.0,
+                            var.second);
+              }
             }
             else
             {
               // urgency.uda.<name>.<value>.coefficient
-              if (task.get (uda.substr(0, dot)) == uda.substr(dot+1))
-                urgencyTerm (urgencyDetails, std::string ("UDA ") + uda, 1.0, var.second);
+              if (task.get(uda.substr(0, dot)) == uda.substr(dot + 1)) {
+                urgencyTerm(urgencyDetails, std::string("UDA ") + uda, 1.0,
+                            var.second);
+              }
             }
           }
         }
@@ -533,8 +604,9 @@ int CmdInfo::execute (std::string& output)
         int when = i++;
         int previous = -1;
 
-        if (! undo[i].compare (0, 3, "old", 3))
+        if (!undo[i].compare(0, 3, "old", 3)) {
           previous = i++;
+        }
 
         int current = i++;
         i++; // Separator
@@ -560,13 +632,13 @@ int CmdInfo::execute (std::string& output)
         << view.render ()
         << "\n";
 
-    if (urgencyDetails.rows () > 0)
-      out << urgencyDetails.render ()
-          << "\n";
+    if (urgencyDetails.rows() > 0) {
+      out << urgencyDetails.render() << "\n";
+    }
 
-    if (journal.rows () > 0)
-      out << journal.render ()
-          << "\n";
+    if (journal.rows() > 0) {
+      out << journal.render() << "\n";
+    }
   }
 
   output = out.str ();

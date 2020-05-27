@@ -56,8 +56,9 @@ void sort_tasks (
   split (global_keys, keys, ',');
 
   // Only sort if necessary.
-  if (order.size ())
-    std::stable_sort (order.begin (), order.end (), sort_compare);
+  if (order.size()) {
+    std::stable_sort(order.begin(), order.end(), sort_compare);
+  }
 
   context.timer_sort.stop ();
 }
@@ -88,8 +89,9 @@ static bool sort_compare (int left, int right)
       left_real  = (*global_data)[left].urgency ();
       right_real = (*global_data)[right].urgency ();
 
-      if (left_real == right_real)
+      if (left_real == right_real) {
         continue;
+      }
 
       return ascending ? (left_real < right_real)
                        : (left_real > right_real);
@@ -101,8 +103,9 @@ static bool sort_compare (int left, int right)
       left_number  = (*global_data)[left].id;
       right_number = (*global_data)[right].id;
 
-      if (left_number == right_number)
+      if (left_number == right_number) {
         continue;
+      }
 
       return ascending ? (left_number < right_number)
                        : (left_number > right_number);
@@ -121,8 +124,9 @@ static bool sort_compare (int left, int right)
       const std::string& left_string  = (*global_data)[left].get_ref  (field);
       const std::string& right_string = (*global_data)[right].get_ref (field);
 
-      if (left_string == right_string)
+      if (left_string == right_string) {
         continue;
+      }
 
       return ascending ? (left_string < right_string)
                        : (left_string > right_string);
@@ -141,14 +145,17 @@ static bool sort_compare (int left, int right)
       const std::string& left_string  = (*global_data)[left].get_ref  (field);
       const std::string& right_string = (*global_data)[right].get_ref (field);
 
-      if (left_string != "" && right_string == "")
+      if (left_string != "" && right_string == "") {
         return true;
+      }
 
-      if (left_string == "" && right_string != "")
+      if (left_string == "" && right_string != "") {
         return false;
+      }
 
-      if (left_string == right_string)
+      if (left_string == right_string) {
         continue;
+      }
 
       return ascending ? (left_string < right_string)
                        : (left_string > right_string);
@@ -161,21 +168,25 @@ static bool sort_compare (int left, int right)
       const std::string& left_string  = (*global_data)[left].get_ref  (field);
       const std::string& right_string = (*global_data)[right].get_ref (field);
 
-      if (left_string == right_string)
+      if (left_string == right_string) {
         continue;
+      }
 
-      if (left_string == "" && right_string != "")
+      if (left_string == "" && right_string != "") {
         return ascending;
+      }
 
-      if (left_string != "" && right_string == "")
+      if (left_string != "" && right_string == "") {
         return !ascending;
+      }
 
       // Sort on the first dependency.
       left_number  = context.tdb2.id (left_string.substr (0, 36));
       right_number = context.tdb2.id (right_string.substr (0, 36));
 
-      if (left_number == right_number)
+      if (left_number == right_number) {
         continue;
+      }
 
       return ascending ? (left_number < right_number)
                        : (left_number > right_number);
@@ -187,8 +198,9 @@ static bool sort_compare (int left, int right)
       const std::string& left_string  = (*global_data)[left].get_ref  (field);
       const std::string& right_string = (*global_data)[right].get_ref (field);
 
-      if (left_string == right_string)
+      if (left_string == right_string) {
         continue;
+      }
 
       ISO8601p left_duration (left_string);
       ISO8601p right_duration (right_string);
@@ -205,8 +217,9 @@ static bool sort_compare (int left, int right)
         const float left_real  = strtof (((*global_data)[left].get_ref  (field)).c_str (), NULL);
         const float right_real = strtof (((*global_data)[right].get_ref (field)).c_str (), NULL);
 
-        if (left_real == right_real)
+        if (left_real == right_real) {
           continue;
+        }
 
         return ascending ? (left_real < right_real)
                          : (left_real > right_real);
@@ -216,8 +229,9 @@ static bool sort_compare (int left, int right)
         const std::string left_string = (*global_data)[left].get_ref (field);
         const std::string right_string = (*global_data)[right].get_ref (field);
 
-        if (left_string == right_string)
+        if (left_string == right_string) {
           continue;
+        }
 
         // UDAs of the type string can have custom sort orders, which need to be considered.
         auto order = Task::customOrder.find (field);
@@ -231,10 +245,11 @@ static bool sort_compare (int left, int right)
         else
         {
           // Empty values are unconditionally last, if no custom order was specified.
-          if (left_string == "")
+          if (left_string == "") {
             return false;
-          else if (right_string == "")
+          } else if (right_string == "") {
             return true;
+          }
 
           return ascending ? (left_string < right_string)
                            : (left_string > right_string);
@@ -246,14 +261,17 @@ static bool sort_compare (int left, int right)
         const std::string& left_string  = (*global_data)[left].get_ref  (field);
         const std::string& right_string = (*global_data)[right].get_ref (field);
 
-        if (left_string != "" && right_string == "")
+        if (left_string != "" && right_string == "") {
           return true;
+        }
 
-        if (left_string == "" && right_string != "")
+        if (left_string == "" && right_string != "") {
           return false;
+        }
 
-        if (left_string == right_string)
+        if (left_string == right_string) {
           continue;
+        }
 
         return ascending ? (left_string < right_string)
                          : (left_string > right_string);
@@ -263,17 +281,18 @@ static bool sort_compare (int left, int right)
         const std::string& left_string  = (*global_data)[left].get_ref  (field);
         const std::string& right_string = (*global_data)[right].get_ref (field);
 
-        if (left_string == right_string)
+        if (left_string == right_string) {
           continue;
+        }
 
         ISO8601p left_duration (left_string);
         ISO8601p right_duration (right_string);
         return ascending ? (left_duration < right_duration)
                          : (left_duration > right_duration);
       }
+    } else {
+      throw format(STRING_INVALID_SORT_COL, field);
     }
-    else
-      throw format (STRING_INVALID_SORT_COL, field);
   }
 
   return false;

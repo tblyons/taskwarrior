@@ -130,8 +130,9 @@ ISO8601d::ISO8601d (const std::string& input, const std::string& format /*= ""*/
 {
   clear ();
   std::string::size_type start = 0;
-  if (! parse (input, start, format))
-    throw ::format (STRING_DATE_INVALID_FORMAT, input, format);
+  if (!parse(input, start, format)) {
+    throw ::format(STRING_DATE_INVALID_FORMAT, input, format);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -301,8 +302,9 @@ void ISO8601d::clear ()
 bool ISO8601d::parse_formatted (Nibbler& n, const std::string& format)
 {
   // Short-circuit on missing format.
-  if (format == "")
+  if (format == "") {
     return false;
+  }
 
   n.save ();
 
@@ -324,12 +326,15 @@ bool ISO8601d::parse_formatted (Nibbler& n, const std::string& format)
     case 'm':
       if (n.getDigit (month))
       {
-        if (month == 0)
-          n.getDigit (month);
+        if (month == 0) {
+          n.getDigit(month);
+        }
 
-        if (month == 1)
-          if (n.getDigit (month))
+        if (month == 1) {
+          if (n.getDigit(month)) {
             month += 10;
+          }
+        }
       }
       else
       {
@@ -349,14 +354,16 @@ bool ISO8601d::parse_formatted (Nibbler& n, const std::string& format)
     case 'd':
       if (n.getDigit (day))
       {
-        if (day == 0)
-          n.getDigit (day);
+        if (day == 0) {
+          n.getDigit(day);
+        }
 
         if (day == 1 || day == 2 || day == 3)
         {
           int tens = day;
-          if (n.getDigit (day))
+          if (n.getDigit(day)) {
             day += 10 * tens;
+          }
         }
       }
       else
@@ -394,14 +401,16 @@ bool ISO8601d::parse_formatted (Nibbler& n, const std::string& format)
     case 'h':
       if (n.getDigit (hour))
       {
-        if (hour == 0)
-          n.getDigit (hour);
+        if (hour == 0) {
+          n.getDigit(hour);
+        }
 
         if (hour == 1 || hour == 2)
         {
           int tens = hour;
-          if (n.getDigit (hour))
+          if (n.getDigit(hour)) {
             hour += 10 * tens;
+          }
         }
       }
       else
@@ -422,14 +431,16 @@ bool ISO8601d::parse_formatted (Nibbler& n, const std::string& format)
     case 'n':
       if (n.getDigit (minute))
       {
-        if (minute == 0)
-          n.getDigit (minute);
+        if (minute == 0) {
+          n.getDigit(minute);
+        }
 
         if (minute < 6)
         {
           int tens = minute;
-          if (n.getDigit (minute))
+          if (n.getDigit(minute)) {
             minute += 10 * tens;
+          }
         }
       }
       else
@@ -450,14 +461,16 @@ bool ISO8601d::parse_formatted (Nibbler& n, const std::string& format)
     case 's':
       if (n.getDigit (second))
       {
-        if (second == 0)
-          n.getDigit (second);
+        if (second == 0) {
+          n.getDigit(second);
+        }
 
         if (second < 6)
         {
           int tens = second;
-          if (n.getDigit (second))
+          if (n.getDigit(second)) {
             second += 10 * tens;
+          }
         }
       }
       else
@@ -478,14 +491,16 @@ bool ISO8601d::parse_formatted (Nibbler& n, const std::string& format)
     case 'v':
       if (n.getDigit (week))
       {
-        if (week == 0)
-          n.getDigit (week);
+        if (week == 0) {
+          n.getDigit(week);
+        }
 
         if (week < 6)
         {
           int tens = week;
-          if (n.getDigit (week))
+          if (n.getDigit(week)) {
             week += 10 * tens;
+          }
         }
       }
       else
@@ -596,8 +611,9 @@ bool ISO8601d::parse_formatted (Nibbler& n, const std::string& format)
           if (minute == -1)
           {
             minute = now.minute ();
-            if (second == -1)
-              second = now.second ();
+            if (second == -1) {
+              second = now.second();
+            }
           }
         }
       }
@@ -605,11 +621,21 @@ bool ISO8601d::parse_formatted (Nibbler& n, const std::string& format)
   }
 
   // Any remaining undefined values are assigned defaults.
-  if (month  == -1) month  = 1;
-  if (day    == -1) day    = 1;
-  if (hour   == -1) hour   = 0;
-  if (minute == -1) minute = 0;
-  if (second == -1) second = 0;
+  if (month == -1) {
+    month = 1;
+  }
+  if (day == -1) {
+    day = 1;
+  }
+  if (hour == -1) {
+    hour = 0;
+  }
+  if (minute == -1) {
+    minute = 0;
+  }
+  if (second == -1) {
+    second = 0;
+  }
 
   _year    = year;
   _month   = month;
@@ -674,8 +700,9 @@ bool ISO8601d::parse_date_time (Nibbler& n)
       n.getDigit2 (minute) && minute < 60 &&
       n.getDigit2 (second) && second < 60)
   {
-    if (n.skip ('Z'))
+    if (n.skip('Z')) {
       _utc = true;
+    }
 
     _year    = year;
     _month   = month;
@@ -706,13 +733,15 @@ bool ISO8601d::parse_date_time_ext (Nibbler& n)
     if (n.skip ('T') &&
         parse_time_ext (n))
     {
-      if (n.skip ('Z'))
+      if (n.skip('Z')) {
         _utc = true;
-      else if (parse_off_ext (n))
+      } else if (parse_off_ext(n)) {
         ;
+      }
 
-      if (! Lexer::isDigit (n.next ()))
+      if (!Lexer::isDigit(n.next())) {
         return true;
+      }
     }
 
     // Restore date_ext
@@ -751,14 +780,16 @@ bool ISO8601d::parse_date_ext (Nibbler& n)
       }
 
       _year = year;
-      if (!Lexer::isDigit (n.next ()))
+      if (!Lexer::isDigit(n.next())) {
         return true;
+      }
     }
     else if (n.getDigit3 (_julian) && _julian)
     {
       _year = year;
-      if (!Lexer::isDigit (n.next ()))
+      if (!Lexer::isDigit(n.next())) {
         return true;
+      }
     }
     else if (n.getDigit2 (month) && month &&
              n.skip ('-')        &&
@@ -767,8 +798,9 @@ bool ISO8601d::parse_date_ext (Nibbler& n)
       _year = year;
       _month = month;
       _day = day;
-      if (!Lexer::isDigit (n.next ()))
+      if (!Lexer::isDigit(n.next())) {
         return true;
+      }
     }
   }
 
@@ -806,8 +838,9 @@ bool ISO8601d::parse_off_ext (Nibbler& n)
       }
 
       _offset = (sign == "-") ? -offset : offset;
-      if (!Lexer::isDigit (n.next ()))
+      if (!Lexer::isDigit(n.next())) {
         return true;
+      }
     }
   }
 
@@ -837,8 +870,9 @@ bool ISO8601d::parse_time_ext (Nibbler& n)
         seconds += ss;
         _seconds = seconds;
 
-        if (!Lexer::isDigit (n.next ()))
+        if (!Lexer::isDigit(n.next())) {
           return true;
+        }
       }
 
       n = backup;
@@ -846,8 +880,9 @@ bool ISO8601d::parse_time_ext (Nibbler& n)
     }
 
     _seconds = seconds;
-    if (!Lexer::isDigit (n.next ()))
+    if (!Lexer::isDigit(n.next())) {
       return true;
+    }
   }
 
   n = backup;
@@ -863,8 +898,9 @@ bool ISO8601d::parse_time_utc_ext (Nibbler& n)
       n.skip ('Z'))
   {
     _utc = true;
-    if (!Lexer::isDigit (n.next ()))
+    if (!Lexer::isDigit(n.next())) {
       return true;
+    }
   }
 
   n.restore ();
@@ -879,8 +915,9 @@ bool ISO8601d::parse_time_off_ext  (Nibbler& n)
   if (parse_time_ext (n) &&
       parse_off_ext (n))
   {
-    if (!Lexer::isDigit (n.next ()))
+    if (!Lexer::isDigit(n.next())) {
       return true;
+    }
   }
 
   n = backup;
@@ -892,15 +929,16 @@ bool ISO8601d::parse_time_off_ext  (Nibbler& n)
 bool ISO8601d::validate ()
 {
   // _year;
-  if ((_year    && (_year    <   1900 || _year    >                                  2200)) ||
-      (_month   && (_month   <      1 || _month   >                                    12)) ||
-      (_week    && (_week    <      1 || _week    >                                    53)) ||
-      (_weekday && (_weekday <      0 || _weekday >                                     6)) ||
-      (_julian  && (_julian  <      1 || _julian  >          ISO8601d::daysInYear (_year))) ||
-      (_day     && (_day     <      1 || _day     > ISO8601d::daysInMonth (_month, _year))) ||
-      (_seconds && (_seconds <      1 || _seconds >                                 86400)) ||
-      (_offset  && (_offset  < -86400 || _offset  >                                 86400)))
+  if ((_year && (_year < 1900 || _year > 2200)) ||
+      (_month && (_month < 1 || _month > 12)) ||
+      (_week && (_week < 1 || _week > 53)) ||
+      (_weekday && (_weekday < 0 || _weekday > 6)) ||
+      (_julian && (_julian < 1 || _julian > ISO8601d::daysInYear(_year))) ||
+      (_day && (_day < 1 || _day > ISO8601d::daysInMonth(_month, _year))) ||
+      (_seconds && (_seconds < 1 || _seconds > 86400)) ||
+      (_offset && (_offset < -86400 || _offset > 86400))) {
     return false;
+  }
 
   return true;
 }
@@ -989,9 +1027,9 @@ void ISO8601d::resolve ()
       {
         month = 1;
         day   = 1;
-      }
-      else if (day == 0)
+      } else if (day == 0) {
         day = 1;
+      }
     }
   }
 
@@ -1175,14 +1213,17 @@ bool ISO8601d::valid (const std::string& input, const std::string& format /*= ""
 bool ISO8601d::valid (const int m, const int d, const int y, const int hr,
                   const int mi, const int se)
 {
-  if (hr < 0 || hr > 23)
+  if (hr < 0 || hr > 23) {
     return false;
+  }
 
-  if (mi < 0 || mi > 59)
+  if (mi < 0 || mi > 59) {
     return false;
+  }
 
-  if (se < 0 || se > 59)
+  if (se < 0 || se > 59) {
     return false;
+  }
 
   return ISO8601d::valid (m, d, y);
 }
@@ -1191,17 +1232,20 @@ bool ISO8601d::valid (const int m, const int d, const int y, const int hr,
 bool ISO8601d::valid (const int m, const int d, const int y)
 {
   // Check that the year is valid.
-  if (y < 0)
+  if (y < 0) {
     return false;
+  }
 
   // Check that the month is valid.
-  if (m < 1 || m > 12)
+  if (m < 1 || m > 12) {
     return false;
+  }
 
   // Finally check that the days fall within the acceptable range for this
   // month, and whether or not this is a leap year.
-  if (d < 1 || d > ISO8601d::daysInMonth (m, y))
+  if (d < 1 || d > ISO8601d::daysInMonth(m, y)) {
     return false;
+  }
 
   return true;
 }
@@ -1211,11 +1255,13 @@ bool ISO8601d::valid (const int m, const int d, const int y)
 bool ISO8601d::valid (const int d, const int y)
 {
   // Check that the year is valid.
-  if (y < 0)
+  if (y < 0) {
     return false;
+  }
 
-  if (d < 1 || d > ISO8601d::daysInYear (y))
+  if (d < 1 || d > ISO8601d::daysInYear(y)) {
     return false;
+  }
 
   return true;
 }
@@ -1234,8 +1280,9 @@ int ISO8601d::daysInMonth (int month, int year)
 {
   static int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
-  if (month == 2 && ISO8601d::leapYear (year))
+  if (month == 2 && ISO8601d::leapYear(year)) {
     return 29;
+  }
 
   return days[month - 1];
 }
@@ -1337,16 +1384,31 @@ std::string ISO8601d::dayNameShort (int dow)
 // Static
 int ISO8601d::dayOfWeek (const std::string& input)
 {
-  if (ISO8601d::minimumMatchLength== 0)
+  if (ISO8601d::minimumMatchLength == 0) {
     ISO8601d::minimumMatchLength = 3;
+  }
 
-       if (closeEnough (STRING_DATE_SUNDAY,    input, ISO8601d::minimumMatchLength)) return 0;
-  else if (closeEnough (STRING_DATE_MONDAY,    input, ISO8601d::minimumMatchLength)) return 1;
-  else if (closeEnough (STRING_DATE_TUESDAY,   input, ISO8601d::minimumMatchLength)) return 2;
-  else if (closeEnough (STRING_DATE_WEDNESDAY, input, ISO8601d::minimumMatchLength)) return 3;
-  else if (closeEnough (STRING_DATE_THURSDAY,  input, ISO8601d::minimumMatchLength)) return 4;
-  else if (closeEnough (STRING_DATE_FRIDAY,    input, ISO8601d::minimumMatchLength)) return 5;
-  else if (closeEnough (STRING_DATE_SATURDAY,  input, ISO8601d::minimumMatchLength)) return 6;
+  if (closeEnough(STRING_DATE_SUNDAY, input, ISO8601d::minimumMatchLength)) {
+    return 0;
+  } else if (closeEnough(STRING_DATE_MONDAY, input,
+                         ISO8601d::minimumMatchLength)) {
+    return 1;
+  } else if (closeEnough(STRING_DATE_TUESDAY, input,
+                         ISO8601d::minimumMatchLength)) {
+    return 2;
+  } else if (closeEnough(STRING_DATE_WEDNESDAY, input,
+                         ISO8601d::minimumMatchLength)) {
+    return 3;
+  } else if (closeEnough(STRING_DATE_THURSDAY, input,
+                         ISO8601d::minimumMatchLength)) {
+    return 4;
+  } else if (closeEnough(STRING_DATE_FRIDAY, input,
+                         ISO8601d::minimumMatchLength)) {
+    return 5;
+  } else if (closeEnough(STRING_DATE_SATURDAY, input,
+                         ISO8601d::minimumMatchLength)) {
+    return 6;
+  }
 
   return -1;
 }
@@ -1366,21 +1428,46 @@ int ISO8601d::dayOfWeek (int year, int month, int day)
 // Static
 int ISO8601d::monthOfYear (const std::string& input)
 {
-  if (ISO8601d::minimumMatchLength== 0)
-    ISO8601d::minimumMatchLength= 3;
+  if (ISO8601d::minimumMatchLength == 0) {
+    ISO8601d::minimumMatchLength = 3;
+  }
 
-       if (closeEnough (STRING_DATE_JANUARY,   input, ISO8601d::minimumMatchLength)) return 1;
-  else if (closeEnough (STRING_DATE_FEBRUARY,  input, ISO8601d::minimumMatchLength)) return 2;
-  else if (closeEnough (STRING_DATE_MARCH,     input, ISO8601d::minimumMatchLength)) return 3;
-  else if (closeEnough (STRING_DATE_APRIL,     input, ISO8601d::minimumMatchLength)) return 4;
-  else if (closeEnough (STRING_DATE_MAY,       input, ISO8601d::minimumMatchLength)) return 5;
-  else if (closeEnough (STRING_DATE_JUNE,      input, ISO8601d::minimumMatchLength)) return 6;
-  else if (closeEnough (STRING_DATE_JULY,      input, ISO8601d::minimumMatchLength)) return 7;
-  else if (closeEnough (STRING_DATE_AUGUST,    input, ISO8601d::minimumMatchLength)) return 8;
-  else if (closeEnough (STRING_DATE_SEPTEMBER, input, ISO8601d::minimumMatchLength)) return 9;
-  else if (closeEnough (STRING_DATE_OCTOBER,   input, ISO8601d::minimumMatchLength)) return 10;
-  else if (closeEnough (STRING_DATE_NOVEMBER,  input, ISO8601d::minimumMatchLength)) return 11;
-  else if (closeEnough (STRING_DATE_DECEMBER,  input, ISO8601d::minimumMatchLength)) return 12;
+  if (closeEnough(STRING_DATE_JANUARY, input, ISO8601d::minimumMatchLength)) {
+    return 1;
+  } else if (closeEnough(STRING_DATE_FEBRUARY, input,
+                         ISO8601d::minimumMatchLength)) {
+    return 2;
+  } else if (closeEnough(STRING_DATE_MARCH, input,
+                         ISO8601d::minimumMatchLength)) {
+    return 3;
+  } else if (closeEnough(STRING_DATE_APRIL, input,
+                         ISO8601d::minimumMatchLength)) {
+    return 4;
+  } else if (closeEnough(STRING_DATE_MAY, input,
+                         ISO8601d::minimumMatchLength)) {
+    return 5;
+  } else if (closeEnough(STRING_DATE_JUNE, input,
+                         ISO8601d::minimumMatchLength)) {
+    return 6;
+  } else if (closeEnough(STRING_DATE_JULY, input,
+                         ISO8601d::minimumMatchLength)) {
+    return 7;
+  } else if (closeEnough(STRING_DATE_AUGUST, input,
+                         ISO8601d::minimumMatchLength)) {
+    return 8;
+  } else if (closeEnough(STRING_DATE_SEPTEMBER, input,
+                         ISO8601d::minimumMatchLength)) {
+    return 9;
+  } else if (closeEnough(STRING_DATE_OCTOBER, input,
+                         ISO8601d::minimumMatchLength)) {
+    return 10;
+  } else if (closeEnough(STRING_DATE_NOVEMBER, input,
+                         ISO8601d::minimumMatchLength)) {
+    return 11;
+  } else if (closeEnough(STRING_DATE_DECEMBER, input,
+                         ISO8601d::minimumMatchLength)) {
+    return 12;
+  }
 
   return -1;
 }
@@ -1456,17 +1543,19 @@ int ISO8601d::weekOfYear (int weekStart) const
   struct tm* t = localtime (&_date);
   char   weekStr[3];
 
-  if (weekStart == 0)
+  if (weekStart == 0) {
     strftime(weekStr, sizeof(weekStr), "%U", t);
-  else if (weekStart == 1)
+  } else if (weekStart == 1) {
     strftime(weekStr, sizeof(weekStr), "%V", t);
-  else
-    throw std::string (STRING_DATE_BAD_WEEKSTART);
+  } else {
+    throw std::string(STRING_DATE_BAD_WEEKSTART);
+  }
 
   int weekNumber = atoi (weekStr);
 
-  if (weekStart == 0)
+  if (weekStart == 0) {
     weekNumber += 1;
+  }
 
   return weekNumber;
 }
@@ -1818,9 +1907,11 @@ bool ISO8601p::parse (const std::string& input, std::string::size_type& start)
 
   // Static and so preserved between calls.
   static std::vector <std::string> units;
-  if (units.size () == 0)
-    for (unsigned int i = 0; i < NUM_DURATIONS; i++)
-      units.push_back (durations[i].unit);
+  if (units.size() == 0) {
+    for (unsigned int i = 0; i < NUM_DURATIONS; i++) {
+      units.push_back(durations[i].unit);
+    }
+  }
 
   std::string number;
   std::string unit;
@@ -1870,9 +1961,9 @@ bool ISO8601p::parse (const std::string& input, std::string::size_type& start)
       // So as a special case, durations, with units of "d" are rejected if the
       // quantity exceeds 10000.
       //
-      if (unit == "d" &&
-          strtol (number.c_str (), NULL, 10) > 10000)
+      if (unit == "d" && strtol(number.c_str(), NULL, 10) > 10000) {
         return false;
+      }
 
       if (n.depleted ()                           ||
           Lexer::isWhitespace         (n.next ()) ||
@@ -1924,14 +2015,22 @@ const std::string ISO8601p::format () const
 
     std::stringstream s;
     s << 'P';
-    if (days)   s << days   << 'D';
+    if (days) {
+      s << days << 'D';
+    }
 
     if (hours || minutes || seconds)
     {
       s << 'T';
-      if (hours)   s << hours   << 'H';
-      if (minutes) s << minutes << 'M';
-      if (seconds) s << seconds << 'S';
+      if (hours) {
+        s << hours << 'H';
+      }
+      if (minutes) {
+        s << minutes << 'M';
+      }
+      if (seconds) {
+        s << seconds << 'S';
+      }
     }
 
     return s.str ();
@@ -1958,13 +2057,21 @@ const std::string ISO8601p::formatVague () const
   float days = (float) _period / 86400.0;
 
   std::stringstream formatted;
-       if (_period >= 86400 * 365) formatted << std::fixed << std::setprecision (1) << (days / 365) << "y";
-  else if (_period >= 86400 * 90)  formatted << static_cast <int> (days / 30)       << "mo";
-  else if (_period >= 86400 * 14)  formatted << static_cast <int> (days / 7)        << "w";
-  else if (_period >= 86400)       formatted << static_cast <int> (days)            << "d";
-  else if (_period >= 3600)        formatted << static_cast <int> (_period / 3600)  << "h";
-  else if (_period >= 60)          formatted << static_cast <int> (_period / 60)    << "min";
-  else if (_period >= 1)           formatted << static_cast <int> (_period)         << "s";
+  if (_period >= 86400 * 365) {
+    formatted << std::fixed << std::setprecision(1) << (days / 365) << "y";
+  } else if (_period >= 86400 * 90) {
+    formatted << static_cast<int>(days / 30) << "mo";
+  } else if (_period >= 86400 * 14) {
+    formatted << static_cast<int>(days / 7) << "w";
+  } else if (_period >= 86400) {
+    formatted << static_cast<int>(days) << "d";
+  } else if (_period >= 3600) {
+    formatted << static_cast<int>(_period / 3600) << "h";
+  } else if (_period >= 60) {
+    formatted << static_cast<int>(_period / 60) << "min";
+  } else if (_period >= 1) {
+    formatted << static_cast<int>(_period) << "s";
+  }
 
   return formatted.str ();
 }
@@ -1979,42 +2086,48 @@ bool ISO8601p::parse_designated (Nibbler& n)
   {
     int value;
     n.save ();
-    if (n.getUnsignedInt (value) && n.skip ('Y'))
+    if (n.getUnsignedInt(value) && n.skip('Y')) {
       _year = value;
-    else
-      n.restore ();
+    } else {
+      n.restore();
+    }
 
     n.save ();
-    if (n.getUnsignedInt (value) && n.skip ('M'))
+    if (n.getUnsignedInt(value) && n.skip('M')) {
       _month = value;
-    else
-      n.restore ();
+    } else {
+      n.restore();
+    }
 
     n.save ();
-    if (n.getUnsignedInt (value) && n.skip ('D'))
+    if (n.getUnsignedInt(value) && n.skip('D')) {
       _day = value;
-    else
-      n.restore ();
+    } else {
+      n.restore();
+    }
 
     if (n.skip ('T'))
     {
       n.save ();
-      if (n.getUnsignedInt (value) && n.skip ('H'))
+      if (n.getUnsignedInt(value) && n.skip('H')) {
         _hours = value;
-      else
-        n.restore ();
+      } else {
+        n.restore();
+      }
 
       n.save ();
-      if (n.getUnsignedInt (value) && n.skip ('M'))
+      if (n.getUnsignedInt(value) && n.skip('M')) {
         _minutes = value;
-      else
-        n.restore ();
+      } else {
+        n.restore();
+      }
 
       n.save ();
-      if (n.getUnsignedInt (value) && n.skip ('S'))
+      if (n.getUnsignedInt(value) && n.skip('S')) {
         _seconds = value;
-      else
-        n.restore ();
+      } else {
+        n.restore();
+      }
     }
 
     return true;

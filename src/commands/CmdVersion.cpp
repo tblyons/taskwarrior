@@ -73,8 +73,9 @@ int CmdVersion::execute (std::string& output)
   link.set (link.addRow (), 0, STRING_CMD_VERSION_DOCS);
 
   Color bold;
-  if (context.color ())
-    bold = Color ("bold");
+  if (context.color()) {
+    bold = Color("bold");
+  }
 
   out << "\n"
       << format (STRING_CMD_VERSION_BUILT, bold.colorize (PACKAGE), bold.colorize (VERSION))

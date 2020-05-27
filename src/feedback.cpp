@@ -50,12 +50,14 @@ std::string taskDifferences (const Task& before, const Task& after)
   // Attributes are all there is, so figure the different attribute names
   // between before and after.
   std::vector <std::string> beforeAtts;
-  for (auto& att : before.data)
-    beforeAtts.push_back (att.first);
+  for (auto& att : before.data) {
+    beforeAtts.push_back(att.first);
+  }
 
   std::vector <std::string> afterAtts;
-  for (auto& att : after.data)
-    afterAtts.push_back (att.first);
+  for (auto& att : after.data) {
+    afterAtts.push_back(att.first);
+  }
 
   std::vector <std::string> beforeOnly;
   std::vector <std::string> afterOnly;
@@ -63,10 +65,10 @@ std::string taskDifferences (const Task& before, const Task& after)
 
   // Now start generating a description of the differences.
   std::stringstream out;
-  for (auto& name : beforeOnly)
-    out << "  - "
-        << format (STRING_FEEDBACK_DELETED, Lexer::ucFirst (name))
+  for (auto& name : beforeOnly) {
+    out << "  - " << format(STRING_FEEDBACK_DELETED, Lexer::ucFirst(name))
         << "\n";
+  }
 
   for (auto& name : afterOnly)
   {
@@ -80,13 +82,12 @@ std::string taskDifferences (const Task& before, const Task& after)
       out << "  - "
           << format (STRING_FEEDBACK_DEP_SET, to)
           << "\n";
-    }
-    else
+    } else {
       out << "  - "
-          << format (STRING_FEEDBACK_ATT_SET,
-                     Lexer::ucFirst (name),
-                     renderAttribute (name, after.get (name)))
+          << format(STRING_FEEDBACK_ATT_SET, Lexer::ucFirst(name),
+                    renderAttribute(name, after.get(name)))
           << "\n";
+    }
   }
 
   for (auto& name : beforeAtts)
@@ -113,22 +114,20 @@ std::string taskDifferences (const Task& before, const Task& after)
         out << "  - "
             << format (STRING_FEEDBACK_DEP_MOD, from, to)
             << "\n";
-      }
-      else
+      } else {
         out << "  - "
-            << format (STRING_FEEDBACK_ATT_MOD,
-                       Lexer::ucFirst (name),
-                       renderAttribute (name, before.get (name)),
-                       renderAttribute (name, after.get (name)))
+            << format(STRING_FEEDBACK_ATT_MOD, Lexer::ucFirst(name),
+                      renderAttribute(name, before.get(name)),
+                      renderAttribute(name, after.get(name)))
             << "\n";
+      }
     }
   }
 
   // Shouldn't just say nothing.
-  if (out.str ().length () == 0)
-    out << "  - "
-        << STRING_FEEDBACK_NOP
-        << "\n";
+  if (out.str().length() == 0) {
+    out << "  - " << STRING_FEEDBACK_NOP << "\n";
+  }
 
   return out.str ();
 }
@@ -144,12 +143,14 @@ std::string taskInfoDifferences (
   // Attributes are all there is, so figure the different attribute names
   // between before and after.
   std::vector <std::string> beforeAtts;
-  for (auto& att : before.data)
-    beforeAtts.push_back (att.first);
+  for (auto& att : before.data) {
+    beforeAtts.push_back(att.first);
+  }
 
   std::vector <std::string> afterAtts;
-  for (auto& att : after.data)
-    afterAtts.push_back (att.first);
+  for (auto& att : after.data) {
+    afterAtts.push_back(att.first);
+  }
 
   std::vector <std::string> beforeOnly;
   std::vector <std::string> afterOnly;
@@ -206,8 +207,9 @@ std::string taskInfoDifferences (
     }
     else
     {
-      if (name == "start")
-          last_timestamp = current_timestamp;
+      if (name == "start") {
+        last_timestamp = current_timestamp;
+      }
 
       out << format (STRING_FEEDBACK_ATT_WAS_SET,
                      Lexer::ucFirst (name),
@@ -216,7 +218,7 @@ std::string taskInfoDifferences (
     }
   }
 
-  for (auto& name : beforeAtts)
+  for (auto& name : beforeAtts) {
     if (name              != "uuid" &&
         name              != "modified" &&
         before.get (name) != after.get (name) &&
@@ -242,19 +244,19 @@ std::string taskInfoDifferences (
       {
         out << format (STRING_FEEDBACK_ANN_WAS_MOD, after.get (name))
             << "\n";
-      }
-      else
-        out << format (STRING_FEEDBACK_ATT_WAS_MOD,
-                       Lexer::ucFirst (name),
-                       renderAttribute (name, before.get (name), dateformat),
-                       renderAttribute (name, after.get (name), dateformat))
+      } else {
+        out << format(STRING_FEEDBACK_ATT_WAS_MOD, Lexer::ucFirst(name),
+                      renderAttribute(name, before.get(name), dateformat),
+                      renderAttribute(name, after.get(name), dateformat))
             << "\n";
+      }
     }
+  }
 
   // Shouldn't just say nothing.
-  if (out.str ().length () == 0)
-    out << STRING_FEEDBACK_WAS_NOP
-        << "\n";
+  if (out.str().length() == 0) {
+    out << STRING_FEEDBACK_WAS_NOP << "\n";
+  }
 
   return out.str ();
 }
@@ -270,8 +272,9 @@ std::string renderAttribute (const std::string& name, const std::string& value, 
         value != "")
     {
       ISO8601d d ((time_t)strtol (value.c_str (), NULL, 10));
-      if (format == "")
-        return d.toString (context.config.get ("dateformat"));
+      if (format == "") {
+        return d.toString(context.config.get("dateformat"));
+      }
 
       return d.toString (format);
     }
@@ -285,8 +288,9 @@ std::string renderAttribute (const std::string& name, const std::string& value, 
 //    <string>
 void feedback_affected (const std::string& effect)
 {
-  if (context.verbose ("affected"))
+  if (context.verbose("affected")) {
     std::cout << effect << "\n";
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -297,9 +301,9 @@ void feedback_affected (const std::string& effect)
 //    {1}    Quantity
 void feedback_affected (const std::string& effect, int quantity)
 {
-  if (context.verbose ("affected"))
-    std::cout << format (effect, quantity)
-              << "\n";
+  if (context.verbose("affected")) {
+    std::cout << format(effect, quantity) << "\n";
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -368,10 +372,15 @@ void feedback_special_tags (const Task& task, const std::string& tag)
   {
     std::string msg;
     std::string explanation;
-         if (tag == "nocolor") msg = STRING_FEEDBACK_TAG_NOCOLOR;
-    else if (tag == "nonag")   msg = STRING_FEEDBACK_TAG_NONAG;
-    else if (tag == "nocal")   msg = STRING_FEEDBACK_TAG_NOCAL;
-    else if (tag == "next")    msg = STRING_FEEDBACK_TAG_NEXT;
+    if (tag == "nocolor") {
+      msg = STRING_FEEDBACK_TAG_NOCOLOR;
+    } else if (tag == "nonag") {
+      msg = STRING_FEEDBACK_TAG_NONAG;
+    } else if (tag == "nocal") {
+      msg = STRING_FEEDBACK_TAG_NOCAL;
+    } else if (tag == "next") {
+      msg = STRING_FEEDBACK_TAG_NEXT;
+    }
 
     if (msg.length ())
     {
@@ -403,13 +412,12 @@ void feedback_unblocked (const Task& task)
       dependencyGetBlocking (i, blocking);
       if (blocking.size () == 0)
       {
-        if (i.id)
+        if (i.id) {
           std::cout << format (STRING_FEEDBACK_UNBLOCKED,
                                i.id,
                                i.get ("description"))
                     << "\n";
-        else
-        {
+        } else {
           std::string uuid = i.get ("uuid");
           std::cout << format (STRING_FEEDBACK_UNBLOCKED,
                                i.get ("uuid"),
@@ -447,9 +455,9 @@ std::string onProjectChange (Task& task, bool scope /* = true */)
 
   if (project != "")
   {
-    if (scope)
-      msg << format (STRING_HELPER_PROJECT_CHANGE, project)
-          << "  ";
+    if (scope) {
+      msg << format(STRING_HELPER_PROJECT_CHANGE, project) << "  ";
+    }
 
     // Count pending and done tasks, for this project.
     int count_pending = 0;
@@ -464,20 +472,23 @@ std::string onProjectChange (Task& task, bool scope /* = true */)
     //          0             >0          0%
     //         >0             >0  calculated
     int percentage = 0;
-    if (count_done == 0)
+    if (count_done == 0) {
       percentage = 0;
-    else if (count_pending == 0)
+    } else if (count_pending == 0) {
       percentage = 100;
-    else
+    } else {
       percentage = (count_done * 100 / (count_done + count_pending));
+    }
 
     msg << format (STRING_HELPER_PROJECT_COMPL, project, percentage)
         << " ";
 
-    if (count_pending == 1 && count_done == 0)
+    if (count_pending == 1 && count_done == 0) {
       msg << format (STRING_HELPER_PROJECT_REM1, count_pending);
-    else
-      msg << format (STRING_HELPER_PROJECT_REM, count_pending, count_pending + count_done);
+    } else {
+      msg << format(STRING_HELPER_PROJECT_REM, count_pending,
+                    count_pending + count_done);
+    }
   }
 
   return msg.str ();
@@ -486,14 +497,16 @@ std::string onProjectChange (Task& task, bool scope /* = true */)
 ///////////////////////////////////////////////////////////////////////////////
 std::string onProjectChange (Task& task1, Task& task2)
 {
-  if (task1.get ("project") == task2.get ("project"))
-    return onProjectChange (task1, false);
+  if (task1.get("project") == task2.get("project")) {
+    return onProjectChange(task1, false);
+  }
 
   std::string messages1 = onProjectChange (task1);
   std::string messages2 = onProjectChange (task2);
 
-  if (messages1.length () && messages2.length ())
+  if (messages1.length() && messages2.length()) {
     return messages1 + '\n' + messages2;
+  }
 
   return messages1 + messages2;
 }
@@ -503,10 +516,10 @@ std::string onExpiration (Task& task)
 {
   std::stringstream msg;
 
-  if (context.verbose ("affected"))
-    msg << format (STRING_FEEDBACK_EXPIRED,
-                   task.identifier (true),
-                   task.get ("description"));
+  if (context.verbose("affected")) {
+    msg << format(STRING_FEEDBACK_EXPIRED, task.identifier(true),
+                  task.get("description"));
+  }
 
   return msg.str ();
 }

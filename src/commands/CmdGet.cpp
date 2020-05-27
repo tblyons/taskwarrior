@@ -68,27 +68,29 @@ int CmdGet::execute (std::string& output)
       {
         Task t;
         Variant result;
-        if (getDOM (arg.attribute ("raw"), t, result))
+        if (getDOM(arg.attribute("raw"), t, result)) {
           results.push_back ((std::string) result);
-        else
-          results.push_back ("");
+        } else {
+          results.push_back("");
+        }
       }
       break;
 
     // Look for non-refs to complain about.
     case Lexer::Type::word:
     case Lexer::Type::identifier:
-      if (! arg.hasTag ("BINARY") &&
-          ! arg.hasTag ("CMD"))
-        throw format (STRING_CMD_GET_BAD_REF, arg.attribute ("raw"));
+      if (!arg.hasTag("BINARY") && !arg.hasTag("CMD")) {
+        throw format(STRING_CMD_GET_BAD_REF, arg.attribute("raw"));
+      }
 
     default:
       break;
     }
   }
 
-  if (results.size () == 0)
-    throw std::string (STRING_CMD_GET_NO_DOM);
+  if (results.size() == 0) {
+    throw std::string(STRING_CMD_GET_NO_DOM);
+  }
 
   join (output, " ", results);
   output += "\n";

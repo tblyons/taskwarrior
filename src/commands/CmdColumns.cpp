@@ -58,13 +58,15 @@ int CmdColumns::execute (std::string& output)
   // Obtain the arguments from the description.  That way, things like '--'
   // have already been handled.
   std::vector <std::string> words = context.cli2.getWords ();
-  if (words.size () > 1)
-    throw std::string (STRING_CMD_COLUMNS_ARGS);
+  if (words.size() > 1) {
+    throw std::string(STRING_CMD_COLUMNS_ARGS);
+  }
 
   // Include all columns in the table.
   std::vector <std::string> names;
-  for (auto& col : context.columns)
-    names.push_back (col.first);
+  for (auto& col : context.columns) {
+    names.push_back(col.first);
+  }
 
   std::sort (names.begin (), names.end ());
 
@@ -147,14 +149,16 @@ int CmdCompletionColumns::execute (std::string& output)
 {
   // Include all columns.
   std::vector <std::string> names;
-  for (auto& col : context.columns)
-    names.push_back (col.first);
+  for (auto& col : context.columns) {
+    names.push_back(col.first);
+  }
 
   std::sort (names.begin (), names.end ());
 
   // Render only the column names.
-  for (auto& name : names)
+  for (auto& name : names) {
     output += name + "\n";
+  }
 
   return 0;
 }

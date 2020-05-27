@@ -83,11 +83,13 @@ Context::Context ()
 ////////////////////////////////////////////////////////////////////////////////
 Context::~Context ()
 {
-  for (auto& com : commands)
+  for (auto& com : commands) {
     delete com.second;
+  }
 
-  for (auto& col : columns)
+  for (auto& col : columns) {
     delete col.second;
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -154,8 +156,9 @@ int Context::initialize (int argc, const char** argv)
     ////////////////////////////////////////////////////////////////////////////
 
     Command::factory (commands);
-    for (auto& cmd : commands)
-      cli2.entity ("cmd", cmd.first);
+    for (auto& cmd : commands) {
+      cli2.entity("cmd", cmd.first);
+    }
 
     ////////////////////////////////////////////////////////////////////////////
     //
@@ -164,8 +167,9 @@ int Context::initialize (int argc, const char** argv)
     ////////////////////////////////////////////////////////////////////////////
 
     Column::factory (columns);
-    for (auto& col : columns)
-      cli2.entity ("attribute", col.first);
+    for (auto& col : columns) {
+      cli2.entity("attribute", col.first);
+    }
 
     cli2.entity ("pseudo", "limit");
 
@@ -175,14 +179,17 @@ int Context::initialize (int argc, const char** argv)
     //
     ////////////////////////////////////////////////////////////////////////////
 
-    for (unsigned int i = 0; i < NUM_MODIFIER_NAMES; ++i)
-      cli2.entity ("modifier", modifierNames[i]);
+    for (unsigned int i = 0; i < NUM_MODIFIER_NAMES; ++i) {
+      cli2.entity("modifier", modifierNames[i]);
+    }
 
-    for (auto& op : Eval::getOperators ())
-      cli2.entity ("operator", op);
+    for (auto& op : Eval::getOperators()) {
+      cli2.entity("operator", op);
+    }
 
-    for (auto& op : Eval::getBinaryOperators ())
-      cli2.entity ("binary_operator", op);
+    for (auto& op : Eval::getBinaryOperators()) {
+      cli2.entity("binary_operator", op);
+    }
 
     ////////////////////////////////////////////////////////////////////////////
     //
@@ -201,8 +208,9 @@ int Context::initialize (int argc, const char** argv)
     //
     ////////////////////////////////////////////////////////////////////////////
 
-    for (int i = 0; i < argc; i++)
-      cli2.add (argv[i]);
+    for (int i = 0; i < argc; i++) {
+      cli2.add(argv[i]);
+    }
 
     cli2.analyze ();
 
@@ -212,23 +220,28 @@ int Context::initialize (int argc, const char** argv)
     std::string combined;
     for (auto& a : cli2._args)
     {
-      if (combined.length ())
+      if (combined.length()) {
         combined += ' ';
+      }
 
       combined += a.attribute ("raw");
 
-      if (a.hasTag ("DEFAULT"))
+      if (a.hasTag("DEFAULT")) {
         foundDefault = true;
+      }
 
-      if (a.hasTag ("ASSUMED"))
+      if (a.hasTag("ASSUMED")) {
         foundAssumed = true;
+      }
     }
 
-    if (foundDefault)
-      header ("[" + combined + "]");
+    if (foundDefault) {
+      header("[" + combined + "]");
+    }
 
-    if (foundAssumed)
-      header (STRING_ASSUME_INFO);
+    if (foundAssumed) {
+      header(STRING_ASSUME_INFO);
+    }
 
     ////////////////////////////////////////////////////////////////////////////
     //
@@ -263,40 +276,48 @@ int Context::initialize (int argc, const char** argv)
     // Dump all debug messages, controlled by rc.debug.
     if (config.getBoolean ("debug"))
     {
-      for (auto& d : debugMessages)
-        if (color ())
+      for (auto& d : debugMessages) {
+        if (color()) {
           std::cerr << colorizeDebug (d) << "\n";
-        else
+        } else {
           std::cerr << d << "\n";
+        }
+      }
     }
 
     // Dump all headers, controlled by 'header' verbosity token.
     if (verbose ("header"))
     {
-      for (auto& h : headers)
-        if (color ())
+      for (auto& h : headers) {
+        if (color()) {
           std::cerr << colorizeHeader (h) << "\n";
-        else
+        } else {
           std::cerr << h << "\n";
+        }
+      }
     }
 
     // Dump all footnotes, controlled by 'footnote' verbosity token.
     if (verbose ("footnote"))
     {
-      for (auto& f : footnotes)
-        if (color ())
+      for (auto& f : footnotes) {
+        if (color()) {
           std::cerr << colorizeFootnote (f) << "\n";
-        else
+        } else {
           std::cerr << f << "\n";
+        }
+      }
     }
 
     // Dump all errors, non-maskable.
     // Colorized as footnotes.
-    for (auto& e : errors)
-      if (color ())
+    for (auto& e : errors) {
+      if (color()) {
         std::cerr << colorizeFootnote (e) << "\n";
-      else
+      } else {
         std::cerr << e << "\n";
+      }
+    }
   }
 
   timer_init.stop ();
@@ -373,21 +394,25 @@ int Context::run ()
   // Dump all debug messages, controlled by rc.debug.
   if (config.getBoolean ("debug"))
   {
-    for (auto& d : debugMessages)
-      if (color ())
+    for (auto& d : debugMessages) {
+      if (color()) {
         std::cerr << colorizeDebug (d) << "\n";
-      else
+      } else {
         std::cerr << d << "\n";
+      }
+    }
   }
 
   // Dump all headers, controlled by 'header' verbosity token.
   if (verbose ("header"))
   {
-    for (auto& h : headers)
-      if (color ())
+    for (auto& h : headers) {
+      if (color()) {
         std::cerr << colorizeHeader (h) << "\n";
-      else
+      } else {
         std::cerr << h << "\n";
+      }
+    }
   }
 
   // Dump the report output.
@@ -396,20 +421,24 @@ int Context::run ()
   // Dump all footnotes, controlled by 'footnote' verbosity token.
   if (verbose ("footnote"))
   {
-    for (auto& f : footnotes)
-      if (color ())
+    for (auto& f : footnotes) {
+      if (color()) {
         std::cerr << colorizeFootnote (f) << "\n";
-      else
+      } else {
         std::cerr << f << "\n";
+      }
+    }
   }
 
   // Dump all errors, non-maskable.
   // Colorized as footnotes.
-  for (auto& e : errors)
-    if (color ())
+  for (auto& e : errors) {
+    if (color()) {
       std::cerr << colorizeError (e) << "\n";
-    else
+    } else {
       std::cerr << e << "\n";
+    }
+  }
 
   return rc;
 }
@@ -458,9 +487,9 @@ int Context::dispatch (std::string &out)
     // With rc.debug.parser == 2, there are more tree dumps than you might want,
     // but we need the rc.debug.parser == 1 case covered also, with the final
     // tree.
-    if (config.getBoolean ("debug") &&
-        config.getInteger ("debug.parser") == 1)
-      debug (cli2.dump ("Parse Tree (before command-specifіc processing)"));
+    if (config.getBoolean("debug") && config.getInteger("debug.parser") == 1) {
+      debug(cli2.dump("Parse Tree (before command-specifіc processing)"));
+    }
 
     return c->execute (out);
   }
@@ -565,17 +594,19 @@ bool Context::verbose (const std::string& token)
   }
 
   // rc.verbose=true|y|yes|1|on overrides all.
-  if (verbosity_legacy)
+  if (verbosity_legacy) {
     return true;
+  }
 
   // rc.verbose=nothing overrides all.
-  if (verbosity.size () == 1 &&
-      *(verbosity.begin ()) == "nothing")
+  if (verbosity.size() == 1 && *(verbosity.begin()) == "nothing") {
     return false;
+  }
 
   // Specific token match.
-  if (verbosity.count (token))
+  if (verbosity.count(token)) {
     return true;
+  }
 
   return false;
 }
@@ -584,8 +615,9 @@ bool Context::verbose (const std::string& token)
 const std::vector <std::string> Context::getColumns () const
 {
   std::vector <std::string> output;
-  for (auto& col : columns)
-    output.push_back (col.first);
+  for (auto& col : columns) {
+    output.push_back(col.first);
+  }
 
   return output;
 }
@@ -646,8 +678,9 @@ void Context::staticInitialization ()
       std::vector <std::string> values;
       split (values, rc.second, ',');
 
-      for (auto r = values.rbegin(); r != values.rend (); ++r)
-        Task::customOrder[name].push_back (*r);
+      for (auto r = values.rbegin(); r != values.rend(); ++r) {
+        Task::customOrder[name].push_back(*r);
+      }
     }
   }
 
@@ -672,10 +705,12 @@ void Context::staticInitialization ()
   // Tag- and project-specific coefficients.
   std::vector <std::string> all;
   config.all (all);
-  for (auto& var : all)
-    if (var.substr (0, 13) == "urgency.user." ||
-        var.substr (0, 12) == "urgency.uda.")
-      Task::coefficients[var] = config.getReal (var);
+  for (auto& var : all) {
+    if (var.substr(0, 13) == "urgency.user." ||
+        var.substr(0, 12) == "urgency.uda.") {
+      Task::coefficients[var] = config.getReal(var);
+    }
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -684,9 +719,10 @@ void Context::createDefaultConfig ()
   // Do we need to create a default rc?
   if (rc_file._data != "" && ! rc_file.exists ())
   {
-    if (config.getBoolean ("confirmation") &&
-        !confirm (format (STRING_CONTEXT_CREATE_RC, home_dir, rc_file._data)))
-      throw std::string (STRING_CONTEXT_NEED_RC);
+    if (config.getBoolean("confirmation") &&
+        !confirm(format(STRING_CONTEXT_CREATE_RC, home_dir, rc_file._data))) {
+      throw std::string(STRING_CONTEXT_NEED_RC);
+    }
 
     config.createDefaultRC (rc_file, data_dir._original);
   }
@@ -741,8 +777,9 @@ void Context::updateXtermTitle ()
 
     for (auto a = cli2._args.begin (); a != cli2._args.end (); ++a)
     {
-      if (a != cli2._args.begin ())
+      if (a != cli2._args.begin()) {
         title += ' ';
+      }
 
       title += a->attribute ("raw");
     }
@@ -766,9 +803,11 @@ void Context::updateVerbosity ()
 ////////////////////////////////////////////////////////////////////////////////
 void Context::loadAliases ()
 {
-  for (auto& i : config)
-    if (i.first.substr (0, 6) == "alias.")
-      cli2.alias (i.first.substr (6), i.second);
+  for (auto& i : config) {
+    if (i.first.substr(0, 6) == "alias.") {
+      cli2.alias(i.first.substr(6), i.second);
+    }
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -779,20 +818,24 @@ void Context::propagateDebug ()
 {
   if (config.getBoolean ("debug"))
   {
-    if (! config.has ("debug.tls"))
-      config.set ("debug.tls", 2);
+    if (!config.has("debug.tls")) {
+      config.set("debug.tls", 2);
+    }
 
-    if (! config.has ("debug.hooks"))
-      config.set ("debug.hooks", 1);
+    if (!config.has("debug.hooks")) {
+      config.set("debug.hooks", 1);
+    }
 
-    if (! config.has ("debug.parser"))
-      config.set ("debug.parser", 1);
+    if (!config.has("debug.parser")) {
+      config.set("debug.parser", 1);
+    }
   }
   else
   {
-    if ((config.has ("debug.hooks")  && config.getInteger ("debug.hooks")) ||
-        (config.has ("debug.parser") && config.getInteger ("debug.parser")) )
-      config.set ("debug", true);
+    if ((config.has("debug.hooks") && config.getInteger("debug.hooks")) ||
+        (config.has("debug.parser") && config.getInteger("debug.parser"))) {
+      config.set("debug", true);
+    }
   }
 }
 
@@ -800,34 +843,38 @@ void Context::propagateDebug ()
 // No duplicates.
 void Context::header (const std::string& input)
 {
-  if (input.length () &&
-      std::find (headers.begin (), headers.end (), input) == headers.end ())
-    headers.push_back (input);
+  if (input.length() &&
+      std::find(headers.begin(), headers.end(), input) == headers.end()) {
+    headers.push_back(input);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // No duplicates.
 void Context::footnote (const std::string& input)
 {
-  if (input.length () &&
-      std::find (footnotes.begin (), footnotes.end (), input) == footnotes.end ())
-    footnotes.push_back (input);
+  if (input.length() &&
+      std::find(footnotes.begin(), footnotes.end(), input) == footnotes.end()) {
+    footnotes.push_back(input);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // No duplicates.
 void Context::error (const std::string& input)
 {
-  if (input.length () &&
-      std::find (errors.begin (), errors.end (), input) == errors.end ())
-    errors.push_back (input);
+  if (input.length() &&
+      std::find(errors.begin(), errors.end(), input) == errors.end()) {
+    errors.push_back(input);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void Context::debug (const std::string& input)
 {
-  if (input.length ())
-    debugMessages.push_back (input);
+  if (input.length()) {
+    debugMessages.push_back(input);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

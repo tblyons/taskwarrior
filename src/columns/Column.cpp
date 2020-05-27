@@ -79,36 +79,58 @@ Column* Column::factory (const std::string& name, const std::string& report)
   }
 
   Column* c;
-       if (column_name == "depends")     c = new ColumnDepends ();
-  else if (column_name == "description") c = new ColumnDescription ();
-  else if (column_name == "due")         c = new ColumnDue ();
-  else if (column_name == "end")         c = new ColumnEnd ();
-  else if (column_name == "entry")       c = new ColumnEntry ();
-  else if (column_name == "id")          c = new ColumnID ();
-  else if (column_name == "imask")       c = new ColumnIMask ();
-  else if (column_name == "mask")        c = new ColumnMask ();
-  else if (column_name == "modified")    c = new ColumnModified ();
-  else if (column_name == "parent")      c = new ColumnParent ();
-  else if (column_name == "project")     c = new ColumnProject ();
-  else if (column_name == "recur")       c = new ColumnRecur ();
-  else if (column_name == "scheduled")   c = new ColumnScheduled ();
-  else if (column_name == "start")       c = new ColumnStart ();
-  else if (column_name == "status")      c = new ColumnStatus ();
-  else if (column_name == "tags")        c = new ColumnTags ();
-  else if (column_name == "until")       c = new ColumnUntil ();
-  else if (column_name == "urgency")     c = new ColumnUrgency ();
-  else if (column_name == "uuid")        c = new ColumnUUID ();
-  else if (column_name == "wait")        c = new ColumnWait ();
+  if (column_name == "depends") {
+    c = new ColumnDepends();
+  } else if (column_name == "description") {
+    c = new ColumnDescription();
+  } else if (column_name == "due") {
+    c = new ColumnDue();
+  } else if (column_name == "end") {
+    c = new ColumnEnd();
+  } else if (column_name == "entry") {
+    c = new ColumnEntry();
+  } else if (column_name == "id") {
+    c = new ColumnID();
+  } else if (column_name == "imask") {
+    c = new ColumnIMask();
+  } else if (column_name == "mask") {
+    c = new ColumnMask();
+  } else if (column_name == "modified") {
+    c = new ColumnModified();
+  } else if (column_name == "parent") {
+    c = new ColumnParent();
+  } else if (column_name == "project") {
+    c = new ColumnProject();
+  } else if (column_name == "recur") {
+    c = new ColumnRecur();
+  } else if (column_name == "scheduled") {
+    c = new ColumnScheduled();
+  } else if (column_name == "start") {
+    c = new ColumnStart();
+  } else if (column_name == "status") {
+    c = new ColumnStatus();
+  } else if (column_name == "tags") {
+    c = new ColumnTags();
+  } else if (column_name == "until") {
+    c = new ColumnUntil();
+  } else if (column_name == "urgency") {
+    c = new ColumnUrgency();
+  } else if (column_name == "uuid") {
+    c = new ColumnUUID();
+  } else if (column_name == "wait") {
+    c = new ColumnWait();
 
-  // Special non-task column.
-  else if (column_name == "string")      c = new ColumnString ();
+    // Special non-task column.
+  } else if (column_name == "string") {
+    c = new ColumnString();
 
-  // UDA.
-  else if (context.config.has ("uda." + column_name + ".type"))
+    // UDA.
+  } else if (context.config.has("uda." + column_name + ".type")) {
     c = Column::uda (column_name);
 
-  else
-    throw format (STRING_COLUMN_BAD_NAME, column_name);
+  } else {
+    throw format(STRING_COLUMN_BAD_NAME, column_name);
+  }
 
   c->setReport (report);
   c->setStyle (column_style);
@@ -157,19 +179,22 @@ void Column::uda (std::map <std::string, Column*>& all)
     {
       std::string::size_type period = 4; // One byte after the first '.'.
 
-      if ((period = i.first.find ('.', period)) != std::string::npos)
-        udas.insert (i.first.substr (4, period - 4));
+      if ((period = i.first.find('.', period)) != std::string::npos) {
+        udas.insert(i.first.substr(4, period - 4));
+      }
     }
   }
 
   for (const auto& uda : udas)
   {
-    if (all.find (uda) != all.end ())
-      throw format (STRING_UDA_COLLISION, uda);
+    if (all.find(uda) != all.end()) {
+      throw format(STRING_UDA_COLLISION, uda);
+    }
 
     Column* c = Column::uda (uda);
-    if (c)
+    if (c) {
       all[c->_name] = c;
+    }
   }
 }
 
@@ -185,8 +210,9 @@ Column* Column::uda (const std::string& name)
     auto c = new ColumnUDAString ();
     c->_name = name;
     c->_label = label;
-    if (values != "")
-      split (c->_values, values, ',');
+    if (values != "") {
+      split(c->_values, values, ',');
+    }
     return c;
   }
   else if (type == "numeric")
@@ -194,8 +220,9 @@ Column* Column::uda (const std::string& name)
     auto c = new ColumnUDANumeric ();
     c->_name = name;
     c->_label = label;
-    if (values != "")
-      split (c->_values, values, ',');
+    if (values != "") {
+      split(c->_values, values, ',');
+    }
     return c;
   }
   else if (type == "date")
@@ -203,8 +230,9 @@ Column* Column::uda (const std::string& name)
     auto c = new ColumnUDADate ();
     c->_name = name;
     c->_label = label;
-    if (values != "")
-      split (c->_values, values, ',');
+    if (values != "") {
+      split(c->_values, values, ',');
+    }
     return c;
   }
   else if (type == "duration")
@@ -212,12 +240,13 @@ Column* Column::uda (const std::string& name)
     auto c = new ColumnUDADuration ();
     c->_name = name;
     c->_label = label;
-    if (values != "")
-      split (c->_values, values, ',');
+    if (values != "") {
+      split(c->_values, values, ',');
+    }
     return c;
+  } else if (type != "") {
+    throw std::string(STRING_UDA_TYPE);
   }
-  else if (type != "")
-    throw std::string (STRING_UDA_TYPE);
 
   return NULL;
 }
@@ -276,8 +305,9 @@ void Column::renderHeader (
 void Column::setStyle (const std::string& style)
 {
   if (style != "default" &&
-      std::find (_styles.begin (), _styles.end (), style) == _styles.end ())
-    throw format (STRING_COLUMN_BAD_FORMAT, _name, style);
+      std::find(_styles.begin(), _styles.end(), style) == _styles.end()) {
+    throw format(STRING_COLUMN_BAD_FORMAT, _name, style);
+  }
 
   _style = style;
 }

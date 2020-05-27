@@ -62,8 +62,9 @@ int CmdSync::execute (std::string& output)
   std::stringstream out;
 
   Filter filter;
-  if (filter.hasFilter ())
-    throw std::string (STRING_ERROR_NO_FILTER);
+  if (filter.hasFilter()) {
+    throw std::string(STRING_ERROR_NO_FILTER);
+  }
 
   // Loog for the 'init' keyword to indicate one-time pending.data upload.
   bool first_time_init = false;
@@ -72,58 +73,66 @@ int CmdSync::execute (std::string& output)
   {
     if (closeEnough ("initialize", word, 4))
     {
-      if (!context.config.getBoolean ("confirmation") ||
-          confirm (STRING_CMD_SYNC_INIT))
+      if (!context.config.getBoolean("confirmation") ||
+          confirm(STRING_CMD_SYNC_INIT)) {
         first_time_init = true;
-      else
-        throw std::string (STRING_CMD_SYNC_NO_INIT);
+      } else {
+        throw std::string(STRING_CMD_SYNC_NO_INIT);
+      }
     }
   }
 
   // If no server is set up, quit.
   std::string connection = context.config.get ("taskd.server");
-  if (connection == "" ||
-      connection.rfind (':') == std::string::npos)
-    throw std::string (STRING_CMD_SYNC_NO_SERVER);
+  if (connection == "" || connection.rfind(':') == std::string::npos) {
+    throw std::string(STRING_CMD_SYNC_NO_SERVER);
+  }
 
   // Obtain credentials.
   std::string credentials_string = context.config.get ("taskd.credentials");
-  if (credentials_string == "")
-    throw std::string (STRING_CMD_SYNC_BAD_CRED);
+  if (credentials_string == "") {
+    throw std::string(STRING_CMD_SYNC_BAD_CRED);
+  }
 
   std::vector <std::string> credentials;
   split (credentials, credentials_string, "/");
-  if (credentials.size () != 3)
-    throw std::string (STRING_CMD_SYNC_BAD_CRED);
+  if (credentials.size() != 3) {
+    throw std::string(STRING_CMD_SYNC_BAD_CRED);
+  }
 
   // This was a Boolean value in 2.3.0, and is a tri-state since 2.4.0.
   std::string trust_value = context.config.get ("taskd.trust");
-  if (trust_value != "strict" &&
-      trust_value != "ignore hostname" &&
-      trust_value != "allow all")
-    throw std::string (STRING_CMD_SYNC_TRUST_OBS);
+  if (trust_value != "strict" && trust_value != "ignore hostname" &&
+      trust_value != "allow all") {
+    throw std::string(STRING_CMD_SYNC_TRUST_OBS);
+  }
 
   enum TLSClient::trust_level trust = TLSClient::strict;
-  if (trust_value  == "allow all")
+  if (trust_value == "allow all") {
     trust = TLSClient::allow_all;
-  else if (trust_value == "ignore hostname")
+  } else if (trust_value == "ignore hostname") {
     trust = TLSClient::ignore_hostname;
+  }
 
   // CA must exist, if provided.
   File ca (context.config.get ("taskd.ca"));
-  if (ca._data != "" && ! ca.exists ())
-    throw std::string (STRING_CMD_SYNC_BAD_CA);
+  if (ca._data != "" && !ca.exists()) {
+    throw std::string(STRING_CMD_SYNC_BAD_CA);
+  }
 
-  if (trust == TLSClient::allow_all && ca._data != "")
-    throw std::string (STRING_CMD_SYNC_TRUST_CA);
+  if (trust == TLSClient::allow_all && ca._data != "") {
+    throw std::string(STRING_CMD_SYNC_TRUST_CA);
+  }
 
   File certificate (context.config.get ("taskd.certificate"));
-  if (! certificate.exists ())
-    throw std::string (STRING_CMD_SYNC_BAD_CERT);
+  if (!certificate.exists()) {
+    throw std::string(STRING_CMD_SYNC_BAD_CERT);
+  }
 
   File key (context.config.get ("taskd.key"));
-  if (! key.exists ())
-    throw std::string (STRING_CMD_SYNC_BAD_KEY);
+  if (!key.exists()) {
+    throw std::string(STRING_CMD_SYNC_BAD_KEY);
+  }
 
   // If this is a first-time initialization, send pending.data and
   // completed.data, but not backlog.data.
@@ -147,8 +156,9 @@ int CmdSync::execute (std::string& output)
     std::vector <std::string> lines = context.tdb2.backlog.get_lines ();
     for (auto& i : lines)
     {
-      if (i[0] == '{')
+      if (i[0] == '{') {
         ++upload_count;
+      }
 
       payload += i + "\n";
     }
@@ -165,14 +175,15 @@ int CmdSync::execute (std::string& output)
 
   // Tell the server that this is a full upload, allowing it to perhaps compact
   // its data.
-  if (first_time_init)
-    request.set ("subtype", "init");
+  if (first_time_init) {
+    request.set("subtype", "init");
+  }
 
   request.setPayload (payload);
 
-  if (context.verbose ("sync"))
-    out << format (STRING_CMD_SYNC_PROGRESS, connection)
-        << "\n";
+  if (context.verbose("sync")) {
+    out << format(STRING_CMD_SYNC_PROGRESS, connection) << "\n";
+  }
 
   // Ignore harmful signals.
   signal (SIGHUP,    SIG_IGN);
@@ -204,8 +215,9 @@ int CmdSync::execute (std::string& output)
       // Load all tasks, but only if necessary.  There is always a sync key in
       // the payload, so if there are two or more lines, then we have merging
       // to perform, otherwise it's just a backlog.data update.
-      if (lines.size () > 1)
-        context.tdb2.all_tasks ();
+      if (lines.size() > 1) {
+        context.tdb2.all_tasks();
+      }
 
       std::string sync_key = "";
       for (auto& line : lines)
@@ -221,24 +233,23 @@ int CmdSync::execute (std::string& output)
           Task dummy;
           if (context.tdb2.get (uuid, dummy))
           {
-            if (context.verbose ("sync"))
+            if (context.verbose("sync")) {
               out << "  "
-                  << colorChanged.colorize (
-                       format (STRING_CMD_SYNC_MOD,
-                               uuid,
-                               from_server.get ("description")))
+                  << colorChanged.colorize(
+                         format(STRING_CMD_SYNC_MOD, uuid,
+                                from_server.get("description")))
                   << "\n";
+            }
             context.tdb2.modify (from_server, false);
           }
           else
           {
-            if (context.verbose ("sync"))
+            if (context.verbose("sync")) {
               out << "  "
-                  << colorAdded.colorize (
-                       format (STRING_CMD_SYNC_ADD,
-                               uuid,
-                               from_server.get ("description")))
+                  << colorAdded.colorize(format(STRING_CMD_SYNC_ADD, uuid,
+                                                from_server.get("description")))
                   << "\n";
+            }
             context.tdb2.add (from_server, false);
           }
         }
@@ -262,15 +273,17 @@ int CmdSync::execute (std::string& output)
         context.tdb2.backlog.add_line (sync_key + "\n");
 
         // Present a clear status message.
-        if (upload_count == 0 && download_count == 0)
+        if (upload_count == 0 && download_count == 0) {
           // Note: should not happen - expect code 201 instead.
           context.footnote (STRING_CMD_SYNC_SUCCESS0);
-        else if (upload_count == 0 && download_count > 0)
+        } else if (upload_count == 0 && download_count > 0) {
           context.footnote (format (STRING_CMD_SYNC_SUCCESS2, download_count));
-        else if (upload_count > 0 && download_count == 0)
+        } else if (upload_count > 0 && download_count == 0) {
           context.footnote (format (STRING_CMD_SYNC_SUCCESS1, upload_count));
-        else if (upload_count > 0 && download_count > 0)
-          context.footnote (format (STRING_CMD_SYNC_SUCCESS3, upload_count, download_count));
+        } else if (upload_count > 0 && download_count > 0) {
+          context.footnote(
+              format(STRING_CMD_SYNC_SUCCESS3, upload_count, download_count));
+        }
       }
 
       status = 0;
@@ -305,10 +318,11 @@ int CmdSync::execute (std::string& output)
     std::string to_be_displayed = response.get ("messages");
     if (to_be_displayed != "")
     {
-      if (context.verbose ("footnote"))
+      if (context.verbose("footnote")) {
         context.footnote (to_be_displayed);
-      else
-        context.debug (to_be_displayed);
+      } else {
+        context.debug(to_be_displayed);
+      }
     }
   }
 
@@ -325,8 +339,9 @@ int CmdSync::execute (std::string& output)
     status = 1;
   }
 
-  if (context.verbose ("sync"))
+  if (context.verbose("sync")) {
     out << "\n";
+  }
   output = out.str ();
 
   // Restore signal handling.
@@ -358,8 +373,9 @@ bool CmdSync::send (
   // It is important that the ':' be the *last* colon, in order to support
   // IPv6 addresses.
   auto colon = to.rfind (':');
-  if (colon == std::string::npos)
-    throw format (STRING_CMD_SYNC_BAD_SERVER, to);
+  if (colon == std::string::npos) {
+    throw format(STRING_CMD_SYNC_BAD_SERVER, to);
+  }
 
   std::string server = to.substr (0, colon);
   std::string port = to.substr (colon + 1);
