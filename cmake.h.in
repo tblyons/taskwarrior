@@ -33,7 +33,6 @@
 #cmakedefine HAVE_COMMIT
 
 /* cmake information */
-#cmakedefine HAVE_CMAKE
 #define CMAKE_VERSION "${CMAKE_VERSION}"
 
 /* Compiling platform */

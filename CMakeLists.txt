@@ -4,8 +4,6 @@ set(CMAKE_LEGACY_CYGWIN_WIN32 0) # Remove when CMake >= 2.8.4 is required
 include (CheckFunctionExists)
 include (CheckStructHasMember)
 
-set (HAVE_CMAKE true)
-
 project (task)
 set (PROJECT_VERSION "2.5.1")
 
