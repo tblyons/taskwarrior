@@ -279,7 +279,7 @@ void ColumnUDADate::measure (Task& task, unsigned int& minimum, unsigned int& ma
         //   rc.report.<report>.dateformat
         //   rc.dateformat.report
         //   rc.dateformat
-        ISO8601d date ((time_t) strtol (value.c_str (), NULL, 10));
+        ISO8601d date (static_cast<time_t>(strtol (value.c_str (), NULL, 10)));
         std::string format = context.config.get ("report." + _report + ".dateformat");
         if (format.empty()) {
           format = context.config.get("dateformat.report");
@@ -336,7 +336,7 @@ void ColumnUDADate::render (
         }
       }
 
-      renderStringLeft (lines, width, color, ISO8601d ((time_t) strtol (value.c_str (), NULL, 10)).toString (format));
+      renderStringLeft (lines, width, color, ISO8601d (static_cast<time_t>(strtol (value.c_str (), NULL, 10))).toString (format));
     }
     else if (_style == "indicator")
     {

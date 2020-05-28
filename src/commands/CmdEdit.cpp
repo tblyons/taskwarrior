@@ -666,7 +666,7 @@ void CmdEdit::parseTask (Task& task, const std::string& after, const std::string
 
         // If the map already contains a annotation for a given timestamp
         // we need to increment until we find an unused key
-        int timestamp = (int) when.toEpoch ();
+        int timestamp = static_cast<int>(when.toEpoch ());
 
         std::stringstream name;
 
@@ -697,7 +697,7 @@ void CmdEdit::parseTask (Task& task, const std::string& after, const std::string
     if (dep.length() >= 7) {
       task.addDependency (dep);
     } else {
-      task.addDependency((int)strtol(dep.c_str(), NULL, 10));
+      task.addDependency(static_cast<int>(strtol(dep.c_str(), NULL, 10)));
     }
   }
 
@@ -711,7 +711,7 @@ void CmdEdit::parseTask (Task& task, const std::string& after, const std::string
       if ((task.get (col.first) != value) && (type != "date" ||
            (task.get (col.first) != ISO8601d (value, dateformat).toEpochString ())) &&
            (type != "duration" ||
-           (task.get (col.first) != (std::string) ISO8601p (value))))
+           (task.get (col.first) != std::string(ISO8601p (value)))))
       {
         if (!value.empty())
         {

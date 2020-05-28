@@ -441,7 +441,7 @@ int CmdInfo::execute (std::string& output)
               ISO8601p iso;
               std::string::size_type cursor = 0;
               if (iso.parse(value, cursor)) {
-                value = (std::string) Variant ((time_t) iso, Variant::type_duration);
+                value = std::string(Variant ((time_t) iso, Variant::type_duration));
               } else {
                 value = "PT0S";
               }

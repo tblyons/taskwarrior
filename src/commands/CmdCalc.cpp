@@ -81,7 +81,7 @@ int CmdCalc::execute (std::string& output)
     e.evaluatePostfixExpression(expression, result);
   }
 
-  output = (std::string) result + "\n";
+  output = std::string(result) + "\n";
   return 0;
 }
 

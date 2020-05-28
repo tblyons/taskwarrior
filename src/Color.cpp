@@ -328,7 +328,7 @@ Color::operator std::string () const
 ////////////////////////////////////////////////////////////////////////////////
 Color::operator int () const
 {
-  return (int) _value;
+  return static_cast<int>(_value);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -577,7 +577,7 @@ int Color::find (const std::string& input)
 {
   for (unsigned int i = 0; i < NUM_COLORS; ++i) {
     if (allColors[i].english_name == input) {
-      return (int)i;
+      return static_cast<int>(i);
     }
   }
 

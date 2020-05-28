@@ -216,11 +216,11 @@ int CmdStats::execute (std::string& output)
 
   row = view.addRow ();
   view.set (row, 0, STRING_CMD_STATS_UNIQUE_TAGS);
-  view.set (row, 1, (int)allTags.size ());
+  view.set (row, 1, static_cast<int>(allTags.size ()));
 
   row = view.addRow ();
   view.set (row, 0, STRING_CMD_STATS_PROJECTS);
-  view.set (row, 1, (int)allProjects.size ());
+  view.set (row, 1, static_cast<int>(allProjects.size ()));
 
   row = view.addRow ();
   view.set (row, 0, STRING_CMD_STATS_BLOCKED);
@@ -294,14 +294,14 @@ int CmdStats::execute (std::string& output)
   {
     row = view.addRow ();
     view.set (row, 0, STRING_CMD_STATS_AVG_PEND);
-    view.set (row, 1, ISO8601p ((int) ((daysPending / (pendingT + completedT)) * 86400)).formatVague ());
+    view.set (row, 1, ISO8601p (static_cast<int>((daysPending / (pendingT + completedT)) * 86400)).formatVague ());
   }
 
   if (totalT)
   {
     row = view.addRow ();
     view.set (row, 0, STRING_CMD_STATS_DESC_LEN);
-    view.set (row, 1, format (STRING_CMD_STATS_CHARS, (int) (descLength / totalT)));
+    view.set (row, 1, format (STRING_CMD_STATS_CHARS, (descLength / totalT)));
   }
 
   // If an alternating row color is specified, notify the table.

@@ -102,7 +102,7 @@ int CmdLogo::execute (std::string& output)
 
     for (int c = 0; c < 14; ++c)
     {
-      int value = (int) data[line][c];
+      int value = static_cast<int>(data[line][c]);
       if (value == '.') {
         output += "  ";
       } else {

@@ -169,7 +169,7 @@ std::string formatBytes (size_t bytes)
   } else if (bytes >= 995) {
     sprintf(formatted, "%.1f %s", (bytes / 1000.0), STRING_UTIL_KIBIBYTES);
   } else {
-    sprintf(formatted, "%d %s", (int)bytes, STRING_UTIL_BYTES);
+    sprintf(formatted, "%d %s", static_cast<int>(bytes), STRING_UTIL_BYTES);
   }
 
   return Lexer::commify (formatted);
@@ -200,7 +200,7 @@ int autoComplete (
       }
 
       // Maintain a list of partial matches.
-      else if (length >= (unsigned)minimum && length <= item.length() &&
+      else if (length >= static_cast<unsigned>(minimum) && length <= item.length() &&
                partial == item.substr(0, length)) {
         matches.push_back(item);
       }
@@ -311,9 +311,9 @@ int execute (
 
     // Add executable as argv[0] and NULL-terminate the array for execvp().
     char** argv = new char* [args.size () + 2];
-    argv[0] = (char*) executable.c_str ();
+    argv[0] = const_cast<char*>(executable.c_str ());
     for (unsigned int i = 0; i < args.size(); ++i) {
-      argv[i + 1] = (char*)args[i].c_str();
+      argv[i + 1] = const_cast<char*>(args[i].c_str());
     }
 
     argv[args.size () + 1] = NULL;

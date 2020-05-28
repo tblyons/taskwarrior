@@ -133,8 +133,8 @@ void ColumnProject::modify (Task& task, const std::string& value)
 
     Variant v;
     e.evaluateInfixExpression (value, v);
-    task.set (_name, (std::string) v);
-    context.debug (label + _name + " <-- '" + (std::string) v + "' <-- '" + value + "'");
+    task.set (_name, std::string(v));
+    context.debug (label + _name + " <-- '" + std::string(v) + "' <-- '" + value + "'");
   }
   else
   {

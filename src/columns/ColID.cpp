@@ -58,7 +58,7 @@ void ColumnID::measure (Task& task, unsigned int& minimum, unsigned int& maximum
   } else if (task.id < 100000) {
     length = 5; // Fast
   } else {
-    length = 1 + (int)log10((double)task.id); // Slow
+    length = 1 + static_cast<int>(log10(static_cast<double>(task.id))); // Slow
   }
 
   minimum = maximum = length;

@@ -235,7 +235,7 @@ json::array* json::array::parse (Nibbler& nibbler)
         else
         {
           delete arr;
-          throw format (STRING_JSON_MISSING_VALUE, (int) n.cursor ());
+          throw format (STRING_JSON_MISSING_VALUE, static_cast<int>(n.cursor ()));
         }
       }
     }
@@ -245,7 +245,7 @@ json::array* json::array::parse (Nibbler& nibbler)
       nibbler = n;
       return arr;
     } else {
-      throw format(STRING_JSON_MISSING_BRACKET, (int)n.cursor());
+      throw format(STRING_JSON_MISSING_BRACKET, static_cast<int>(n.cursor()));
     }
 
     delete arr;
@@ -318,7 +318,7 @@ json::object* json::object::parse (Nibbler& nibbler)
         else
         {
           delete obj;
-          throw format (STRING_JSON_MISSING_VALUE, (int) n.cursor ());
+          throw format (STRING_JSON_MISSING_VALUE, static_cast<int>(n.cursor ()));
         }
       }
     }
@@ -328,7 +328,7 @@ json::object* json::object::parse (Nibbler& nibbler)
       nibbler = n;
       return obj;
     } else {
-      throw format(STRING_JSON_MISSING_BRACE, (int)n.cursor());
+      throw format(STRING_JSON_MISSING_BRACE, static_cast<int>(n.cursor()));
     }
 
     delete obj;
@@ -356,10 +356,10 @@ bool json::object::parse_pair (
         nibbler = n;
         return true;
       } else {
-        throw format(STRING_JSON_MISSING_VALUE2, (int)n.cursor());
+        throw format(STRING_JSON_MISSING_VALUE2, static_cast<int>(n.cursor()));
       }
     } else {
-      throw format(STRING_JSON_MISSING_COLON, (int)n.cursor());
+      throw format(STRING_JSON_MISSING_COLON, static_cast<int>(n.cursor()));
     }
   }
 
@@ -405,7 +405,7 @@ json::value* json::parse (const std::string& input)
   } else if (n.next() == '[') {
     root = json::array::parse(n);
   } else {
-    throw format(STRING_JSON_MISSING_OPEN, (int)n.cursor());
+    throw format(STRING_JSON_MISSING_OPEN, static_cast<int>(n.cursor()));
   }
 
   // Check for end condition.
@@ -413,7 +413,7 @@ json::value* json::parse (const std::string& input)
   if (!n.depleted ())
   {
     delete root;
-    throw format (STRING_JSON_EXTRA_CHARACTERS, (int) n.cursor ());
+    throw format (STRING_JSON_EXTRA_CHARACTERS, static_cast<int>(n.cursor ()));
   }
 
   return root;
@@ -440,7 +440,7 @@ std::string json::encode (const std::string& input)
     case '\r':
     case '\t':
       output.append (last, i);
-      output += json_encode[(unsigned char)(*i)];
+      output += json_encode[static_cast<unsigned char>(*i)];
       last = i + 1;
 
     // Default NOP.

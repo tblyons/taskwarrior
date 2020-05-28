@@ -189,8 +189,8 @@ void ColumnTags::modify (Task& task, const std::string& value)
 
       Variant v;
       e.evaluateInfixExpression (value, v);
-      task.addTag ((std::string) v);
-      context.debug (label + "tags <-- '" + (std::string) v + "' <-- '" + tag + "'");
+      task.addTag (std::string(v));
+      context.debug (label + "tags <-- '" + std::string(v) + "' <-- '" + tag + "'");
     }
     else
     {

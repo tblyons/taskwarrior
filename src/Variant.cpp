@@ -1208,7 +1208,7 @@ Variant& Variant::operator^= (const Variant& other)
     switch (other._type)
     {
     case type_boolean:  throw std::string (STRING_VARIANT_EXP_BOOL);
-    case type_integer:  _integer = (int) pow (static_cast<double>(_integer), static_cast<double>(other._integer)); break;
+    case type_integer:  _integer = static_cast<int>(pow (static_cast<double>(_integer), static_cast<double>(other._integer))); break;
     case type_real:     throw std::string (STRING_VARIANT_EXP_NON_INT);
     case type_string:   throw std::string (STRING_VARIANT_EXP_STRING);
     case type_date:     throw std::string (STRING_VARIANT_EXP_DATE);
@@ -1301,7 +1301,7 @@ Variant& Variant::operator-= (const Variant& other)
     {
     case type_boolean:  right.cast (type_integer); _date -= right._integer;    break;
     case type_integer:                             _date -= right._integer;    break;
-    case type_real:                                _date -= (int) right._real; break;
+    case type_real:                                _date -= static_cast<int>(right._real); break;
     case type_string:   throw std::string (STRING_VARIANT_SUB_STRING);
     case type_date:     cast (type_duration);      _duration -= right._date;   break;
     case type_duration:                            _date -= right._duration;   break;
@@ -1313,7 +1313,7 @@ Variant& Variant::operator-= (const Variant& other)
     {
     case type_boolean:  right.cast (type_integer); _duration -= right._integer;    break;
     case type_integer:                             _duration -= right._integer;    break;
-    case type_real:                                _duration -= (int) right._real; break;
+    case type_real:                                _duration -= static_cast<int>(right._real); break;
     case type_string:   throw std::string (STRING_VARIANT_SUB_STRING);
     case type_date:     throw std::string (STRING_VARIANT_SUB_DATE);
     case type_duration:                            _duration -= right._duration;   break;
@@ -1384,18 +1384,18 @@ Variant& Variant::operator+= (const Variant& other)
 
     case type_date:
       _type = type_date;
-      _date = (unsigned) (int) _real + right._date;
+      _date = static_cast<unsigned>(static_cast<int>(_real)) + right._date;
       break;
 
     case type_duration:
       _type = type_duration;
-      _duration = (unsigned) (int) _real + right._duration;
+      _duration = static_cast<unsigned>(static_cast<int>(_real)) + right._duration;
       break;
     }
     break;
 
   case type_string:
-    _string += (std::string) right;
+    _string += std::string(right);
     break;
 
   case type_date:
@@ -1403,7 +1403,7 @@ Variant& Variant::operator+= (const Variant& other)
     {
     case type_boolean:  right.cast (type_date); _date += right._date;       break;
     case type_integer:                          _date += right._integer;    break;
-    case type_real:                             _date += (int) right._real; break;
+    case type_real:                             _date += static_cast<int>(right._real); break;
     case type_string:   cast (type_string);     _string += right._string;   break;
     case type_date:     throw std::string (STRING_VARIANT_ADD_DATE);
     case type_duration:                         _date += right._duration;   break;
@@ -1415,7 +1415,7 @@ Variant& Variant::operator+= (const Variant& other)
     {
     case type_boolean:  right.cast (type_duration); _duration += right._duration;   break;
     case type_integer:                              _duration += right._integer;    break;
-    case type_real:                                 _duration += (int) right._real; break;
+    case type_real:                                 _duration += static_cast<int>(right._real); break;
     case type_string:   cast (type_string);         _string += right._string;       break;
     case type_date:     cast (type_date);           _date += right._date;           break;
     case type_duration:                             _duration += right._duration;   break;
@@ -1497,7 +1497,7 @@ Variant& Variant::operator*= (const Variant& other)
 
     case type_duration:
       _type = type_duration;
-      _duration = (time_t) (unsigned) (int) (_real * static_cast<double>(right._duration));
+      _duration = static_cast<time_t>(static_cast<unsigned>(static_cast<int>(_real * static_cast<double>(right._duration))));
     }
     break;
 
@@ -1535,7 +1535,7 @@ Variant& Variant::operator*= (const Variant& other)
     case type_boolean:  right.cast (type_duration); _duration *= right._duration;   break;
     case type_integer:                              _duration *= right._integer;    break;
     case type_real:
-      _duration = (time_t) (unsigned) (int) (static_cast<double>(_duration) * right._real);
+      _duration = static_cast<time_t>(static_cast<unsigned>(static_cast<int>(static_cast<double>(_duration) * right._real)));
       break;
     case type_string:   throw std::string (STRING_VARIANT_MUL_DUR_STR);
     case type_date:     throw std::string (STRING_VARIANT_MUL_DUR_DATE);
@@ -1598,7 +1598,7 @@ Variant& Variant::operator/= (const Variant& other)
         throw std::string(STRING_VARIANT_DIV_ZERO);
       }
       _type = type_duration;
-      _duration = (time_t) (unsigned) (int) (_integer / right._duration);
+      _duration = static_cast<time_t>(static_cast<unsigned>(static_cast<int>(_integer / right._duration)));
       break;
     }
     break;
@@ -1634,7 +1634,7 @@ Variant& Variant::operator/= (const Variant& other)
         throw std::string(STRING_VARIANT_DIV_ZERO);
       }
       _type = type_duration;
-      _duration = (time_t) (unsigned) (int) (_real / right._duration);
+      _duration = static_cast<time_t>(static_cast<unsigned>(static_cast<int>(_real / right._duration)));
       break;
     }
     break;
@@ -1663,7 +1663,7 @@ Variant& Variant::operator/= (const Variant& other)
       if (right._real == 0) {
         throw std::string(STRING_VARIANT_DIV_ZERO);
       }
-      _duration = (time_t) (unsigned) (int) (static_cast<double>(_duration) / right._real);
+      _duration = static_cast<time_t>(static_cast<unsigned>(static_cast<int>(static_cast<double>(_duration) / right._real)));
       break;
 
     case type_string:
@@ -1869,8 +1869,8 @@ void Variant::cast (const enum type new_type)
         _string = temp;
       }
       break;
-    case type_date:     _date = (time_t) _integer;            break;
-    case type_duration: _duration = (time_t) _integer;        break;
+    case type_date:     _date = static_cast<time_t>(_integer);            break;
+    case type_duration: _duration = static_cast<time_t>(_integer);        break;
     }
     break;
 
@@ -1878,7 +1878,7 @@ void Variant::cast (const enum type new_type)
     switch (new_type)
     {
     case type_boolean:  _bool = _real != 0.0; break;
-    case type_integer:  _integer = (int) _real;              break;
+    case type_integer:  _integer = static_cast<int>(_real);              break;
     case type_real:                                          break;
     case type_string:
       {
@@ -1887,8 +1887,8 @@ void Variant::cast (const enum type new_type)
         _string = temp;
       }
       break;
-    case type_date:     _date = (time_t) (int) _real;        break;
-    case type_duration: _duration = (time_t) (int) _real;    break;
+    case type_date:     _date = static_cast<time_t>(static_cast<int>(_real));        break;
+    case type_duration: _duration = static_cast<time_t>(static_cast<int>(_real));    break;
     }
     break;
 
@@ -1902,7 +1902,7 @@ void Variant::cast (const enum type new_type)
                _string == "0.0");
       break;
     case type_integer:
-      _integer = (int) strtol (_string.c_str (), NULL, (_string.substr (0, 2) == "0x" ? 16 : 10));
+      _integer = static_cast<int>(strtol (_string.c_str (), NULL, (_string.substr (0, 2) == "0x" ? 16 : 10)));
       break;
     case type_real:     _real = strtod (_string.c_str (), NULL);              break;
     case type_string:                                                         break;
@@ -1953,9 +1953,9 @@ void Variant::cast (const enum type new_type)
     switch (new_type)
     {
     case type_boolean:  _bool = _date != 0;  break;
-    case type_integer:  _integer = (int) _date;             break;
+    case type_integer:  _integer = static_cast<int>(_date);             break;
     case type_real:     _real = static_cast<double>(_date); break;
-    case type_string:   _string = (std::string) *this;      break;
+    case type_string:   _string = std::string(*this);      break;
     case type_date:                                         break;
     case type_duration: _duration = _date;                  break;
     }
@@ -1965,9 +1965,9 @@ void Variant::cast (const enum type new_type)
     switch (new_type)
     {
     case type_boolean:  _bool = _duration != 0;  break;
-    case type_integer:  _integer = (int) _duration;             break;
+    case type_integer:  _integer = static_cast<int>(_duration);             break;
     case type_real:     _real = static_cast<double>(_duration); break;
-    case type_string:   _string = (std::string) *this;          break;
+    case type_string:   _string = std::string(*this);          break;
     case type_date:     _date = _duration;                      break;
     case type_duration:                                         break;
     }

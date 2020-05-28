@@ -461,7 +461,7 @@ void Hooks::assertNTasks (const std::vector <std::string>& input, unsigned int n
 {
   if (input.size () != n)
   {
-    context.error (format (STRING_HOOK_ERROR_BAD_NUM, n, (int) input.size ()));
+    context.error (format (STRING_HOOK_ERROR_BAD_NUM, n, static_cast<int>(input.size ())));
     throw 0;
   }
 }

@@ -100,7 +100,7 @@ void handleRecurrence ()
           rec.setAsNow ("entry");                // New entry date.
 
           char dueDate[16];
-          sprintf (dueDate, "%u", (unsigned int) d.toEpoch ());
+          sprintf (dueDate, "%u", static_cast<unsigned int>(d.toEpoch ()));
           rec.set ("due", dueDate);              // Store generated due date.
 
           if (t.has ("wait"))
@@ -108,7 +108,7 @@ void handleRecurrence ()
             ISO8601d old_wait (t.get_date ("wait"));
             ISO8601d old_due (t.get_date ("due"));
             ISO8601d due (d);
-            sprintf (dueDate, "%u", (unsigned int) (due + (old_wait - old_due)).toEpoch ());
+            sprintf (dueDate, "%u", static_cast<unsigned int>((due + (old_wait - old_due)).toEpoch ()));
             rec.set ("wait", dueDate);
             rec.setStatus (Task::waiting);
             mask += 'W';
@@ -120,7 +120,7 @@ void handleRecurrence ()
           }
 
           char indexMask[12];
-          sprintf (indexMask, "%u", (unsigned int) i);
+          sprintf (indexMask, "%u", i);
           rec.set ("imask", indexMask);          // Store index into mask.
 
           rec.remove ("mask");                   // Remove the mask of the parent.

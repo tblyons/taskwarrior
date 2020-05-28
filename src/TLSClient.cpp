@@ -62,7 +62,7 @@ static void gnutls_log_function (int level, const char* message)
 ////////////////////////////////////////////////////////////////////////////////
 static int verify_certificate_callback (gnutls_session_t session)
 {
-  const TLSClient* client = (TLSClient*) gnutls_session_get_ptr (session);
+  const TLSClient* client = static_cast<TLSClient*>(gnutls_session_get_ptr (session));
   return client->verify_certificate ();
 }
 
@@ -456,8 +456,8 @@ void TLSClient::send (const std::string& data)
       break;
     }
 
-    total     += (unsigned int) status;
-    remaining -= (unsigned int) status;
+    total     += static_cast<unsigned int>(status);
+    remaining -= static_cast<unsigned int>(status);
   }
 
   if (_debug) {
@@ -539,7 +539,7 @@ void TLSClient::recv (std::string& data)
       break;
     }
   }
-  while (received > 0 && total < (int) expected);
+  while (received > 0 && total < static_cast<int>(expected));
 
   if (_debug) {
     std::cout << "c: INFO Receiving 'XXXX" << data.c_str() << "' (" << total

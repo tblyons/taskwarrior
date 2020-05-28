@@ -284,7 +284,7 @@ void CLI2::getDataLocation (int argc, const char** argv, Path& data)
         raw.substr (0, 16) == "rc.data.location")
     {
       data = Directory (raw.substr (17));
-      context.header (format (STRING_PARSER_ALTERNATE_DATA, (std::string) data));
+      context.header (format (STRING_PARSER_ALTERNATE_DATA, std::string(data)));
 
       // Keep looping, because if there are multiple rc:file arguments, the last
       // one should dominate.

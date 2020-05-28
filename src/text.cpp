@@ -545,7 +545,7 @@ const std::string obfuscateText (const std::string& input)
   {
     if (inside)
     {
-      output << (char) character;
+      output << static_cast<char>(character);
 
       if (character == 'm') {
         inside = false;
@@ -558,7 +558,7 @@ const std::string obfuscateText (const std::string& input)
       }
 
       if (inside || character == ' ') {
-        output << (char) character;
+        output << static_cast<char>(character);
       } else {
         output << 'x';
       }

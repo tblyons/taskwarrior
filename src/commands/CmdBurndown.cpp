@@ -449,7 +449,7 @@ std::string Chart::render ()
 
   if (_title.length ())
   {
-    if (full_title.length () + 1 + _title.length () < (unsigned) _width)
+    if (full_title.length () + 1 + _title.length () < static_cast<unsigned>(_width))
     {
       full_title += " " + _title;
       _grid.replace (LOC (0, (_width - full_title.length ()) / 2), full_title.length (), full_title);
@@ -473,7 +473,7 @@ std::string Chart::render ()
   // Determine y-axis labelling.
   std::vector <int> _labels;
   yLabels (_labels);
-  _max_label = (int) log10 ((double) _labels[2]) + 1;
+  _max_label = static_cast<int>(log10 (static_cast<double>(_labels[2]))) + 1;
 
   // Draw y-axis.
   for (int i = 0; i < _graph_height; ++i) {
@@ -829,7 +829,7 @@ void Chart::maxima ()
       _max_value = total;
     }
 
-    int length = (int) log10 ((double) total) + 1;
+    int length = static_cast<int>(log10 (static_cast<double>(total))) + 1;
     if (length > _max_label) {
       _max_label = length;
     }
@@ -957,7 +957,7 @@ unsigned Chart::burndown_size (unsigned ntasks)
 
   // Choose the number from here rounded up to the nearest 10% of the next
   // highest power of 10 or half of power of 10.
-  const unsigned count = (unsigned) log10 (std::numeric_limits<unsigned>::max ());
+  const unsigned count = static_cast<unsigned>(log10 (std::numeric_limits<unsigned>::max ()));
   unsigned half = 500;
   unsigned full = 1000;
 

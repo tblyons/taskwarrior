@@ -131,11 +131,11 @@ std::string ViewTask::render (std::vector <Task>& data, std::vector <int>& seque
 
     for (unsigned int s = 0; s < sequence.size (); ++s)
     {
-      if ((int)s >= _truncate_lines && _truncate_lines != 0) {
+      if (static_cast<int>(s) >= _truncate_lines && _truncate_lines != 0) {
         break;
       }
 
-      if ((int)s >= _truncate_rows && _truncate_rows != 0) {
+      if (static_cast<int>(s) >= _truncate_rows && _truncate_rows != 0) {
         break;
       }
 

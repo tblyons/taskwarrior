@@ -238,7 +238,7 @@ void ColumnTypeDate::modify (Task& task, const std::string& value)
   std::string label = "  [1;37;43mMODIFICATION[0m ";
   if (evaluatedValue.type () == Variant::type_duration)
   {
-    context.debug (label + _name + " <-- '" + format ("{1}", format (evaluatedValue.get_duration ())) + "' <-- '" + (std::string) evaluatedValue + "' <-- '" + value + "'");
+    context.debug (label + _name + " <-- '" + format ("{1}", format (evaluatedValue.get_duration ())) + "' <-- '" + std::string(evaluatedValue) + "' <-- '" + value + "'");
     Variant now;
     if (namedDates("now", now)) {
       evaluatedValue += now;
@@ -247,7 +247,7 @@ void ColumnTypeDate::modify (Task& task, const std::string& value)
   else
   {
     evaluatedValue.cast (Variant::type_date);
-    context.debug (label + _name + " <-- '" + format ("{1}", evaluatedValue.get_date ()) + "' <-- '" + (std::string) evaluatedValue + "' <-- '" + value + "'");
+    context.debug (label + _name + " <-- '" + format ("{1}", evaluatedValue.get_date ()) + "' <-- '" + std::string(evaluatedValue) + "' <-- '" + value + "'");
   }
 
   // If a date doesn't parse (2/29/2014) then it evaluates to zero.

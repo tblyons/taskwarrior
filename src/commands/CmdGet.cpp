@@ -69,7 +69,7 @@ int CmdGet::execute (std::string& output)
         Task t;
         Variant result;
         if (getDOM(arg.attribute("raw"), t, result)) {
-          results.push_back ((std::string) result);
+          results.push_back (std::string(result));
         } else {
           results.push_back("");
         }

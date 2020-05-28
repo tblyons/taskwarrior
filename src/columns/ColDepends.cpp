@@ -84,7 +84,7 @@ void ColumnDepends::measure (Task& task, unsigned int& minimum, unsigned int& ma
   }
   else if (_style == "count")
   {
-    minimum = maximum = 2 + format ((int) blocking.size ()).length ();
+    minimum = maximum = 2 + format (static_cast<int>(blocking.size ())).length ();
   }
   else if (_style == "default" ||
            _style == "list")

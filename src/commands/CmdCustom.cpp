@@ -226,11 +226,11 @@ int CmdCustom::execute (std::string& output)
                 ? STRING_CMD_CUSTOM_COUNT
                 : format (STRING_CMD_CUSTOM_COUNTN, filtered.size ()));
 
-      if (maxrows && maxrows < (int)filtered.size()) {
+      if (maxrows && maxrows < static_cast<int>(filtered.size())) {
         out << ", " << format(STRING_CMD_CUSTOM_SHOWN, maxrows);
       }
 
-      if (maxlines && maxlines < (int)filtered.size()) {
+      if (maxlines && maxlines < static_cast<int>(filtered.size())) {
         out << ", "
             << format(STRING_CMD_CUSTOM_TRUNCATED, maxlines - table_header);
       }

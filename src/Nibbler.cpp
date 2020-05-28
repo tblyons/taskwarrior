@@ -593,7 +593,7 @@ std::string::size_type Nibbler::cursor ()
 // Peeks ahead - does not move cursor.
 std::string Nibbler::next (const int quantity)
 {
-  if (_cursor < _length && (unsigned)quantity <= _length &&
+  if (_cursor < _length && static_cast<unsigned>(quantity) <= _length &&
       _cursor <= _length - quantity) {
     return _input->substr(_cursor, quantity);
   }

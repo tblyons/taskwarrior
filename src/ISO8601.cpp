@@ -1679,14 +1679,14 @@ ISO8601d ISO8601d::operator- (const int delta)
 ////////////////////////////////////////////////////////////////////////////////
 ISO8601d& ISO8601d::operator+= (const int delta)
 {
-  _date += (time_t) delta;
+  _date += static_cast<time_t>(delta);
   return *this;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ISO8601d& ISO8601d::operator-= (const int delta)
 {
-  _date -= (time_t) delta;
+  _date -= static_cast<time_t>(delta);
   return *this;
 }
 
@@ -1794,7 +1794,7 @@ ISO8601p::ISO8601p (const std::string& input)
 
   if (Lexer::isAllDigits (input))
   {
-    time_t value = (time_t) strtol (input.c_str (), NULL, 10);
+    time_t value = static_cast<time_t>(strtol (input.c_str (), NULL, 10));
     if (value == 0 || value > 60)
     {
       _period = value;
@@ -2050,7 +2050,7 @@ const std::string ISO8601p::format () const
 //
 const std::string ISO8601p::formatVague () const
 {
-  float days = (float) _period / 86400.0;
+  float days = static_cast<float>(_period) / 86400.0;
 
   std::stringstream formatted;
   if (_period >= 86400 * 365) {

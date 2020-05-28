@@ -115,7 +115,7 @@ int CmdSummary::execute (std::string& output)
 
         time_t entry = strtol (task.get ("entry").c_str (), NULL, 10);
         if (entry) {
-          sumEntry[parent] = sumEntry[parent] + (double)(now - entry);
+          sumEntry[parent] = sumEntry[parent] + static_cast<double>(now - entry);
         }
       }
     }
@@ -129,7 +129,7 @@ int CmdSummary::execute (std::string& output)
         time_t entry = strtol (task.get ("entry").c_str (), NULL, 10);
         time_t end   = strtol (task.get ("end").c_str (), NULL, 10);
         if (entry && end) {
-          sumEntry[parent] = sumEntry[parent] + (double)(end - entry);
+          sumEntry[parent] = sumEntry[parent] + static_cast<double>(end - entry);
         }
       }
     }
@@ -181,7 +181,7 @@ int CmdSummary::execute (std::string& output)
       view.set (row, 1, countPending[i.first]);
       if (counter[i.first]) {
         view.set(row, 2,
-                 ISO8601p((int)(sumEntry[i.first] / (double)counter[i.first]))
+                 ISO8601p(static_cast<int>(sumEntry[i.first] / static_cast<double>(counter[i.first])))
                      .formatVague());
       }
 

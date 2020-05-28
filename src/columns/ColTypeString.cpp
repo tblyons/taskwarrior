@@ -62,7 +62,7 @@ void ColumnTypeString::modify (Task& task, const std::string& value)
 
     Variant v;
     e.evaluateInfixExpression (value, v);
-    std::string strValue = (std::string) v;
+    std::string strValue = std::string(v);
     if (validate (strValue))
     {
       task.set (_name, strValue);
