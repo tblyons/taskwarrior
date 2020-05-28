@@ -31,10 +31,10 @@
 #include <TLSClient.h>
 #include <iostream>
 #include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstdint>
+#include <cstring>
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #if (defined OPENBSD || defined SOLARIS || defined NETBSD)

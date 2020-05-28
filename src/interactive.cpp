@@ -26,7 +26,7 @@
 
 #include <cmake.h>
 #include <sstream>
-#include <stdio.h>
+#include <cstdio>
 #include <unistd.h>
 #include <sys/ioctl.h>
 #include <Context.h>

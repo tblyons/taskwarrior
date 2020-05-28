@@ -31,9 +31,9 @@
 #include <sstream>
 #include <algorithm>
 #include <sys/stat.h>
-#include <inttypes.h>
+#include <cinttypes>
 #include <unistd.h>
-#include <stdlib.h>
+#include <cstdlib>
 #include <ISO8601.h>
 #include <FS.h>
 #include <Timer.h>

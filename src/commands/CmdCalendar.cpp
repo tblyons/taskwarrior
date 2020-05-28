@@ -28,7 +28,7 @@
 #include <CmdCalendar.h>
 #include <sstream>
 #include <iomanip>
-#include <stdlib.h>
+#include <cstdlib>
 #include <Context.h>
 #include <ViewText.h>
 #include <Lexer.h>

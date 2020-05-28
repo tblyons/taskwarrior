@@ -34,7 +34,7 @@
 #include <strings.h>
 #include <Context.h>
 #include <Lexer.h>
-#include <math.h>
+#include <cmath>
 #include <util.h>
 #include <text.h>
 #include <utf8.h>

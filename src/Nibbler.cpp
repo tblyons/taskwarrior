@@ -26,9 +26,9 @@
 
 #include <cmake.h>
 #include <Nibbler.h>
-#include <stdlib.h>
-#include <string.h>
-#include <inttypes.h>
+#include <cstdlib>
+#include <cstring>
+#include <cinttypes>
 #include <Lexer.h>
 #include <util.h>
 

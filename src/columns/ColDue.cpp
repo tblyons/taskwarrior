@@ -26,7 +26,7 @@
 
 #include <cmake.h>
 #include <ColDue.h>
-#include <stdlib.h>
+#include <cstdlib>
 #include <text.h>
 #include <i18n.h>
 

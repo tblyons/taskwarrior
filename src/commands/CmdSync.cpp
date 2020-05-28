@@ -27,8 +27,8 @@
 #include <cmake.h>
 #include <CmdSync.h>
 #include <sstream>
-#include <inttypes.h>
-#include <signal.h>
+#include <cinttypes>
+#include <csignal>
 #include <Context.h>
 #include <Filter.h>
 #include <Color.h>

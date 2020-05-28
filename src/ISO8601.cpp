@@ -28,8 +28,8 @@
 #include <ISO8601.h>
 #include <sstream>
 #include <iomanip>
-#include <stdlib.h>
-#include <assert.h>
+#include <cstdlib>
+#include <cassert>
 #include <Lexer.h>
 #include <util.h>
 #ifdef PRODUCT_TASKWARRIOR

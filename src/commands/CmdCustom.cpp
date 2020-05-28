@@ -30,7 +30,7 @@
 #include <map>
 #include <vector>
 #include <algorithm>
-#include <stdlib.h>
+#include <cstdlib>
 #include <Context.h>
 #include <Filter.h>
 #include <Lexer.h>

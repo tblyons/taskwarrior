@@ -30,9 +30,9 @@
 #include <fstream>
 #include <sstream>
 #include <algorithm>
-#include <assert.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cassert>
+#include <cstdlib>
+#include <cstring>
 #include <unistd.h>
 #include <FS.h>
 #include <Eval.h>

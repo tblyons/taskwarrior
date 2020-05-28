@@ -27,9 +27,9 @@
 #include <cmake.h>
 #include <sstream>
 #include <algorithm>
-#include <stdio.h>
-#include <math.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
 #include <Variant.h>
 #include <ISO8601.h>
 #include <Lexer.h>

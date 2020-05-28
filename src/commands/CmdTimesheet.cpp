@@ -27,7 +27,7 @@
 #include <cmake.h>
 #include <CmdTimesheet.h>
 #include <sstream>
-#include <stdlib.h>
+#include <cstdlib>
 #include <Context.h>
 #include <Filter.h>
 #include <ViewText.h>

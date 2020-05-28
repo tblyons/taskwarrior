@@ -27,8 +27,8 @@
 #include <cmake.h>
 #include <Dates.h>
 #include <algorithm>
-#include <stdlib.h>
-#include <time.h>
+#include <cstdlib>
+#include <ctime>
 #include <text.h>
 #include <ISO8601.h>
 #include <Lexer.h>

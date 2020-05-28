@@ -28,7 +28,7 @@
 #include <CmdCommands.h>
 #include <sstream>
 #include <algorithm>
-#include <stdlib.h>
+#include <cstdlib>
 #include <Context.h>
 #include <ViewText.h>
 #include <Command.h>

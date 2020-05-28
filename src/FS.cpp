@@ -30,13 +30,13 @@
 #include <glob.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <stdlib.h>
+#include <cstdlib>
 #include <pwd.h>
 #include <cstdio>
 #include <unistd.h>
 #include <fcntl.h>
 #include <dirent.h>
-#include <string.h>
+#include <cstring>
 #include <text.h>
 #include <util.h>
 #include <i18n.h>

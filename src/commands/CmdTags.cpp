@@ -28,7 +28,7 @@
 #include <CmdTags.h>
 #include <sstream>
 #include <vector>
-#include <stdlib.h>
+#include <cstdlib>
 #include <Context.h>
 #include <Filter.h>
 #include <ViewText.h>

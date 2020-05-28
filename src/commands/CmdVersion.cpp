@@ -27,7 +27,7 @@
 #include <cmake.h>
 #include <CmdVersion.h>
 #include <sstream>
-#include <stdlib.h>
+#include <cstdlib>
 #include <Context.h>
 #include <ViewText.h>
 #ifdef HAVE_COMMIT

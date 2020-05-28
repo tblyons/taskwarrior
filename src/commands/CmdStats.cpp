@@ -28,7 +28,7 @@
 #include <CmdStats.h>
 #include <sstream>
 #include <iomanip>
-#include <stdlib.h>
+#include <cstdlib>
 #include <ViewText.h>
 #include <ISO8601.h>
 #include <Context.h>

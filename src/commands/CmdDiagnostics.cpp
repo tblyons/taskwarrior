@@ -29,8 +29,8 @@
 #include <iomanip>
 #include <sstream>
 #include <algorithm>
-#include <stdlib.h>
-#include <time.h>
+#include <cstdlib>
+#include <ctime>
 #include <RX.h>
 #include <Context.h>
 #include <i18n.h>

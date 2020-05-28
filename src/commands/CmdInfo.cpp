@@ -27,8 +27,8 @@
 #include <cmake.h>
 #include <CmdInfo.h>
 #include <sstream>
-#include <stdlib.h>
-#include <math.h>
+#include <cstdlib>
+#include <cmath>
 #include <Context.h>
 #include <Filter.h>
 #include <ISO8601.h>

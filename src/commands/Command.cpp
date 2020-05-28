@@ -27,7 +27,7 @@
 #include <cmake.h>
 #include <iostream>
 #include <vector>
-#include <stdlib.h>
+#include <cstdlib>
 #include <text.h>
 #include <util.h>
 #include <i18n.h>

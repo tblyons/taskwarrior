@@ -28,7 +28,7 @@
 #include <CmdAttributes.h>
 #include <sstream>
 #include <algorithm>
-#include <stdlib.h>
+#include <cstdlib>
 #include <Context.h>
 #include <Command.h>
 #include <i18n.h>

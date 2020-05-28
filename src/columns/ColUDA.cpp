@@ -31,7 +31,7 @@
 #include <text.h>
 #include <utf8.h>
 #include <i18n.h>
-#include <stdlib.h>
+#include <cstdlib>
 
 extern Context context;
 

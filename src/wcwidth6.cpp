@@ -60,7 +60,7 @@
  */
 
 #include <cmake.h>
-#include <wchar.h>
+#include <cwchar>
 
 struct interval {
     int first;

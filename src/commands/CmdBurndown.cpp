@@ -30,8 +30,8 @@
 #include <map>
 #include <algorithm>
 #include <limits>
-#include <string.h>
-#include <math.h>
+#include <cstring>
+#include <cmath>
 #include <Context.h>
 #include <Filter.h>
 #include <ISO8601.h>

@@ -27,7 +27,7 @@
 #include <cmake.h>
 #include <CmdUrgency.h>
 #include <sstream>
-#include <stdlib.h>
+#include <cstdlib>
 #include <Context.h>
 #include <Filter.h>
 #include <Lexer.h>

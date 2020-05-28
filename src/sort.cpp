@@ -28,7 +28,7 @@
 #include <algorithm>
 #include <vector>
 #include <string>
-#include <stdlib.h>
+#include <cstdlib>
 #include <Context.h>
 #include <ISO8601.h>
 #include <Task.h>
