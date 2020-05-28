@@ -91,7 +91,7 @@ int CmdColumns::execute (std::string& output)
 
   for (auto& name : names)
   {
-    if (words.size () == 0 ||
+    if (words.empty() ||
         find (name, words[0], false) != std::string::npos)
     {
       const std::vector <std::string> styles   = context.columns[name]->styles ();

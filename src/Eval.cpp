@@ -235,7 +235,7 @@ void Eval::evaluatePostfixStack (
   const std::vector <std::pair <std::string, Lexer::Type>>& tokens,
   Variant& result) const
 {
-  if (tokens.size() == 0) {
+  if (tokens.empty()) {
     throw std::string(STRING_EVAL_NO_EXPRESSION);
   }
 
@@ -247,7 +247,7 @@ void Eval::evaluatePostfixStack (
     if (token.second == Lexer::Type::op &&
         token.first == "!")
     {
-      if (values.size() < 1) {
+      if (values.empty()) {
         throw std::string(STRING_EVAL_NO_EVAL);
       }
 
@@ -263,7 +263,7 @@ void Eval::evaluatePostfixStack (
     else if (token.second == Lexer::Type::op &&
              token.first == "_neg_")
     {
-      if (values.size() < 1) {
+      if (values.empty()) {
         throw std::string(STRING_EVAL_NO_EVAL);
       }
 
@@ -829,14 +829,14 @@ void Eval::infixToPostfix (
     else if (token.second == Lexer::Type::op &&
              token.first == ")")
     {
-      while (op_stack.size () &&
+      while (!op_stack.empty() &&
              op_stack.back ().first != "(")
       {
         postfix.push_back (op_stack.back ());
         op_stack.pop_back ();
       }
 
-      if (op_stack.size()) {
+      if (!op_stack.empty()) {
         op_stack.pop_back ();
       } else {
         throw std::string("Mismatched parentheses in expression");
@@ -848,7 +848,7 @@ void Eval::infixToPostfix (
       char type2;
       unsigned int precedence2;
       char associativity2;
-      while (op_stack.size () > 0 &&
+      while (!op_stack.empty() &&
              identifyOperator (op_stack.back ().first, type2, precedence2, associativity2) &&
              ((associativity == 'l' && precedence <= precedence2) ||
               (associativity == 'r' && precedence <  precedence2)))
@@ -865,7 +865,7 @@ void Eval::infixToPostfix (
     }
   }
 
-  while (op_stack.size ())
+  while (!op_stack.empty())
   {
     if (op_stack.back().first == "(" || op_stack.back().first == ")") {
       throw std::string(STRING_PAREN_MISMATCH);

@@ -84,13 +84,13 @@ int CmdSync::execute (std::string& output)
 
   // If no server is set up, quit.
   std::string connection = context.config.get ("taskd.server");
-  if (connection == "" || connection.rfind(':') == std::string::npos) {
+  if (connection.empty() || connection.rfind(':') == std::string::npos) {
     throw std::string(STRING_CMD_SYNC_NO_SERVER);
   }
 
   // Obtain credentials.
   std::string credentials_string = context.config.get ("taskd.credentials");
-  if (credentials_string == "") {
+  if (credentials_string.empty()) {
     throw std::string(STRING_CMD_SYNC_BAD_CRED);
   }
 
@@ -116,11 +116,11 @@ int CmdSync::execute (std::string& output)
 
   // CA must exist, if provided.
   File ca (context.config.get ("taskd.ca"));
-  if (ca._data != "" && !ca.exists()) {
+  if (!ca._data.empty() && !ca.exists()) {
     throw std::string(STRING_CMD_SYNC_BAD_CA);
   }
 
-  if (trust == TLSClient::allow_all && ca._data != "") {
+  if (trust == TLSClient::allow_all && !ca._data.empty()) {
     throw std::string(STRING_CMD_SYNC_TRUST_CA);
   }
 
@@ -253,7 +253,7 @@ int CmdSync::execute (std::string& output)
             context.tdb2.add (from_server, false);
           }
         }
-        else if (line != "")
+        else if (!line.empty())
         {
           sync_key = line;
           context.debug ("Sync key " + sync_key);
@@ -264,7 +264,7 @@ int CmdSync::execute (std::string& output)
 
       // Only update everything if there is a new sync_key.  No sync_key means
       // something horrible happened on the other end of the wire.
-      if (sync_key != "")
+      if (!sync_key.empty())
       {
         // Truncate backlog.data, save new sync_key.
         context.tdb2.backlog._file.truncate ();
@@ -316,7 +316,7 @@ int CmdSync::execute (std::string& output)
 
     // Display all errors returned.  This is recommended by the server protocol.
     std::string to_be_displayed = response.get ("messages");
-    if (to_be_displayed != "")
+    if (!to_be_displayed.empty())
     {
       if (context.verbose("footnote")) {
         context.footnote (to_be_displayed);

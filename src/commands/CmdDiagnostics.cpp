@@ -247,7 +247,7 @@ int CmdDiagnostics::execute (std::string& output)
 
   // Determine rc.editor/$EDITOR/$VISUAL.
   char* peditor;
-  if (context.config.get("editor") != "") {
+  if (!context.config.get("editor").empty()) {
     out << "  rc.editor: " << context.config.get ("editor") << "\n";
   } else if ((peditor = getenv("VISUAL")) != NULL) {
     out << "    $VISUAL: " << peditor << "\n";
@@ -259,7 +259,7 @@ int CmdDiagnostics::execute (std::string& output)
       << context.config.get ("taskd.server")
       << "\n";
 
-  if (context.config.get("taskd.ca") != "") {
+  if (!context.config.get("taskd.ca").empty()) {
     out << "         CA: " << context.config.get("taskd.ca")
         << (File(context.config.get("taskd.ca")).readable()
                 ? ", readable, "
@@ -319,7 +319,7 @@ int CmdDiagnostics::execute (std::string& output)
       << "\n";
 
   auto hooks = context.hooks.list ();
-  if (hooks.size ())
+  if (!hooks.empty())
   {
     unsigned int longest = 0;
     for (auto& hook : hooks) {
@@ -431,7 +431,7 @@ int CmdDiagnostics::execute (std::string& output)
       << format (STRING_CMD_DIAG_UUID_SCAN, all.size ())
       << "\n";
 
-  if (dups.size ())
+  if (!dups.empty())
   {
     for (auto& d : dups) {
       out << "             " << format(STRING_CMD_DIAG_UUID_DUP, d) << "\n";
@@ -471,7 +471,7 @@ int CmdDiagnostics::execute (std::string& output)
     // Check recurrence parent
     std::string parentUUID = task.get ("parent");
 
-    if (parentUUID != "" && ! context.tdb2.has (parentUUID))
+    if (!parentUUID.empty() && ! context.tdb2.has (parentUUID))
     {
       out << "             "
           << format (STRING_CMD_DIAG_MISS_PAR, task.get ("uuid"), parentUUID)

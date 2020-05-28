@@ -174,7 +174,7 @@ int CmdSummary::execute (std::string& output)
       }
 
       int row = view.addRow ();
-      view.set (row, 0, (i.first == ""
+      view.set (row, 0, (i.first.empty()
                           ? STRING_CMD_SUMMARY_NONE
                           : indentProject (i.first, "  ", '.')));
 

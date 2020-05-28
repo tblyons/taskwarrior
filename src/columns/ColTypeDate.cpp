@@ -84,10 +84,10 @@ void ColumnTypeDate::measure (Task& task, unsigned int& minimum, unsigned int& m
       //   rc.dateformat.report
       //   rc.dateformat.
       std::string format = context.config.get ("report." + _report + ".dateformat");
-      if (format == "") {
+      if (format.empty()) {
         format = context.config.get("dateformat.report");
       }
-      if (format == "") {
+      if (format.empty()) {
         format = context.config.get("dateformat");
       }
 
@@ -161,10 +161,10 @@ void ColumnTypeDate::render (
       //   rc.dateformat.report
       //   rc.dateformat
       std::string format = context.config.get ("report." + _report + ".dateformat");
-      if (format == "")
+      if (format.empty())
       {
         format = context.config.get ("dateformat.report");
-        if (format == "") {
+        if (format.empty()) {
           format = context.config.get("dateformat");
         }
       }
@@ -251,7 +251,7 @@ void ColumnTypeDate::modify (Task& task, const std::string& value)
   }
 
   // If a date doesn't parse (2/29/2014) then it evaluates to zero.
-  if (value != "" && evaluatedValue.get_date() == 0) {
+  if (!value.empty() && evaluatedValue.get_date() == 0) {
     throw format(STRING_DATE_INVALID_FORMAT, value, Variant::dateFormat);
   }
 

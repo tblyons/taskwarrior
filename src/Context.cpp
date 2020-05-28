@@ -449,7 +449,7 @@ int Context::dispatch (std::string &out)
 {
   // Autocomplete args against keywords.
   std::string command = cli2.getCommand ();
-  if (command != "")
+  if (!command.empty())
   {
     updateXtermTitle ();
     updateVerbosity ();
@@ -633,7 +633,7 @@ void Context::getLimits (int& rows, int& lines)
 
   // This is an integer specified as a filter (limit:10).
   std::string limit = config.get ("limit");
-  if (limit != "")
+  if (!limit.empty())
   {
     if (limit == "page")
     {
@@ -717,7 +717,7 @@ void Context::staticInitialization ()
 void Context::createDefaultConfig ()
 {
   // Do we need to create a default rc?
-  if (rc_file._data != "" && ! rc_file.exists ())
+  if (!rc_file._data.empty() && ! rc_file.exists ())
   {
     if (config.getBoolean("confirmation") &&
         !confirm(format(STRING_CONTEXT_CREATE_RC, home_dir, rc_file._data))) {
@@ -793,7 +793,7 @@ void Context::updateXtermTitle ()
 void Context::updateVerbosity ()
 {
   std::string command = cli2.getCommand ();
-  if (command != "" &&
+  if (!command.empty() &&
       command[0] == '_')
   {
     verbosity = {"nothing"};

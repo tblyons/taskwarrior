@@ -62,7 +62,7 @@ int CmdStart::execute (std::string&)
   Filter filter;
   std::vector <Task> filtered;
   filter.subset (filtered);
-  if (filtered.size () == 0)
+  if (filtered.empty())
   {
     context.footnote (STRING_FEEDBACK_NO_TASKS_SP);
     return 1;
@@ -131,7 +131,7 @@ int CmdStart::execute (std::string&)
 
   // Now list the project changes.
   for (auto& change : projectChanges) {
-    if (change.first != "") {
+    if (!change.first.empty()) {
       context.footnote(change.second);
     }
   }

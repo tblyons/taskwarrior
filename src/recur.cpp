@@ -175,7 +175,7 @@ bool generateDueDates (Task& parent, std::vector <ISO8601d>& allDue)
 
   bool specificEnd = false;
   ISO8601d until;
-  if (parent.get ("until") != "")
+  if (!parent.get ("until").empty())
   {
     until = ISO8601d (parent.get ("until"));
     specificEnd = true;
@@ -409,7 +409,7 @@ void updateRecurrenceMask (Task& task)
   std::string uuid = task.get ("parent");
   Task parent;
 
-  if (uuid != "" &&
+  if (!uuid.empty() &&
       context.tdb2.get (uuid, parent))
   {
     unsigned int index = strtol (task.get ("imask").c_str (), NULL, 10);
@@ -456,7 +456,7 @@ bool nag (Task& task)
   }
 
   std::string nagMessage = context.config.get ("nag");
-  if (nagMessage != "")
+  if (!nagMessage.empty())
   {
     // Scan all pending, non-recurring tasks.
     auto pending = context.tdb2.pending.get_tasks ();

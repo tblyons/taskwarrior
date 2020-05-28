@@ -72,7 +72,7 @@ void Filter::subset (const std::vector <Task>& input, std::vector <Task>& output
     }
   }
 
-  if (precompiled.size ())
+  if (!precompiled.empty())
   {
     Eval eval;
     eval.addSource (domSource);
@@ -124,7 +124,7 @@ void Filter::subset (std::vector <Task>& output)
   // Shortcut indicates that only pending.data needs to be loaded.
   bool shortcut = false;
 
-  if (precompiled.size ())
+  if (!precompiled.empty())
   {
     context.timer_filter.stop ();
     auto pending = context.tdb2.pending.get_tasks ();

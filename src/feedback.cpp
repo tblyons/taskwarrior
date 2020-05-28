@@ -222,8 +222,8 @@ std::string taskInfoDifferences (
     if (name              != "uuid" &&
         name              != "modified" &&
         before.get (name) != after.get (name) &&
-        before.get (name) != "" &&
-        after.get (name)  != "")
+        !before.get (name).empty() &&
+        !after.get (name).empty())
     {
       if (name == "depends")
       {
@@ -269,10 +269,10 @@ std::string renderAttribute (const std::string& name, const std::string& value, 
     Column* col = context.columns[name];
     if (col                    &&
         col->type () == "date" &&
-        value != "")
+        !value.empty())
     {
       ISO8601d d ((time_t)strtol (value.c_str (), NULL, 10));
-      if (format == "") {
+      if (format.empty()) {
         return d.toString(context.config.get("dateformat"));
       }
 
@@ -410,7 +410,7 @@ void feedback_unblocked (const Task& task)
     {
       std::vector <Task> blocking;
       dependencyGetBlocking (i, blocking);
-      if (blocking.size () == 0)
+      if (blocking.empty())
       {
         if (i.id) {
           std::cout << format (STRING_FEEDBACK_UNBLOCKED,
@@ -432,7 +432,7 @@ void feedback_unblocked (const Task& task)
 ///////////////////////////////////////////////////////////////////////////////
 void feedback_backlog ()
 {
-  if (context.config.get ("taskd.server") != "" &&
+  if (!context.config.get ("taskd.server").empty() &&
       context.verbose ("sync"))
   {
     std::vector <std::string> lines = context.tdb2.backlog.get_lines ();
@@ -453,7 +453,7 @@ std::string onProjectChange (Task& task, bool scope /* = true */)
   std::stringstream msg;
   std::string project = task.get ("project");
 
-  if (project != "")
+  if (!project.empty())
   {
     if (scope) {
       msg << format(STRING_HELPER_PROJECT_CHANGE, project) << "  ";

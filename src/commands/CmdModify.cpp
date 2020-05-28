@@ -61,7 +61,7 @@ int CmdModify::execute (std::string&)
   Filter filter;
   std::vector <Task> filtered;
   filter.subset (filtered);
-  if (filtered.size () == 0)
+  if (filtered.empty())
   {
     context.footnote (STRING_FEEDBACK_NO_TASKS_SP);
     return 1;
@@ -103,7 +103,7 @@ int CmdModify::execute (std::string&)
 
   // Now list the project changes.
   for (auto& change : projectChanges) {
-    if (change.first != "") {
+    if (!change.first.empty()) {
       context.footnote(change.second);
     }
   }
@@ -121,12 +121,12 @@ void CmdModify::checkConsistency (Task &before, Task &after)
   }
 
   if (before.has("recur") && before.has("due") &&
-      (!after.has("due") || after.get("due") == "")) {
+      (!after.has("due") || after.get("due").empty())) {
     throw std::string(STRING_CMD_MODIFY_REM_DUE);
   }
 
   if (before.has("recur") &&
-      (!after.has("recur") || after.get("recur") == "")) {
+      (!after.has("recur") || after.get("recur").empty())) {
     throw std::string(STRING_CMD_MODIFY_REC_ALWAYS);
   }
 }
@@ -204,7 +204,7 @@ int CmdModify::modifyRecurrenceParent (
   int count = 0;
 
   std::vector <Task> children = context.tdb2.children (task);
-  if (children.size () &&
+  if (!children.empty() &&
       (! context.config.getBoolean ("recurrence.confirmation") ||
         confirm (STRING_CMD_MODIFY_RECUR)))
   {

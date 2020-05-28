@@ -302,7 +302,7 @@ void ISO8601d::clear ()
 bool ISO8601d::parse_formatted (Nibbler& n, const std::string& format)
 {
   // Short-circuit on missing format.
-  if (format == "") {
+  if (format.empty()) {
     return false;
   }
 
@@ -1907,7 +1907,7 @@ bool ISO8601p::parse (const std::string& input, std::string::size_type& start)
 
   // Static and so preserved between calls.
   static std::vector <std::string> units;
-  if (units.size() == 0) {
+  if (units.empty()) {
     for (unsigned int i = 0; i < NUM_DURATIONS; i++) {
       units.push_back(durations[i].unit);
     }

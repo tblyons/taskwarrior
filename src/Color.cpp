@@ -249,7 +249,7 @@ Color::Color (const std::string& spec)
         fg_value |= index;
         fg_value |= _COLOR_256;
       }
-    } else if (word != "") {
+    } else if (!word.empty()) {
       throw format(STRING_COLOR_UNRECOGNIZED, word);
     }
   }

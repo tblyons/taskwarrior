@@ -51,7 +51,7 @@ ColumnDescription::ColumnDescription ()
              "truncated_count"};
 
   _dateformat = context.config.get ("dateformat.annotation");
-  if (_dateformat == "") {
+  if (_dateformat.empty()) {
     _dateformat = context.config.get("dateformat");
   }
 

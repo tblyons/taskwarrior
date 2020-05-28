@@ -98,7 +98,7 @@ int CmdExport::execute (std::string& output)
     }
   }
 
-  if (filtered.size()) {
+  if (!filtered.empty()) {
     output += "\n";
   }
 

@@ -210,7 +210,7 @@ Column* Column::uda (const std::string& name)
     auto c = new ColumnUDAString ();
     c->_name = name;
     c->_label = label;
-    if (values != "") {
+    if (!values.empty()) {
       split(c->_values, values, ',');
     }
     return c;
@@ -220,7 +220,7 @@ Column* Column::uda (const std::string& name)
     auto c = new ColumnUDANumeric ();
     c->_name = name;
     c->_label = label;
-    if (values != "") {
+    if (!values.empty()) {
       split(c->_values, values, ',');
     }
     return c;
@@ -230,7 +230,7 @@ Column* Column::uda (const std::string& name)
     auto c = new ColumnUDADate ();
     c->_name = name;
     c->_label = label;
-    if (values != "") {
+    if (!values.empty()) {
       split(c->_values, values, ',');
     }
     return c;
@@ -240,11 +240,11 @@ Column* Column::uda (const std::string& name)
     auto c = new ColumnUDADuration ();
     c->_name = name;
     c->_label = label;
-    if (values != "") {
+    if (!values.empty()) {
       split(c->_values, values, ',');
     }
     return c;
-  } else if (type != "") {
+  } else if (!type.empty()) {
     throw std::string(STRING_UDA_TYPE);
   }
 
@@ -276,7 +276,7 @@ void Column::renderHeader (
   Color& color)
 {
   if (context.verbose ("label") &&
-      _label != "")
+      !_label.empty())
   {
     // Create a basic label.
     std::string header;

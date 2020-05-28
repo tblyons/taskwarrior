@@ -56,7 +56,7 @@ void sort_tasks (
   split (global_keys, keys, ',');
 
   // Only sort if necessary.
-  if (order.size()) {
+  if (!order.empty()) {
     std::stable_sort(order.begin(), order.end(), sort_compare);
   }
 
@@ -145,11 +145,11 @@ static bool sort_compare (int left, int right)
       const std::string& left_string  = (*global_data)[left].get_ref  (field);
       const std::string& right_string = (*global_data)[right].get_ref (field);
 
-      if (left_string != "" && right_string == "") {
+      if (!left_string.empty() && right_string.empty()) {
         return true;
       }
 
-      if (left_string == "" && right_string != "") {
+      if (left_string.empty() && !right_string.empty()) {
         return false;
       }
 
@@ -172,11 +172,11 @@ static bool sort_compare (int left, int right)
         continue;
       }
 
-      if (left_string == "" && right_string != "") {
+      if (left_string.empty() && !right_string.empty()) {
         return ascending;
       }
 
-      if (left_string != "" && right_string == "") {
+      if (!left_string.empty() && right_string.empty()) {
         return !ascending;
       }
 
@@ -245,9 +245,9 @@ static bool sort_compare (int left, int right)
         else
         {
           // Empty values are unconditionally last, if no custom order was specified.
-          if (left_string == "") {
+          if (left_string.empty()) {
             return false;
-          } else if (right_string == "") {
+          } else if (right_string.empty()) {
             return true;
           }
 
@@ -261,11 +261,11 @@ static bool sort_compare (int left, int right)
         const std::string& left_string  = (*global_data)[left].get_ref  (field);
         const std::string& right_string = (*global_data)[right].get_ref (field);
 
-        if (left_string != "" && right_string == "") {
+        if (!left_string.empty() && right_string.empty()) {
           return true;
         }
 
-        if (left_string == "" && right_string != "") {
+        if (left_string.empty() && !right_string.empty()) {
           return false;
         }
 

@@ -170,7 +170,7 @@ void A2::decompose ()
 
       if (name == "rc")
       {
-        if (mod != "") {
+        if (!mod.empty()) {
           tag ("CONFIG");
         } else {
           tag("RC");
@@ -269,7 +269,7 @@ void CLI2::getOverride (int argc, const char** argv, std::string& home, File& rc
 void CLI2::getDataLocation (int argc, const char** argv, Path& data)
 {
   std::string location = context.config.get ("data.location");
-  if (location != "") {
+  if (!location.empty()) {
     data = location;
   }
 
@@ -610,7 +610,7 @@ void CLI2::addContextFilter ()
 
   // Detect if any context is set, and bail out if not
   std::string contextName = context.config.get ("context");
-  if (contextName == "")
+  if (contextName.empty())
   {
     context.debug ("No context.");
     return;
@@ -632,7 +632,7 @@ void CLI2::addContextFilter ()
   context.debug ("Applying context: " + contextName);
   std::string contextFilter = context.config.get ("context." + contextName);
 
-  if (contextFilter == "") {
+  if (contextFilter.empty()) {
     context.debug ("Context '" + contextName + "' not defined.");
   } else {
     _context_filter_added = true;
@@ -674,7 +674,7 @@ void CLI2::prepareFilter ()
     {
       if (a.hasTag ("FILTER"))
       {
-        if (combined != "") {
+        if (!combined.empty()) {
           combined += " ";
         }
 
@@ -682,7 +682,7 @@ void CLI2::prepareFilter ()
       }
     }
 
-    if (combined.size()) {
+    if (!combined.empty()) {
       context.footnote(std::string(STRING_COLUMN_LABEL_FILTER) + ": " +
                        combined);
     }
@@ -749,7 +749,7 @@ bool CLI2::canonicalize (
 ////////////////////////////////////////////////////////////////////////////////
 std::string CLI2::getBinary () const
 {
-  if (_args.size()) {
+  if (!_args.empty()) {
     return _args[0].attribute("raw");
   }
 
@@ -793,7 +793,7 @@ const std::string CLI2::dump (const std::string& title) const
 
   out << "\n";
 
-  if (_args.size ())
+  if (!_args.empty())
   {
     out << "  _args\n";
     for (const auto& a : _args) {
@@ -801,7 +801,7 @@ const std::string CLI2::dump (const std::string& title) const
     }
   }
 
-  if (_id_ranges.size ())
+  if (!_id_ranges.empty())
   {
     out << "  _id_ranges\n    ";
     for (const auto& range : _id_ranges)
@@ -816,7 +816,7 @@ const std::string CLI2::dump (const std::string& title) const
     out << "\n";
   }
 
-  if (_uuid_list.size ())
+  if (!_uuid_list.empty())
   {
     out << "  _uuid_list\n    ";
     for (const auto& uuid : _uuid_list) {
@@ -1313,7 +1313,7 @@ void CLI2::desugarFilterAttributes ()
 
       // An unquoted string, while equivalent to an empty string, doesn't cause
       // an operand shortage in eval.
-      if (value == "") {
+      if (value.empty()) {
         value = "''";
       }
 
@@ -1365,7 +1365,7 @@ void CLI2::desugarFilterAttributes ()
         rhs.tag ("FILTER");
 
         // Special case for '<name>:<value>'.
-        if (mod == "")
+        if (mod.empty())
         {
           op.attribute ("raw", "=");
           rhs.attribute ("raw", value);
@@ -1606,7 +1606,7 @@ void CLI2::findIDs ()
     // listed as a MODIFICATION.
     std::string command = getCommand ();
 
-    if (! _id_ranges.size () &&
+    if (_id_ranges.empty() &&
         filterCount == 0     &&
         command != "add"     &&
         command != "log")
@@ -1703,7 +1703,7 @@ void CLI2::findUUIDs ()
       }
     }
 
-    if (! _uuid_list.size ())
+    if (_uuid_list.empty())
     {
       for (auto& a : _args)
       {
@@ -1755,7 +1755,7 @@ void CLI2::insertIDExpr ()
 {
   // Skip completely if no ID/UUID was found. This is because below, '(' and ')'
   // are inserted regardless of list size.
-  if (!_id_ranges.size() && !_uuid_list.size()) {
+  if (_id_ranges.empty() && _uuid_list.empty()) {
     return;
   }
 
@@ -1861,7 +1861,7 @@ void CLI2::insertIDExpr ()
         }
 
         // Combine the ID and UUID sections with 'or'.
-        if (_id_ranges.size() && _uuid_list.size()) {
+        if (!_id_ranges.empty() && !_uuid_list.empty()) {
           reconstructed.push_back(opOr);
         }
 
@@ -2140,7 +2140,7 @@ void CLI2::defaultCommand ()
     {
       // Apply overrides, if any.
       std::string defaultCommand = context.config.get ("default.command");
-      if (defaultCommand != "")
+      if (!defaultCommand.empty())
       {
         // Modify _args, _original_args to be:
         //   <args0> [<def0> ...] <args1> [...]

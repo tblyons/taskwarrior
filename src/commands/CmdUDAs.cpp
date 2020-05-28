@@ -78,7 +78,7 @@ int CmdUDAs::execute (std::string& output)
   std::vector <Task> filtered;
   filter.subset (filtered);
 
-  if (udas.size ())
+  if (!udas.empty())
   {
     std::sort (udas.begin (), udas.end ());
 
@@ -105,7 +105,7 @@ int CmdUDAs::execute (std::string& output)
       std::string label  = context.config.get ("uda." + uda + ".label");
       std::string values = context.config.get ("uda." + uda + ".values");
       std::string defval = context.config.get ("uda." + uda + ".default");
-      if (label == "") {
+      if (label.empty()) {
         label = uda;
       }
 
@@ -152,7 +152,7 @@ int CmdUDAs::execute (std::string& output)
     }
   }
 
-  if (orphans.size ())
+  if (!orphans.empty())
   {
     // Display the orphans and their counts.
     ViewText orphanView;
@@ -218,7 +218,7 @@ int CmdCompletionUDAs::execute (std::string& output)
     }
   }
 
-  if (udas.size ())
+  if (!udas.empty())
   {
     std::sort (udas.begin (), udas.end ());
     join (output, "\n", udas);

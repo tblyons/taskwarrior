@@ -132,7 +132,7 @@ int CmdTimesheet::execute (std::string& output)
 
           int row = completed.addRow ();
           std::string format = context.config.get ("dateformat.report");
-          if (format == "") {
+          if (format.empty()) {
             format = context.config.get("dateformat");
           }
           completed.set (row, 1, task.get ("project"), c);
@@ -189,7 +189,7 @@ int CmdTimesheet::execute (std::string& output)
 
           int row = started.addRow ();
           std::string format = context.config.get ("dateformat.report");
-          if (format == "") {
+          if (format.empty()) {
             format = context.config.get("dateformat");
           }
           started.set (row, 1, task.get ("project"), c);

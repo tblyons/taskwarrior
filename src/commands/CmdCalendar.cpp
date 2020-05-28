@@ -395,10 +395,10 @@ int CmdCalendar::execute (std::string& output)
       std::string format = context.config.get ("report." +
                                                context.config.get ("calendar.details.report") +
                                                ".dateformat");
-      if (format == "") {
+      if (format.empty()) {
         format = context.config.get("dateformat.report");
       }
-      if (format == "") {
+      if (format.empty()) {
         format = context.config.get("dateformat");
       }
 

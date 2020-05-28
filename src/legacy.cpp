@@ -120,7 +120,7 @@ std::string legacyCheckForDeprecatedVariables ()
   }
 
   std::stringstream out;
-  if (deprecated.size ())
+  if (!deprecated.empty())
   {
     out << STRING_CONFIG_DEPRECATED_VAR
         << "\n";
@@ -155,7 +155,7 @@ std::string legacyCheckForDeprecatedColumns ()
   std::stringstream out;
   out << "\n";
 
-  if (deprecated.size ())
+  if (!deprecated.empty())
   {
     out << STRING_CONFIG_DEPRECATED_COL
         << "\n";

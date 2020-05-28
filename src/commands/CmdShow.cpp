@@ -283,7 +283,7 @@ int CmdShow::execute (std::string& output)
   std::string section;
 
   // Look for the first plausible argument which could be a pattern
-  if (words.size()) {
+  if (!words.empty()) {
     section = words[0];
   }
 
@@ -316,7 +316,7 @@ int CmdShow::execute (std::string& output)
       view.set (row, 1, value, color);
 
       if (default_config[i.first] != value &&
-          default_config[i.first] != "")
+          !default_config[i.first].empty())
       {
         row = view.addRow ();
         view.set (row, 0, std::string ("  ") + STRING_CMD_SHOW_CONF_DEFAULT, color);
@@ -385,7 +385,7 @@ int CmdShow::execute (std::string& output)
   // Verify installation.  This is mentioned in the documentation as the way
   // to ensure everything is properly installed.
 
-  if (context.config.size () == 0)
+  if (context.config.empty())
   {
     out << STRING_CMD_SHOW_EMPTY << "\n";
     rc = 1;
@@ -394,7 +394,7 @@ int CmdShow::execute (std::string& output)
   {
     Directory location (context.config.get ("data.location"));
 
-    if (location._data == "") {
+    if (location._data.empty()) {
       out << STRING_CMD_SHOW_NO_LOCATION << "\n";
     }
 

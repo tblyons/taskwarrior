@@ -88,7 +88,7 @@ int CmdGet::execute (std::string& output)
     }
   }
 
-  if (results.size() == 0) {
+  if (results.empty()) {
     throw std::string(STRING_CMD_GET_NO_DOM);
   }
 

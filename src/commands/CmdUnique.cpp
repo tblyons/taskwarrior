@@ -67,7 +67,7 @@ int CmdUnique::execute (std::string& output)
 
   // Just the first arg.
   auto words = context.cli2.getWords ();
-  if (words.size() == 0) {
+  if (words.empty()) {
     throw std::string(STRING_CMD_UNIQUE_MISSING);
   }
   attribute = words[0];

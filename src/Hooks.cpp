@@ -116,7 +116,7 @@ void Hooks::onLaunch () const
   context.timer_hooks.start ();
 
   std::vector <std::string> matchingScripts = scripts ("on-launch");
-  if (matchingScripts.size ())
+  if (!matchingScripts.empty())
   {
     for (auto& script : matchingScripts)
     {
@@ -172,7 +172,7 @@ void Hooks::onExit () const
   context.timer_hooks.start ();
 
   std::vector <std::string> matchingScripts = scripts ("on-exit");
-  if (matchingScripts.size ())
+  if (!matchingScripts.empty())
   {
     // Get the set of changed tasks.
     std::vector <Task> tasks;
@@ -238,7 +238,7 @@ void Hooks::onAdd (Task& task) const
   context.timer_hooks.start ();
 
   std::vector <std::string> matchingScripts = scripts ("on-add");
-  if (matchingScripts.size ())
+  if (!matchingScripts.empty())
   {
     // Convert task to a vector of strings.
     std::vector <std::string> input;
@@ -307,7 +307,7 @@ void Hooks::onModify (const Task& before, Task& after) const
   context.timer_hooks.start ();
 
   std::vector <std::string> matchingScripts = scripts ("on-modify");
-  if (matchingScripts.size ())
+  if (!matchingScripts.empty())
   {
     // Convert vector of tasks to a vector of strings.
     std::vector <std::string> input;
@@ -592,7 +592,7 @@ int Hooks::callHookScript (
   {
     context.debug ("Hook: output");
     for (const auto& i : output) {
-      if (i != "") {
+      if (!i.empty()) {
         context.debug("  " + i);
       }
     }

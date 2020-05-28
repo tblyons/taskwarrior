@@ -78,18 +78,18 @@ int CmdCustom::execute (std::string& output)
   std::vector <std::string> labels;
   split (labels, reportLabels, ',');
 
-  if (columns.size() != labels.size() && labels.size() != 0) {
+  if (columns.size() != labels.size() && !labels.empty()) {
     throw format(STRING_CMD_CUSTOM_MISMATCH, _keyword);
   }
 
   std::vector <std::string> sortOrder;
   split (sortOrder, reportSort, ',');
-  if (sortOrder.size() != 0 && sortOrder[0] != "none") {
+  if (!sortOrder.empty() && sortOrder[0] != "none") {
     validateSortColumns(sortOrder);
   }
 
   // Add the report filter to any existing filter.
-  if (reportFilter != "") {
+  if (!reportFilter.empty()) {
     context.cli2.addFilter(reportFilter);
   }
 
@@ -100,7 +100,7 @@ int CmdCustom::execute (std::string& output)
   filter.subset (filtered);
 
   std::vector <int> sequence;
-  if (sortOrder.size () &&
+  if (!sortOrder.empty() &&
       sortOrder[0] == "none")
   {
     // Assemble a sequence vector that represents the tasks listed in
@@ -124,7 +124,7 @@ int CmdCustom::execute (std::string& output)
     }
 
     // Sort the tasks.
-    if (sortOrder.size()) {
+    if (!sortOrder.empty()) {
       sort_tasks(filtered, sequence, reportSort);
     }
   }
@@ -212,7 +212,7 @@ int CmdCustom::execute (std::string& output)
 
   // Render.
   std::stringstream out;
-  if (filtered.size ())
+  if (!filtered.empty())
   {
     view.truncateRows (maxrows);
     view.truncateLines (maxlines);

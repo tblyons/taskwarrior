@@ -130,7 +130,7 @@ bool RX::match (
     }
   }
 
-  return matches.size () ? true : false;
+  return !matches.empty() ? true : false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -159,7 +159,7 @@ bool RX::match (
     }
   }
 
-  return start.size () ? true : false;
+  return !start.empty() ? true : false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

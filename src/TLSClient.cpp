@@ -156,12 +156,12 @@ void TLSClient::init (
     throw format("TLS allocation error. {1}", gnutls_strerror(ret));
   }
 
-  if (_ca != "" && (ret = gnutls_certificate_set_x509_trust_file(
+  if (!_ca.empty() && (ret = gnutls_certificate_set_x509_trust_file(
                         _credentials, _ca.c_str(), GNUTLS_X509_FMT_PEM)) < 0) {
     throw format("Bad CA file. {1}", gnutls_strerror(ret));
   }
 
-  if (_cert != "" && _key != "" &&
+  if (!_cert.empty() && !_key.empty() &&
       (ret = gnutls_certificate_set_x509_key_file(_credentials, _cert.c_str(),
                                                   _key.c_str(),
                                                   GNUTLS_X509_FMT_PEM)) < 0) {
@@ -181,7 +181,7 @@ void TLSClient::init (
   }
 
   // Use default priorities unless overridden.
-  if (_ciphers == "") {
+  if (_ciphers.empty()) {
     _ciphers = "NORMAL";
   }
 

@@ -177,7 +177,7 @@ static void colorizeProject (Task& task, const std::string& rule, const Color& b
 ////////////////////////////////////////////////////////////////////////////////
 static void colorizeProjectNone (Task& task, const Color& base, Color& c, bool merge)
 {
-  if (task.get("project") == "") {
+  if (task.get("project").empty()) {
     applyColor(base, c, merge);
   }
 }

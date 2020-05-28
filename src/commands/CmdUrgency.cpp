@@ -61,7 +61,7 @@ int CmdUrgency::execute (std::string& output)
   std::vector <Task> filtered;
   filter.subset (filtered);
 
-  if (filtered.size () == 0)
+  if (filtered.empty())
   {
     context.footnote (STRING_FEEDBACK_NO_TASKS_SP);
     return 1;

@@ -159,7 +159,7 @@ int CmdStats::execute (std::string& output)
 
     std::vector <std::string> tags;
     task.getTags (tags);
-    if (tags.size()) {
+    if (!tags.empty()) {
       ++taggedT;
     }
 
@@ -168,7 +168,7 @@ int CmdStats::execute (std::string& output)
     }
 
     std::string project = task.get ("project");
-    if (project != "") {
+    if (!project.empty()) {
       allProjects[project] = 0;
     }
   }
@@ -252,7 +252,7 @@ int CmdStats::execute (std::string& output)
     view.set (row, 1, value.str ());
   }
 
-  if (filtered.size ())
+  if (!filtered.empty())
   {
     ISO8601d e (earliest);
     row = view.addRow ();

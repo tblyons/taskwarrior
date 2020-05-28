@@ -92,7 +92,7 @@ int CmdTags::execute (std::string& output)
     }
   }
 
-  if (unique.size ())
+  if (!unique.empty())
   {
     // Render a list of tags names from the map.
     ViewText view;
