@@ -791,8 +791,7 @@ CmdEdit::editResult CmdEdit::editFile (Task& task)
 
   // Change directory for the editor
   std::string current_dir = Directory::cwd ();
-  int ignored = chdir (location._data.c_str ());
-  ++ignored; // Keep compiler quiet.
+  chdir(location._data.c_str());
 
   // Check if the file already exists, if so, bail out
   Path filepath = Path (file.str ());
@@ -885,7 +884,7 @@ ARE_THESE_REALLY_HARMFUL:
 
   // Cleanup.
   File::remove (file.str ());
-  ignored = chdir (current_dir.c_str ());
+  chdir(current_dir.c_str());
   return changes
          ? CmdEdit::editResult::changes
          : CmdEdit::editResult::nochanges;

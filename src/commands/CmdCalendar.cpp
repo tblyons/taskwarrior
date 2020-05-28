@@ -79,15 +79,11 @@ int CmdCalendar::execute (std::string& output)
   ISO8601d today;
   bool getpendingdate = false;
   int monthsToDisplay = 1;
-  int mFrom = today.month ();
-  int yFrom = today.year ();
-  int mTo = mFrom;
-  int yTo = yFrom;
 
   // Defaults.
   monthsToDisplay = monthsPerLine;
-  mFrom = today.month ();
-  yFrom = today.year ();
+  int mFrom = today.month ();
+  int yFrom = today.year ();
 
   // Set up a vector of commands (1), for autoComplete.
   std::vector <std::string> commandNames;
@@ -226,8 +222,8 @@ int CmdCalendar::execute (std::string& output)
     }
   }
 
-  mTo = mFrom + monthsToDisplay - 1;
-  yTo = yFrom;
+  int mTo = mFrom + monthsToDisplay - 1;
+  int yTo = yFrom;
   if (mTo > 12)
   {
     mTo -= 12;
