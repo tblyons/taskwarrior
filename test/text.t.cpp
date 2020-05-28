@@ -26,7 +26,7 @@
 
 #include <cmake.h>
 #include <iostream>
-#include <stdlib.h>
+#include <cstdlib>
 #include <main.h>
 #include <text.h>
 #include <utf8.h>
@@ -43,7 +43,7 @@ int main (int, char**)
   std::string text = "This is a test of the line wrapping code.";
   std::vector <std::string> lines;
   wrapText (lines, text, 10, true);
-  t.is (lines.size (), (size_t) 5, "wrapText 'This is a test of the line wrapping code.' -> total 5 lines");
+  t.is (lines.size (), static_cast<size_t>(5), "wrapText 'This is a test of the line wrapping code.' -> total 5 lines");
   t.is (lines[0], "This is a",     "wrapText line 0 -> 'This is a'");
   t.is (lines[1], "test of",       "wrapText line 1 -> 'test of'");
   t.is (lines[2], "the line",      "wrapText line 2 -> 'the line'");
@@ -53,7 +53,7 @@ int main (int, char**)
   text = "This ☺ is a test of utf8 line extraction.";
   lines.clear ();
   wrapText (lines, text, 7, true);
-  t.is (lines.size (), (size_t) 7, "wrapText 'This ☺ is a test of utf8 line extraction.' -> total 7 lines");
+  t.is (lines.size (), static_cast<size_t>(7), "wrapText 'This ☺ is a test of utf8 line extraction.' -> total 7 lines");
   t.is (lines[0], "This ☺",        "wrapText line 0 -> 'This ☺'");
   t.is (lines[1], "is a",          "wrapText line 1 -> 'is a'");
   t.is (lines[2], "test of",       "wrapText line 2 -> 'test of'");
@@ -65,7 +65,7 @@ int main (int, char**)
   text = "one two three\n  four";
   lines.clear ();
   wrapText (lines, text, 13, true);
-  t.is (lines.size (), (size_t) 2, "wrapText 'one two three\\n  four' -> 2 lines");
+  t.is (lines.size (), static_cast<size_t>(2), "wrapText 'one two three\\n  four' -> 2 lines");
   t.is (lines[0], "one two three", "wrapText line 0 -> 'one two three'");
   t.is (lines[1], "  four",        "wrapText line 1 -> '  four'");
 
@@ -119,26 +119,26 @@ int main (int, char**)
   std::vector <std::string> items;
   std::string unsplit = "";
   split (items, unsplit, '-');
-  t.is (items.size (), (size_t) 0, "split '' '-' -> 0 items");
+  t.is (items.size (), static_cast<size_t>(0), "split '' '-' -> 0 items");
 
   unsplit = "a";
   split (items, unsplit, '-');
-  t.is (items.size (), (size_t) 1, "split 'a' '-' -> 1 item");
+  t.is (items.size (), static_cast<size_t>(1), "split 'a' '-' -> 1 item");
   t.is (items[0], "a",             "split 'a' '-' -> 'a'");
 
   split (items, unsplit, '-');
-  t.is (items.size (), (size_t) 1, "split 'a' '-' -> 1 item");
+  t.is (items.size (), static_cast<size_t>(1), "split 'a' '-' -> 1 item");
   t.is (items[0], "a",             "split 'a' '-' -> 'a'");
 
   unsplit = "-";
   split (items, unsplit, '-');
-  t.is (items.size (), (size_t) 2, "split '-' '-' -> '' ''");
+  t.is (items.size (), static_cast<size_t>(2), "split '-' '-' -> '' ''");
   t.is (items[0], "",              "split '-' '-' -> [0] ''");
   t.is (items[1], "",              "split '-' '-' -> [1] ''");
 
   unsplit = "-a-bc-def";
   split (items, unsplit, '-');
-  t.is (items.size (), (size_t) 4, "split '-a-bc-def' '-' -> '' 'a' 'bc' 'def'");
+  t.is (items.size (), static_cast<size_t>(4), "split '-a-bc-def' '-' -> '' 'a' 'bc' 'def'");
   t.is (items[0], "",              "split '-a-bc-def' '-' -> [0] ''");
   t.is (items[1], "a",             "split '-a-bc-def' '-' -> [1] 'a'");
   t.is (items[2], "bc",            "split '-a-bc-def' '-' -> [2] 'bc'");
@@ -147,22 +147,22 @@ int main (int, char**)
   // void split (std::vector<std::string>& results, const std::string& input, const std::string& delimiter)
   unsplit = "";
   split (items, unsplit, "--");
-  t.is (items.size (), (size_t) 0, "split '' '--' -> 0 items");
+  t.is (items.size (), static_cast<size_t>(0), "split '' '--' -> 0 items");
 
   unsplit = "a";
   split (items, unsplit, "--");
-  t.is (items.size (), (size_t) 1, "split 'a' '--' -> 1 item");
+  t.is (items.size (), static_cast<size_t>(1), "split 'a' '--' -> 1 item");
   t.is (items[0], "a",             "split 'a' '-' -> 'a'");
 
   unsplit = "--";
   split (items, unsplit, "--");
-  t.is (items.size (), (size_t) 2, "split '-' '--' -> '' ''");
+  t.is (items.size (), static_cast<size_t>(2), "split '-' '--' -> '' ''");
   t.is (items[0], "",              "split '-' '-' -> [0] ''");
   t.is (items[1], "",              "split '-' '-' -> [1] ''");
 
   unsplit = "--a--bc--def";
   split (items, unsplit, "--");
-  t.is (items.size (), (size_t) 4, "split '-a-bc-def' '--' -> '' 'a' 'bc' 'def'");
+  t.is (items.size (), static_cast<size_t>(4), "split '-a-bc-def' '--' -> '' 'a' 'bc' 'def'");
   t.is (items[0], "",              "split '-a-bc-def' '--' -> [0] ''");
   t.is (items[1], "a",             "split '-a-bc-def' '--' -> [1] 'a'");
   t.is (items[2], "bc",            "split '-a-bc-def' '--' -> [2] 'bc'");
@@ -170,7 +170,7 @@ int main (int, char**)
 
   unsplit = "one\ntwo\nthree";
   split (items, unsplit, "\n");
-  t.is (items.size (), (size_t) 3, "split 'one\\ntwo\\nthree' -> 'one', 'two', 'three'");
+  t.is (items.size (), static_cast<size_t>(3), "split 'one\\ntwo\\nthree' -> 'one', 'two', 'three'");
   t.is (items[0], "one",           "split 'one\\ntwo\\nthree' -> [0] 'one'");
   t.is (items[1], "two",           "split 'one\\ntwo\\nthree' -> [1] 'two'");
   t.is (items[2], "three",         "split 'one\\ntwo\\nthree' -> [2] 'three'");
@@ -180,32 +180,32 @@ int main (int, char**)
   std::string joined;
 
   join (joined, "", unjoined);
-  t.is (joined.length (), (size_t) 0,  "join -> length 0");
+  t.is (joined.length (), static_cast<size_t>(0),  "join -> length 0");
   t.is (joined,           "",          "join -> ''");
 
   unjoined = {"", "a", "bc", "def"};
   join (joined, "", unjoined);
-  t.is (joined.length (), (size_t) 6, "join '' 'a' 'bc' 'def' -> length 6");
+  t.is (joined.length (), static_cast<size_t>(6), "join '' 'a' 'bc' 'def' -> length 6");
   t.is (joined,           "abcdef",   "join '' 'a' 'bc' 'def' -> 'abcdef'");
 
   join (joined, "-", unjoined);
-  t.is (joined.length (), (size_t) 9,  "join '' - 'a' - 'bc' - 'def' -> length 9");
+  t.is (joined.length (), static_cast<size_t>(9),  "join '' - 'a' - 'bc' - 'def' -> length 9");
   t.is (joined,           "-a-bc-def", "join '' - 'a' - 'bc' - 'def' -> '-a-bc-def'");
 
   // void join (std::string& result, const std::string& separator, const std::vector<int>& items)
   std::vector <int> unjoined2;
 
   join (joined, "", unjoined2);
-  t.is (joined.length (), (size_t) 0, "join -> length 0");
+  t.is (joined.length (), static_cast<size_t>(0), "join -> length 0");
   t.is (joined,           "",         "join -> ''");
 
   unjoined2 = {0, 1, 2};
   join (joined, "", unjoined2);
-  t.is (joined.length (), (size_t) 3, "join 0 1 2 -> length 3");
+  t.is (joined.length (), static_cast<size_t>(3), "join 0 1 2 -> length 3");
   t.is (joined,           "012",      "join 0 1 2 -> '012'");
 
   join (joined, "-", unjoined2);
-  t.is (joined.length (), (size_t) 5, "join 0 1 2 -> length 5");
+  t.is (joined.length (), static_cast<size_t>(5), "join 0 1 2 -> length 5");
   t.is (joined,           "0-1-2",    "join 0 1 2 -> '0-1-2'");
 
   // std::string unquoteText (const std::string& text)
@@ -276,37 +276,37 @@ int main (int, char**)
 
   // std::string::size_type find (const std::string&, const std::string&, bool caseless = false);
   // Make sure degenerate cases are handled.
-  t.is ((int) find ("foo", ""), (int) 0,                 "foo !contains ''");
-  t.is ((int) find ("", "foo"), (int) std::string::npos, "'' !contains foo");
+  t.is (static_cast<int>(find ("foo", "")), 0,                 "foo !contains ''");
+  t.is (static_cast<int>(find ("", "foo")), static_cast<int>(std::string::npos), "'' !contains foo");
 
   // Make sure the default is case-sensitive.
-  t.is ((int) find ("foo", "fo"), 0,                       "foo contains fo");
-  t.is ((int) find ("foo", "FO"), (int) std::string::npos, "foo !contains fo");
+  t.is (static_cast<int>(find ("foo", "fo")), 0,                       "foo contains fo");
+  t.is (static_cast<int>(find ("foo", "FO")), static_cast<int>(std::string::npos), "foo !contains fo");
 
   // Test case-sensitive.
-  t.is ((int) find ("foo", "xx", true), (int) std::string::npos, "foo !contains xx");
-  t.is ((int) find ("foo", "oo", true), 1,                       "foo contains oo");
+  t.is (static_cast<int>(find ("foo", "xx", true)), static_cast<int>(std::string::npos), "foo !contains xx");
+  t.is (static_cast<int>(find ("foo", "oo", true)), 1,                       "foo contains oo");
 
-  t.is ((int) find ("foo", "fo", true), 0,                       "foo contains fo");
-  t.is ((int) find ("foo", "FO", true), (int) std::string::npos, "foo !contains fo");
-  t.is ((int) find ("FOO", "fo", true), (int) std::string::npos, "foo !contains fo");
-  t.is ((int) find ("FOO", "FO", true), 0,                       "foo contains fo");
+  t.is (static_cast<int>(find ("foo", "fo", true)), 0,                       "foo contains fo");
+  t.is (static_cast<int>(find ("foo", "FO", true)), static_cast<int>(std::string::npos), "foo !contains fo");
+  t.is (static_cast<int>(find ("FOO", "fo", true)), static_cast<int>(std::string::npos), "foo !contains fo");
+  t.is (static_cast<int>(find ("FOO", "FO", true)), 0,                       "foo contains fo");
 
   // Test case-insensitive.
-  t.is ((int) find ("foo", "xx", false),  (int) std::string::npos, "foo !contains xx (caseless)");
-  t.is ((int) find ("foo", "oo", false),  1,                       "foo contains oo (caseless)");
+  t.is (static_cast<int>(find ("foo", "xx", false)),  static_cast<int>(std::string::npos), "foo !contains xx (caseless)");
+  t.is (static_cast<int>(find ("foo", "oo", false)),  1,                       "foo contains oo (caseless)");
 
-  t.is ((int) find ("foo", "fo", false),  0, "foo contains fo (caseless)");
-  t.is ((int) find ("foo", "FO", false),  0, "foo contains FO (caseless)");
-  t.is ((int) find ("FOO", "fo", false),  0, "FOO contains fo (caseless)");
-  t.is ((int) find ("FOO", "FO", false),  0, "FOO contains FO (caseless)");
+  t.is (static_cast<int>(find ("foo", "fo", false)),  0, "foo contains fo (caseless)");
+  t.is (static_cast<int>(find ("foo", "FO", false)),  0, "foo contains FO (caseless)");
+  t.is (static_cast<int>(find ("FOO", "fo", false)),  0, "FOO contains fo (caseless)");
+  t.is (static_cast<int>(find ("FOO", "FO", false)),  0, "FOO contains FO (caseless)");
 
   // Test start offset.
-  t.is ((int) find ("one two three", "e",  3, true), (int) 11, "offset obeyed");
-  t.is ((int) find ("one two three", "e", 11, true), (int) 11, "offset obeyed");
+  t.is (static_cast<int>(find ("one two three", "e",  3, true)), 11, "offset obeyed");
+  t.is (static_cast<int>(find ("one two three", "e", 11, true)), 11, "offset obeyed");
 
-  t.is ((int) find ("one two three", "e",  3, false), (int) 11, "offset obeyed");
-  t.is ((int) find ("one two three", "e", 11, false), (int) 11, "offset obeyed");
+  t.is (static_cast<int>(find ("one two three", "e",  3, false)), 11, "offset obeyed");
+  t.is (static_cast<int>(find ("one two three", "e", 11, false)), 11, "offset obeyed");
 
   // int strippedLength (const std::string&);
   t.is (strippedLength (std::string ("")),                                  0, "strippedLength                              -> 0");

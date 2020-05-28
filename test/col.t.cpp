@@ -25,7 +25,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <cmake.h>
-#include <stdlib.h>
+#include <cstdlib>
 #include <columns/ColID.h>
 #include <main.h>
 #include <test.h>
@@ -48,33 +48,33 @@ int main (int, char**)
   Task t1;
   t1.id = 3;
   columnID.measure (t1, minimum, maximum);
-  test.is ((int)minimum, 1, "id:3 --> ColID::measure minimum 1");
-  test.is ((int)maximum, 1, "id:3 --> ColID::measure maximum 1");
+  test.is (static_cast<int>(minimum), 1, "id:3 --> ColID::measure minimum 1");
+  test.is (static_cast<int>(maximum), 1, "id:3 --> ColID::measure maximum 1");
 
   t1.id = 33;
   columnID.measure (t1, minimum, maximum);
-  test.is ((int)minimum, 2, "id:33 --> ColID::measure minimum 2");
-  test.is ((int)maximum, 2, "id:33 --> ColID::measure maximum 2");
+  test.is (static_cast<int>(minimum), 2, "id:33 --> ColID::measure minimum 2");
+  test.is (static_cast<int>(maximum), 2, "id:33 --> ColID::measure maximum 2");
 
   t1.id = 333;
   columnID.measure (t1, minimum, maximum);
-  test.is ((int)minimum, 3, "id:333 --> ColID::measure minimum 3");
-  test.is ((int)maximum, 3, "id:333 --> ColID::measure maximum 3");
+  test.is (static_cast<int>(minimum), 3, "id:333 --> ColID::measure minimum 3");
+  test.is (static_cast<int>(maximum), 3, "id:333 --> ColID::measure maximum 3");
 
   t1.id = 3333;
   columnID.measure (t1, minimum, maximum);
-  test.is ((int)minimum, 4, "id:3333 --> ColID::measure minimum 4");
-  test.is ((int)maximum, 4, "id:3333 --> ColID::measure maximum 4");
+  test.is (static_cast<int>(minimum), 4, "id:3333 --> ColID::measure minimum 4");
+  test.is (static_cast<int>(maximum), 4, "id:3333 --> ColID::measure maximum 4");
 
   t1.id = 33333;
   columnID.measure (t1, minimum, maximum);
-  test.is ((int)minimum, 5, "id:33333 --> ColID::measure minimum 5");
-  test.is ((int)maximum, 5, "id:33333 --> ColID::measure maximum 5");
+  test.is (static_cast<int>(minimum), 5, "id:33333 --> ColID::measure minimum 5");
+  test.is (static_cast<int>(maximum), 5, "id:33333 --> ColID::measure maximum 5");
 
   t1.id = 333333;
   columnID.measure (t1, minimum, maximum);
-  test.is ((int)minimum, 6, "id:333333 --> ColID::measure minimum 6");
-  test.is ((int)maximum, 6, "id:333333 --> ColID::measure maximum 6");
+  test.is (static_cast<int>(minimum), 6, "id:333333 --> ColID::measure minimum 6");
+  test.is (static_cast<int>(maximum), 6, "id:333333 --> ColID::measure maximum 6");
 
   return 0;
 }

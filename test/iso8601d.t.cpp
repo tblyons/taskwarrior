@@ -26,7 +26,7 @@
 
 #include <cmake.h>
 #include <iostream>
-#include <time.h>
+#include <ctime>
 #include <test.h>
 #include <ISO8601.h>
 #include <Context.h>
@@ -55,7 +55,7 @@ void testParse (
   std::string::size_type start = 0;
 
   t.ok (iso.parse (input, start),             label + "true");
-  t.is ((int) start,        in_start,         label + "[]");
+  t.is (static_cast<int>(start),        in_start,         label + "[]");
   t.is (iso._year,          in_year,          label + "_year");
   t.is (iso._month,         in_month,         label + "_month");
   t.is (iso._week,          in_week,          label + "_week");
@@ -65,7 +65,7 @@ void testParse (
   t.is (iso._seconds,       in_seconds,       label + "_seconds");
   t.is (iso._offset,        in_offset,        label + "_offset");
   t.is (iso._utc,           in_utc,           label + "_utc");
-  t.is ((size_t) iso._date, (size_t) in_date, label + "_date");
+  t.is (static_cast<size_t>(iso._date), static_cast<size_t>(in_date), label + "_date");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -80,7 +80,7 @@ int main (int, char**)
   ISO8601d iso;
   std::string::size_type start = 0;
   t.notok (iso.parse ("foo", start), "foo --> false");
-  t.is ((int)start, 0,               "foo[0]");
+  t.is (static_cast<int>(start), 0,               "foo[0]");
 
   // Determine local and UTC time.
   time_t now = time (NULL);
@@ -391,9 +391,9 @@ int main (int, char**)
     t.is (y, 2008, "1/1/2008 == 2008");
 
     ISO8601d epoch (9, 8, 2001);
-    t.ok ((int)epoch.toEpoch () < 1000000000, "9/8/2001 < 1,000,000,000");
+    t.ok (static_cast<int>(epoch.toEpoch ()) < 1000000000, "9/8/2001 < 1,000,000,000");
     epoch += 172800;
-    t.ok ((int)epoch.toEpoch () > 1000000000, "9/10/2001 > 1,000,000,000");
+    t.ok (static_cast<int>(epoch.toEpoch ()) > 1000000000, "9/10/2001 > 1,000,000,000");
 
     ISO8601d fromEpoch (epoch.toEpoch ());
     t.is (fromEpoch.toString (), epoch.toString (), "ctor (time_t)");

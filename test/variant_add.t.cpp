@@ -159,12 +159,12 @@ int main (int, char**)
   Variant v34 = v3 + v4;
   t.is (v34.type (), Variant::type_string,   "foo + 1234567890 --> string");
   std::string s = v34.get_string ();
-  t.is ((int)s[7],  (int)'-',                "foo + 1234567890 --> fooYYYY-MM-DDThh:mm:ss");
-  t.is ((int)s[10], (int)'-',                "foo + 1234567890 --> fooYYYY-MM-DDThh:mm:ss");
-  t.is ((int)s[13], (int)'T',                "foo + 1234567890 --> fooYYYY-MM-DDThh:mm:ss");
-  t.is ((int)s[16], (int)':',                "foo + 1234567890 --> fooYYYY-MM-DDThh:mm:ss");
-  t.is ((int)s[19], (int)':',                "foo + 1234567890 --> fooYYYY-MM-DDThh:mm:ss");
-  t.is ((int)s.length (), 22,                "foo + 1234567890 --> fooYYYY-MM-DDThh:mm:ss");
+  t.is (static_cast<int>(s[7]),  static_cast<int>('-'),                "foo + 1234567890 --> fooYYYY-MM-DDThh:mm:ss");
+  t.is (static_cast<int>(s[10]), static_cast<int>('-'),                "foo + 1234567890 --> fooYYYY-MM-DDThh:mm:ss");
+  t.is (static_cast<int>(s[13]), static_cast<int>('T'),                "foo + 1234567890 --> fooYYYY-MM-DDThh:mm:ss");
+  t.is (static_cast<int>(s[16]), static_cast<int>(':'),                "foo + 1234567890 --> fooYYYY-MM-DDThh:mm:ss");
+  t.is (static_cast<int>(s[19]), static_cast<int>(':'),                "foo + 1234567890 --> fooYYYY-MM-DDThh:mm:ss");
+  t.is (static_cast<int>(s.length ()), 22,                "foo + 1234567890 --> fooYYYY-MM-DDThh:mm:ss");
 
   // string + duration -> string
   Variant v35 = v3 + v5;
@@ -190,12 +190,12 @@ int main (int, char**)
   Variant v43 = v4 + v3;
   t.is (v43.type (), Variant::type_string,   "1234567890 + foo --> string");
   s = v43.get_string ();
-  t.is ((int)s[4],  (int)'-',                "1234567890 + foo --> YYYY-MM-DDThh:mm:ssfoo");
-  t.is ((int)s[7],  (int)'-',                "1234567890 + foo --> YYYY-MM-DDThh:mm:ssfoo");
-  t.is ((int)s[10], (int)'T',                "1234567890 + foo --> YYYY-MM-DDThh:mm:ssfoo");
-  t.is ((int)s[13], (int)':',                "1234567890 + foo --> YYYY-MM-DDThh:mm:ssfoo");
-  t.is ((int)s[16], (int)':',                "1234567890 + foo --> YYYY-MM-DDThh:mm:ssfoo");
-  t.is ((int)s.length (), 22,                "1234567890 + foo --> YYYY-MM-DDThh:mm:ssfoo");
+  t.is (static_cast<int>(s[4]),  static_cast<int>('-'),                "1234567890 + foo --> YYYY-MM-DDThh:mm:ssfoo");
+  t.is (static_cast<int>(s[7]),  static_cast<int>('-'),                "1234567890 + foo --> YYYY-MM-DDThh:mm:ssfoo");
+  t.is (static_cast<int>(s[10]), static_cast<int>('T'),                "1234567890 + foo --> YYYY-MM-DDThh:mm:ssfoo");
+  t.is (static_cast<int>(s[13]), static_cast<int>(':'),                "1234567890 + foo --> YYYY-MM-DDThh:mm:ssfoo");
+  t.is (static_cast<int>(s[16]), static_cast<int>(':'),                "1234567890 + foo --> YYYY-MM-DDThh:mm:ssfoo");
+  t.is (static_cast<int>(s.length ()), 22,                "1234567890 + foo --> YYYY-MM-DDThh:mm:ssfoo");
 
   // date + date     -> ERROR
   try {Variant v44 = v4 + v4; t.fail ("1234567890 + 1234567890 --> error");}

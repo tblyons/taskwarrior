@@ -27,7 +27,7 @@
 #include <cmake.h>
 #include <iostream>
 #include <vector>
-#include <string.h>
+#include <cstring>
 #include <test.h>
 #include <Lexer.h>
 #include <Context.h>
@@ -174,27 +174,27 @@ int main (int, char**)
     tokens.push_back (std::pair <std::string, Lexer::Type> (token, type));
   }
 
-  t.is ((int)tokens.size (),     7,                         "7 tokens");
+  t.is (static_cast<int>(tokens.size ()),     7,                         "7 tokens");
   t.is (tokens[0].first,         "1",                       "tokens[0] == '1'");
-  t.is ((int) tokens[0].second,  (int) Lexer::Type::number, "tokens[0] == Type::number");
+  t.is (static_cast<int>(tokens[0].second),  static_cast<int>(Lexer::Type::number), "tokens[0] == Type::number");
   t.is (tokens[1].first,         "12",                      "tokens[1] == '12'");
-  t.is ((int) tokens[1].second,  (int) Lexer::Type::number, "tokens[1] == Type::date");
+  t.is (static_cast<int>(tokens[1].second),  static_cast<int>(Lexer::Type::number), "tokens[1] == Type::date");
   t.is (tokens[2].first,         "123",                     "tokens[2] == '123'");
-  t.is ((int) tokens[2].second,  (int) Lexer::Type::number, "tokens[2] == Type::number"); // 70
+  t.is (static_cast<int>(tokens[2].second),  static_cast<int>(Lexer::Type::number), "tokens[2] == Type::number"); // 70
   t.is (tokens[3].first,         "1234",                    "tokens[3] == '1234'");
-  t.is ((int) tokens[3].second,  (int) Lexer::Type::number, "tokens[3] == Type::date");
+  t.is (static_cast<int>(tokens[3].second),  static_cast<int>(Lexer::Type::number), "tokens[3] == Type::date");
   t.is (tokens[4].first,         "12345",                   "tokens[4] == '12345'");
-  t.is ((int) tokens[4].second,  (int) Lexer::Type::number, "tokens[4] == Type::number");
+  t.is (static_cast<int>(tokens[4].second),  static_cast<int>(Lexer::Type::number), "tokens[4] == Type::number");
   t.is (tokens[5].first,         "123456",                  "tokens[5] == '123456'");
-  t.is ((int) tokens[5].second,  (int) Lexer::Type::number, "tokens[5] == Type::date");
+  t.is (static_cast<int>(tokens[5].second),  static_cast<int>(Lexer::Type::number), "tokens[5] == Type::date");
   t.is (tokens[6].first,         "1234567",                 "tokens[6] == '1234567'");
-  t.is ((int) tokens[6].second,  (int) Lexer::Type::number, "tokens[6] == Type::number");
+  t.is (static_cast<int>(tokens[6].second),  static_cast<int>(Lexer::Type::number), "tokens[6] == Type::number");
 
   // void split (std::vector<std::string>&, const std::string&);
   std::string unsplit = " ( A or B ) ";
   std::vector <std::string> items;
   items = Lexer::split (unsplit);
-  t.is (items.size (), (size_t) 5, "split ' ( A or B ) '");
+  t.is (items.size (), static_cast<size_t>(5), "split ' ( A or B ) '");
   t.is (items[0], "(",             "split ' ( A or B ) ' -> [0] '('");
   t.is (items[1], "A",             "split ' ( A or B ) ' -> [1] 'A'");
   t.is (items[2], "or",            "split ' ( A or B ) ' -> [2] 'or'");
@@ -204,7 +204,7 @@ int main (int, char**)
   // Test simple mode with contrived tokens that ordinarily split.
   unsplit = "  +-* a+b 12.3e4 'c d'";
   items = Lexer::split (unsplit);
-  t.is (items.size (), (size_t) 8, "split '  +-* a+b 12.3e4 'c d''");
+  t.is (items.size (), static_cast<size_t>(8), "split '  +-* a+b 12.3e4 'c d''");
   t.is (items[0], "+",             "split '  +-* a+b 12.3e4 'c d'' -> [0] '+'");
   t.is (items[1], "-",             "split '  +-* a+b 12.3e4 'c d'' -> [1] '-'");
   t.is (items[2], "*",             "split '  +-* a+b 12.3e4 'c d'' -> [2] '*'");
@@ -241,7 +241,7 @@ int main (int, char**)
   std::string word;
   t.ok (Lexer::readWord ("'one two'", "'\"", cursor, word), "readWord ''one two'' --> true");
   t.is (word, "'one two'",                                  "  word '" + word + "'");
-  t.is ((int)cursor, 9,                                     "  cursor");
+  t.is (static_cast<int>(cursor), 9,                                     "  cursor");
 
   // Unterminated quoted string is invalid.
   cursor = 0;
@@ -251,22 +251,22 @@ int main (int, char**)
   cursor = 0;
   t.ok (Lexer::readWord ("input", cursor, word),            "readWord 'input' --> true");
   t.is (word, "input",                                      "  word '" + word + "'");
-  t.is ((int)cursor, 5,                                     "  cursor");
+  t.is (static_cast<int>(cursor), 5,                                     "  cursor");
 
   cursor = 0;
   t.ok (Lexer::readWord ("one\\ two", cursor, word),        "readWord 'one\\ two' --> true");
   t.is (word, "one two",                                    "  word '" + word + "'");
-  t.is ((int)cursor, 8,                                     "  cursor");
+  t.is (static_cast<int>(cursor), 8,                                     "  cursor");
 
   cursor = 0;
   t.ok (Lexer::readWord ("\\u20A43", cursor, word),         "readWord '\\u20A43' --> true");
   t.is (word, "₤3",                                         "  word '" + word + "'");
-  t.is ((int)cursor, 7,                                     "  cursor");
+  t.is (static_cast<int>(cursor), 7,                                     "  cursor");
 
   cursor = 0;
   t.ok (Lexer::readWord ("U+20AC4", cursor, word),          "readWord '\\u20AC4' --> true");
   t.is (word, "€4",                                         "  word '" + word + "'");
-  t.is ((int)cursor, 7,                                     "  cursor");
+  t.is (static_cast<int>(cursor), 7,                                     "  cursor");
 
   std::string text = "one 'two' three\\ four";
   cursor = 0;
@@ -302,16 +302,16 @@ int main (int, char**)
   t.ok    (l6.isOneOf (dwarves, false, false),              "isOneOf ('Grumpy', false) --> true");
 
   // static std::string::size_type commonLength (const std::string&, const std::string&);
-  t.is ((int)Lexer::commonLength ("", ""),           0, "commonLength '' : '' --> 0");
-  t.is ((int)Lexer::commonLength ("a", "a"),         1, "commonLength 'a' : 'a' --> 1");
-  t.is ((int)Lexer::commonLength ("abcde", "abcde"), 5, "commonLength 'abcde' : 'abcde' --> 5");
-  t.is ((int)Lexer::commonLength ("abc", ""),        0, "commonLength 'abc' : '' --> 0");
-  t.is ((int)Lexer::commonLength ("abc", "def"),     0, "commonLength 'abc' : 'def' --> 0");
-  t.is ((int)Lexer::commonLength ("foobar", "foo"),  3, "commonLength 'foobar' : 'foo' --> 3");
-  t.is ((int)Lexer::commonLength ("foo", "foobar"),  3, "commonLength 'foo' : 'foobar' --> 3");
+  t.is (static_cast<int>(Lexer::commonLength ("", "")),           0, "commonLength '' : '' --> 0");
+  t.is (static_cast<int>(Lexer::commonLength ("a", "a")),         1, "commonLength 'a' : 'a' --> 1");
+  t.is (static_cast<int>(Lexer::commonLength ("abcde", "abcde")), 5, "commonLength 'abcde' : 'abcde' --> 5");
+  t.is (static_cast<int>(Lexer::commonLength ("abc", "")),        0, "commonLength 'abc' : '' --> 0");
+  t.is (static_cast<int>(Lexer::commonLength ("abc", "def")),     0, "commonLength 'abc' : 'def' --> 0");
+  t.is (static_cast<int>(Lexer::commonLength ("foobar", "foo")),  3, "commonLength 'foobar' : 'foo' --> 3");
+  t.is (static_cast<int>(Lexer::commonLength ("foo", "foobar")),  3, "commonLength 'foo' : 'foobar' --> 3");
 
   // static std::string::size_type commonLength (const std::string&, std::string::size_type, const std::string&, std::string::size_type);
-  t.is ((int)Lexer::commonLength ("wonder", 0, "prowonderbread", 3), 6, "'wonder'+0 : 'prowonderbread'+3 --> 6");
+  t.is (static_cast<int>(Lexer::commonLength ("wonder", 0, "prowonderbread", 3)), 6, "'wonder'+0 : 'prowonderbread'+3 --> 6");
 
   // Test all Lexer types.
   #define NO {"",Lexer::Type::word}
@@ -520,7 +520,7 @@ int main (int, char**)
         // Isolated: "<token>"
         t.ok (isolated.token (token, type),                  "Isolated Lexer::token(...) --> true");
         t.is (token, lexerTests[i].results[j].token,         "  token --> " + token);
-        t.is ((int)type, (int)lexerTests[i].results[j].type, "  type --> Lexer::Type::" + Lexer::typeToString (type));
+        t.is (static_cast<int>(type), static_cast<int>(lexerTests[i].results[j].type), "  type --> Lexer::Type::" + Lexer::typeToString (type));
       }
     }
 
@@ -534,7 +534,7 @@ int main (int, char**)
         // Embedded: "<token>"
         t.ok (embedded.token (token, type),                  "Embedded Lexer::token(...) --> true");
         t.is (token, lexerTests[i].results[j].token,         "  token --> " + token);
-        t.is ((int)type, (int)lexerTests[i].results[j].type, "  type --> Lexer::Type::" + Lexer::typeToString (type));
+        t.is (static_cast<int>(type), static_cast<int>(lexerTests[i].results[j].type), "  type --> Lexer::Type::" + Lexer::typeToString (type));
       }
     }
   }

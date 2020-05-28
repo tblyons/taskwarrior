@@ -26,11 +26,11 @@
 
 #include <iostream>
 #include <iomanip>
-#include <stdio.h>
+#include <cstdio>
 #include <unistd.h>
-#include <string.h>
-#include <math.h>
-#include <stdlib.h>
+#include <cstring>
+#include <cmath>
+#include <cstdlib>
 #include <test.h>
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -26,8 +26,8 @@
 
 #include <cmake.h>
 #include <iostream>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstring>
 #include <FS.h>
 #include <JSON.h>
 #include <Context.h>

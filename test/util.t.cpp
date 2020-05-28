@@ -26,7 +26,7 @@
 
 #include <cmake.h>
 #include <iostream>
-#include <stdlib.h>
+#include <cstdlib>
 #include <main.h>
 #include <util.h>
 #include <test.h>

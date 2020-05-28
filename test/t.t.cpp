@@ -25,7 +25,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <cmake.h>
-#include <stdlib.h>
+#include <cstdlib>
 #include <main.h>
 #include <test.h>
 
@@ -40,10 +40,10 @@ int main (int, char**)
   unsetenv ("TASKDATA");
   unsetenv ("TASKRC");
 
-  test.is ((int)Task::textToStatus ("pending"),   (int)Task::pending,   "textToStatus pending");
-  test.is ((int)Task::textToStatus ("completed"), (int)Task::completed, "textToStatus completed");
-  test.is ((int)Task::textToStatus ("deleted"),   (int)Task::deleted,   "textToStatus deleted");
-  test.is ((int)Task::textToStatus ("recurring"), (int)Task::recurring, "textToStatus recurring");
+  test.is (static_cast<int>(Task::textToStatus ("pending")),   static_cast<int>(Task::pending),   "textToStatus pending");
+  test.is (static_cast<int>(Task::textToStatus ("completed")), static_cast<int>(Task::completed), "textToStatus completed");
+  test.is (static_cast<int>(Task::textToStatus ("deleted")),   static_cast<int>(Task::deleted),   "textToStatus deleted");
+  test.is (static_cast<int>(Task::textToStatus ("recurring")), static_cast<int>(Task::recurring), "textToStatus recurring");
 
   test.is (Task::statusToText (Task::pending),   "pending",   "statusToText pending");
   test.is (Task::statusToText (Task::completed), "completed", "statusToText completed");
@@ -205,7 +205,7 @@ TODO Task::decode
   // Task::get_ulong
   task.set ("two", "4294967295");
   test.is (task.composeF4 (), "[name:\"value\" one:\"1\" two:\"4294967295\"]", "Task::set");
-  test.is ((size_t)task.get_ulong ("two"), (size_t)4294967295UL, "Task::get_ulong");
+  test.is (static_cast<size_t>(task.get_ulong ("two")), static_cast<size_t>(4294967295UL), "Task::get_ulong");
 
   // Task::remove
   task.remove ("one");
@@ -213,7 +213,7 @@ TODO Task::decode
   test.is (task.composeF4 (), "[name:\"value\"]", "Task::remove");
 
   // Task::all
-  test.is (task.data.size (), (size_t)1, "Task::all size");
+  test.is (task.data.size (), static_cast<size_t>(1), "Task::all size");
 
   ////////////////////////////////////////////////////////////////////////////////
 

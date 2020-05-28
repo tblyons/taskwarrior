@@ -26,7 +26,7 @@
 
 #include <cmake.h>
 #include <iostream>
-#include <time.h>
+#include <ctime>
 #include <test.h>
 #include <ISO8601.h>
 #include <Context.h>
@@ -54,14 +54,14 @@ void testParse (
   std::string::size_type start = 0;
 
   t.ok (iso.parse (input, start),                 label + "true");
-  t.is ((int) start,          in_start,           label + "[]");
+  t.is (static_cast<int>(start),          in_start,           label + "[]");
   t.is (iso._year,            in_year,            label + "_year");
   t.is (iso._month,           in_month,           label + "_month");
   t.is (iso._day,             in_day,             label + "_day");
   t.is (iso._hours,           in_hours,           label + "_hours");
   t.is (iso._minutes,         in_minutes,         label + "_minutes");
   t.is (iso._seconds,         in_seconds,         label + "_seconds");
-  t.is ((size_t) iso._period, (size_t) in_period, label + "_period");
+  t.is (static_cast<size_t>(iso._period), static_cast<size_t>(in_period), label + "_period");
   t.is (iso.format (),        output,             label + " format");
   t.is (iso.formatVague (),   vague,              label + " formatVague");
 }
@@ -74,22 +74,22 @@ int main (int, char**)
   ISO8601p iso;
   std::string::size_type start = 0;
   t.notok (iso.parse ("foo", start), "foo --> false");
-  t.is ((int)start, 0,               "foo[0]");
+  t.is (static_cast<int>(start), 0,               "foo[0]");
 
   t.notok (iso.parse ("P", start),   "P --> false");
-  t.is ((int)start, 0,               "P[0]");
+  t.is (static_cast<int>(start), 0,               "P[0]");
 
   t.notok (iso.parse ("PT", start),  "PT --> false");
-  t.is ((int)start, 0,               "PT[0]");
+  t.is (static_cast<int>(start), 0,               "PT[0]");
 
   t.notok (iso.parse ("P1", start),  "P1 --> false");
-  t.is ((int)start, 0,               "P1[0]");
+  t.is (static_cast<int>(start), 0,               "P1[0]");
 
   t.notok (iso.parse ("P1T", start), "P1T --> false");
-  t.is ((int)start, 0,               "P1T[0]");
+  t.is (static_cast<int>(start), 0,               "P1T[0]");
 
   t.notok (iso.parse ("PT1", start), "PT1 --> false");
-  t.is ((int)start, 0,               "PT1[0]");
+  t.is (static_cast<int>(start), 0,               "PT1[0]");
 
   int year  = 365 * 86400;
   int month =  30 * 86400;

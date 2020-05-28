@@ -26,7 +26,7 @@
 
 #include <cmake.h>
 #include <iostream>
-#include <stdlib.h>
+#include <cstdlib>
 #include <main.h>
 #include <test.h>
 
@@ -45,10 +45,10 @@ int main (int, char**)
   std::vector<std::string> string_leftOnly;
   std::vector<std::string> string_rightOnly;
   listDiff (string_one, string_two, string_leftOnly, string_rightOnly);
-  t.is ((int) string_leftOnly.size (), 1, "std::string (1,2,3) <=> (2,3,4) = 1<-");
+  t.is (static_cast<int>(string_leftOnly.size ()), 1, "std::string (1,2,3) <=> (2,3,4) = 1<-");
   t.is (string_leftOnly[0], "1",          "std::string (1,2,3) <=> (2,3,4) = 1<-");
 
-  t.is ((int) string_rightOnly.size (), 1, "std::string (1,2,3) <=> (2,3,4) = ->4");
+  t.is (static_cast<int>(string_rightOnly.size ()), 1, "std::string (1,2,3) <=> (2,3,4) = ->4");
   t.is (string_rightOnly[0], "4",          "std::string (1,2,3) <=> (2,3,4) = ->4");
 
   // Now do it all again, with integers.
@@ -63,10 +63,10 @@ int main (int, char**)
   std::vector<int> int_leftOnly;
   std::vector<int> int_rightOnly;
   listDiff (int_one, int_two, int_leftOnly, int_rightOnly);
-  t.is ((int) int_leftOnly.size (), 1, "int (1,2,3) <=> (2,3,4) = 1<-");
+  t.is (static_cast<int>(int_leftOnly.size ()), 1, "int (1,2,3) <=> (2,3,4) = 1<-");
   t.is (int_leftOnly[0], "1",          "int (1,2,3) <=> (2,3,4) = 1<-");
 
-  t.is ((int) int_rightOnly.size (), 1, "int (1,2,3) <=> (2,3,4) = ->4");
+  t.is (static_cast<int>(int_rightOnly.size ()), 1, "int (1,2,3) <=> (2,3,4) = ->4");
   t.is (int_rightOnly[0], "4",          "int (1,2,3) <=> (2,3,4) = ->4");
 
   return 0;

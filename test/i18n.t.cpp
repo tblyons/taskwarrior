@@ -26,10 +26,10 @@
 
 #include <cmake.h>
 #include <iostream>
-#include <stdlib.h>
+#include <cstdlib>
 #include <string>
 #include <unistd.h>
-#include <stdarg.h>
+#include <cstdarg>
 
 #include <Context.h>
 #include <text.h>

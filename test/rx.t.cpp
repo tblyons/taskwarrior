@@ -25,7 +25,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <cmake.h>
-#include <stdlib.h>
+#include <cstdlib>
 #include <Context.h>
 #include <RX.h>
 #include <test.h>
@@ -77,7 +77,7 @@ int main (int, char**)
   RX r8 ("e..", true);
   ut.ok (r8.match (results, text), "e.. there are matches");
   ut.ok (r8.match (start, end, text), "e.. there are matches");
-  ut.is (results.size (), (size_t) 4, "e.. == 4 matches");
+  ut.is (results.size (), static_cast<size_t>(4), "e.. == 4 matches");
   ut.is (results[0], "est", "e..[0] == 'est'");
   ut.is (start[0],      11, "e..[0] == 11->");
   ut.is (end[0],        14, "e..[0] == ->14");
@@ -85,12 +85,12 @@ int main (int, char**)
   results.clear ();
   RX r9 ("e", true);
   ut.ok (r9.match (results, text),           "e there are matches");
-  ut.is (results.size (), (size_t) 6,        "e == 6 matches");
+  ut.is (results.size (), static_cast<size_t>(6),        "e == 6 matches");
 
   start.clear ();
   end.clear ();
   ut.ok (r9.match (start, end, text),        "e there are matches");
-  ut.is (start.size (), (size_t) 6,          "e == 6 matches");
+  ut.is (start.size (), static_cast<size_t>(6),          "e == 6 matches");
 
 #if defined(DARWIN) || defined(CYGWIN) || defined(FREEBSD) || defined(OPENBSD)
   text = "this is the end.";

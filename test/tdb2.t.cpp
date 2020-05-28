@@ -26,7 +26,7 @@
 
 #include <cmake.h>
 #include <iostream>
-#include <stdlib.h>
+#include <cstdlib>
 #include <unistd.h>
 #include <main.h>
 #include <test.h>
@@ -63,10 +63,10 @@ int main (int, char**)
     std::vector <std::string> undo      = context.tdb2.undo.get_lines ();
     std::vector <std::string> backlog   = context.tdb2.backlog.get_lines ();
 
-    t.is ((int) pending.size (),   0, "TDB2 Read empty pending");
-    t.is ((int) completed.size (), 0, "TDB2 Read empty completed");
-    t.is ((int) undo.size (),      0, "TDB2 Read empty undo");
-    t.is ((int) backlog.size (),   0, "TDB2 Read empty backlog");
+    t.is (static_cast<int>(pending.size ()),   0, "TDB2 Read empty pending");
+    t.is (static_cast<int>(completed.size ()), 0, "TDB2 Read empty completed");
+    t.is (static_cast<int>(undo.size ()),      0, "TDB2 Read empty undo");
+    t.is (static_cast<int>(backlog.size ()),   0, "TDB2 Read empty backlog");
 
     // Add a task.
     Task task ("[description:\"description\" name:\"value\"]");
@@ -77,10 +77,10 @@ int main (int, char**)
     undo      = context.tdb2.undo.get_lines ();
     backlog   = context.tdb2.backlog.get_lines ();
 
-    t.is ((int) pending.size (),   1, "TDB2 after add, 1 pending task");
-    t.is ((int) completed.size (), 0, "TDB2 after add, 0 completed tasks");
-    t.is ((int) undo.size (),      3, "TDB2 after add, 3 undo lines");
-    t.is ((int) backlog.size (),   1, "TDB2 after add, 1 backlog task");
+    t.is (static_cast<int>(pending.size ()),   1, "TDB2 after add, 1 pending task");
+    t.is (static_cast<int>(completed.size ()), 0, "TDB2 after add, 0 completed tasks");
+    t.is (static_cast<int>(undo.size ()),      3, "TDB2 after add, 3 undo lines");
+    t.is (static_cast<int>(backlog.size ()),   1, "TDB2 after add, 1 backlog task");
 
     task.set ("description", "This is a test");
     context.tdb2.modify (task);
@@ -90,10 +90,10 @@ int main (int, char**)
     undo      = context.tdb2.undo.get_lines ();
     backlog   = context.tdb2.backlog.get_lines ();
 
-    t.is ((int) pending.size (),   1, "TDB2 after add, 1 pending task");
-    t.is ((int) completed.size (), 0, "TDB2 after add, 0 completed tasks");
-    t.is ((int) undo.size (),      7, "TDB2 after add, 7 undo lines");
-    t.is ((int) backlog.size (),   2, "TDB2 after add, 2 backlog task");
+    t.is (static_cast<int>(pending.size ()),   1, "TDB2 after add, 1 pending task");
+    t.is (static_cast<int>(completed.size ()), 0, "TDB2 after add, 0 completed tasks");
+    t.is (static_cast<int>(undo.size ()),      7, "TDB2 after add, 7 undo lines");
+    t.is (static_cast<int>(backlog.size ()),   2, "TDB2 after add, 2 backlog task");
 
     context.tdb2.commit ();
 

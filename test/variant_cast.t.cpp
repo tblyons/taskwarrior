@@ -45,7 +45,7 @@ int main (int, char**)
     Variant v00 (true);
     v00.cast (Variant::type_boolean);
     t.ok (v00.type () == Variant::type_boolean, "cast boolean --> boolean");
-    t.ok (v00.get_bool () == true,              "cast boolean --> boolean");
+    t.ok (v00.get_bool (),              "cast boolean --> boolean");
 
     Variant v01 (true);
     v01.cast (Variant::type_integer);
@@ -76,7 +76,7 @@ int main (int, char**)
     Variant v10 (42);
     v10.cast (Variant::type_boolean);
     t.ok (v10.type () == Variant::type_boolean, "cast integer --> boolean");
-    t.ok (v10.get_bool () == true,              "cast integer --> boolean");
+    t.ok (v10.get_bool (),              "cast integer --> boolean");
 
     Variant v11 (42);
     v11.cast (Variant::type_integer);
@@ -107,7 +107,7 @@ int main (int, char**)
     Variant v20 (3.14);
     v20.cast (Variant::type_boolean);
     t.ok (v20.type () == Variant::type_boolean, "cast real --> boolean");
-    t.ok (v20.get_bool () == true,              "cast real --> boolean");
+    t.ok (v20.get_bool (),              "cast real --> boolean");
 
     Variant v21 (3.14);
     v21.cast (Variant::type_integer);
@@ -138,7 +138,7 @@ int main (int, char**)
     Variant v30 ("foo");
     v30.cast (Variant::type_boolean);
     t.ok (v30.type () == Variant::type_boolean, "cast string --> boolean");
-    t.ok (v30.get_bool () == true,              "cast string --> boolean");
+    t.ok (v30.get_bool (),              "cast string --> boolean");
 
     Variant v31 ("42");
     v31.cast (Variant::type_integer);
@@ -176,71 +176,71 @@ int main (int, char**)
     t.is (v35b.get_duration (), 3628800,          "cast string --> duration");
 
     // Variant::type_date --> *
-    Variant v40 ((time_t) 1234567890, Variant::type_date);
+    Variant v40 (static_cast<time_t>(1234567890), Variant::type_date);
     v40.cast (Variant::type_boolean);
     t.ok (v40.type () == Variant::type_boolean, "cast date --> boolean");
-    t.ok (v40.get_bool () == true,              "cast date --> boolean");
+    t.ok (v40.get_bool (),              "cast date --> boolean");
 
-    Variant v41 ((time_t) 1234567890, Variant::type_date);
+    Variant v41 (static_cast<time_t>(1234567890), Variant::type_date);
     v41.cast (Variant::type_integer);
     t.ok (v41.type () == Variant::type_integer, "cast date --> integer");
     t.ok (v41.get_integer () == 1234567890,     "cast date --> integer");
 
-    Variant v42 ((time_t) 1234567890, Variant::type_date);
+    Variant v42 (static_cast<time_t>(1234567890), Variant::type_date);
     v42.cast (Variant::type_real);
     t.ok (v42.type () == Variant::type_real,      "cast date --> real");
     t.is (v42.get_real (), 1234567890.0, EPSILON, "cast date --> real");
 
     // YYYY-MM-DDThh:mm:ss
     //     ^  ^  ^  ^  ^
-    Variant v43 ((time_t) 1234567890, Variant::type_date);
+    Variant v43 (static_cast<time_t>(1234567890), Variant::type_date);
     v43.cast (Variant::type_string);
     t.ok (v43.type () == Variant::type_string, "cast date --> string");
     std::string s = v43.get_string ();
-    t.is ((int)s[4],  (int)'-',                "cast date --> string");
-    t.is ((int)s[7],  (int)'-',                "cast date --> string");
-    t.is ((int)s[10], (int)'T',                "cast date --> string");
-    t.is ((int)s[13], (int)':',                "cast date --> string");
-    t.is ((int)s[16], (int)':',                "cast date --> string");
-    t.is ((int)s.length (), 19,                "cast date --> string");
+    t.is (static_cast<int>(s[4]),  static_cast<int>('-'),                "cast date --> string");
+    t.is (static_cast<int>(s[7]),  static_cast<int>('-'),                "cast date --> string");
+    t.is (static_cast<int>(s[10]), static_cast<int>('T'),                "cast date --> string");
+    t.is (static_cast<int>(s[13]), static_cast<int>(':'),                "cast date --> string");
+    t.is (static_cast<int>(s[16]), static_cast<int>(':'),                "cast date --> string");
+    t.is (static_cast<int>(s.length ()), 19,                "cast date --> string");
 
-    Variant v44 ((time_t) 1234567890, Variant::type_date);
+    Variant v44 (static_cast<time_t>(1234567890), Variant::type_date);
     v44.cast (Variant::type_date);
     t.ok (v44.type () == Variant::type_date,    "cast date --> date");
     t.ok (v44.get_date () == 1234567890,        "cast date --> date");
 
-    Variant v45 ((time_t) 1234567890, Variant::type_date);
+    Variant v45 (static_cast<time_t>(1234567890), Variant::type_date);
     v45.cast (Variant::type_duration);
     t.ok (v45.type () == Variant::type_duration, "cast date --> duration");
     t.ok (v45.get_duration () == 1234567890,     "cast date --> duration");
 
     // Variant::type_duration --> *
-    Variant v50 ((time_t) 12345, Variant::type_duration);
+    Variant v50 (static_cast<time_t>(12345), Variant::type_duration);
     v50.cast (Variant::type_boolean);
     t.ok (v50.type () == Variant::type_boolean, "cast duration --> boolean");
-    t.ok (v50.get_bool () == true,              "cast duration --> boolean");
+    t.ok (v50.get_bool (),              "cast duration --> boolean");
 
-    Variant v51 ((time_t) 12345, Variant::type_duration);
+    Variant v51 (static_cast<time_t>(12345), Variant::type_duration);
     v51.cast (Variant::type_integer);
     t.ok (v51.type () == Variant::type_integer, "cast duration --> integer");
     t.ok (v51.get_integer () == 12345,          "cast duration --> integer");
 
-    Variant v52 ((time_t) 12345, Variant::type_duration);
+    Variant v52 (static_cast<time_t>(12345), Variant::type_duration);
     v52.cast (Variant::type_real);
     t.ok (v52.type () == Variant::type_real,    "cast duration --> real");
     t.is (v52.get_real (), 12345.0, EPSILON,    "cast duration --> real");
 
-    Variant v53 ((time_t) 12345, Variant::type_duration);
+    Variant v53 (static_cast<time_t>(12345), Variant::type_duration);
     v53.cast (Variant::type_string);
     t.ok (v53.type () == Variant::type_string,  "cast duration --> string");
     t.is (v53.get_string (), "PT3H25M45S",      "cast duration --> string");
 
-    Variant v54 ((time_t) 12345, Variant::type_duration);
+    Variant v54 (static_cast<time_t>(12345), Variant::type_duration);
     v54.cast (Variant::type_date);
     t.ok (v54.type () == Variant::type_date,    "cast duration --> date");
     t.is (v54.get_date (), 12345,               "cast duration --> date");
 
-    Variant v55 ((time_t) 12345, Variant::type_duration);
+    Variant v55 (static_cast<time_t>(12345), Variant::type_duration);
     v55.cast (Variant::type_duration);
     t.ok (v55.type () == Variant::type_duration, "cast duration --> duration");
     t.ok (v55.get_duration () == 12345,          "cast duration --> duration");

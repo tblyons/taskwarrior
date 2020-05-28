@@ -26,9 +26,9 @@
 
 #include <cmake.h>
 #include <iostream>
-#include <stdlib.h>
+#include <cstdlib>
 #include <unistd.h>
-#include <stdio.h>
+#include <cstdio>
 #include <Context.h>
 #include <Column.h>
 #include <Task.h>

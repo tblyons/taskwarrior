@@ -26,7 +26,7 @@
 
 #include <cmake.h>
 #include <iostream>
-#include <stdlib.h>
+#include <cstdlib>
 #include <JSON.h>
 #include <test.h>
 #include <Context.h>
@@ -136,7 +136,7 @@ int main (int, char**)
     try
     {
       json::value* root = json::parse (negative_tests[i]);
-      t.is ((const char*) root, (const char*) NULL,
+      t.is (reinterpret_cast<const char*>(root), (const char*) NULL,
             std::string ("negative: ") + negative_tests[i]);
     }
 
@@ -171,7 +171,7 @@ int main (int, char**)
 
     std::string encoded = json::encode ("one\\");
     t.is (encoded, "one\\\\",                "json::encode oneslashslashslashslash -> oneslashslashslashslashslashslashslashslash");
-    t.is ((int)encoded.length (), 5,         "json::encode oneslashslashslashslash -> length 5");
+    t.is (static_cast<int>(encoded.length ()), 5,         "json::encode oneslashslashslashslash -> length 5");
     t.is (encoded[0], 'o',                   "json::encode oneslashslashslashslash[0] -> o");
     t.is (encoded[1], 'n',                   "json::encode oneslashslashslashslash[1] -> n");
     t.is (encoded[2], 'e',                   "json::encode oneslashslashslashslash[2] -> e");

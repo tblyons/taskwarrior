@@ -26,7 +26,7 @@
 
 #include <cmake.h>
 #include <iostream>
-#include <stdlib.h>
+#include <cstdlib>
 #include <Context.h>
 #include <Color.h>
 #include <test.h>
@@ -39,51 +39,51 @@ int main (int, char**)
   UnitTest t (40 + 256 + 256 + 6*6*6 + 6*6*6 + 1 + 24 + 24 + 3);
 
   // Names matched to values.
-  t.is ((int) Color (""),        (int) Color (Color::nocolor), "''        == Color::nocolor");
-  t.is ((int) Color ("black"),   (int) Color (Color::black),   "'black'   == Color::black");
-  t.is ((int) Color ("red"),     (int) Color (Color::red),     "'red'     == Color::red");
-  t.is ((int) Color ("green"),   (int) Color (Color::green),   "'green'   == Color::green");
-  t.is ((int) Color ("yellow"),  (int) Color (Color::yellow),  "'yellow'  == Color::yellow");
-  t.is ((int) Color ("blue"),    (int) Color (Color::blue),    "'blue'    == Color::blue");
-  t.is ((int) Color ("magenta"), (int) Color (Color::magenta), "'magenta' == Color::magenta");
-  t.is ((int) Color ("cyan"),    (int) Color (Color::cyan),    "'cyan'    == Color::cyan");
-  t.is ((int) Color ("white"),   (int) Color (Color::white),   "'white'   == Color::white");
+  t.is (static_cast<int>(Color("")),        static_cast<int>(Color(Color::nocolor)), "''        == Color::nocolor");
+  t.is (static_cast<int>(Color("black")),   static_cast<int>(Color(Color::black)),   "'black'   == Color::black");
+  t.is (static_cast<int>(Color("red")),     static_cast<int>(Color(Color::red)),     "'red'     == Color::red");
+  t.is (static_cast<int>(Color("green")),   static_cast<int>(Color(Color::green)),   "'green'   == Color::green");
+  t.is (static_cast<int>(Color("yellow")),  static_cast<int>(Color(Color::yellow)),  "'yellow'  == Color::yellow");
+  t.is (static_cast<int>(Color("blue")),    static_cast<int>(Color(Color::blue)),    "'blue'    == Color::blue");
+  t.is (static_cast<int>(Color("magenta")), static_cast<int>(Color(Color::magenta)), "'magenta' == Color::magenta");
+  t.is (static_cast<int>(Color("cyan")),    static_cast<int>(Color(Color::cyan)),    "'cyan'    == Color::cyan");
+  t.is (static_cast<int>(Color("white")),   static_cast<int>(Color(Color::white)),   "'white'   == Color::white");
 
   // Auto upgrades.
   Color c ("red on color0");
-  t.is ((std::string) c, "color1 on color0", "upgrade red on color0 -> color1 on color0");
+  t.is (std::string(c), "color1 on color0", "upgrade red on color0 -> color1 on color0");
 
   c = Color ("color1 on black");
-  t.is ((std::string) c, "color1 on color0", "upgrade color1 on black -> color1 on color0");
+  t.is (std::string(c), "color1 on color0", "upgrade color1 on black -> color1 on color0");
 
   c = Color ("bold red on color0");
-  t.is ((std::string) c, "color9 on color0", "upgrade bold red on color0 -> color9 on color0");
+  t.is (std::string(c), "color9 on color0", "upgrade bold red on color0 -> color9 on color0");
 
   c = Color ("color1 on bright black");
-  t.is ((std::string) c, "color1 on color8", "upgrade color1 on bright black -> color1 on color8");
+  t.is (std::string(c), "color1 on color8", "upgrade color1 on bright black -> color1 on color8");
 
   // Simple blending.
   c = Color ("red");
   c.blend (Color ("on white"));
-  t.is ((std::string) c, "red on white", "red + on white -> red on white");
+  t.is (std::string(c), "red on white", "red + on white -> red on white");
 
   c = Color ("bold underline red");
   c.blend (Color ("on bright white"));
-  t.is ((std::string) c, "bold underline red on bright white", "bold underline red + on bright white -> bold underline red on bright white");
+  t.is (std::string(c), "bold underline red on bright white", "bold underline red + on bright white -> bold underline red on bright white");
 
   // Blending with conflicts.
   c = Color ("red on white");
   c.blend (Color ("on blue"));
-  t.is ((std::string) c, "red on blue", "red on white + on blue -> red on blue");
+  t.is (std::string(c), "red on blue", "red on white + on blue -> red on blue");
 
   c = Color ("red on white");
   c.blend (Color ("blue on magenta"));
-  t.is ((std::string) c, "blue on magenta", "red on white + blue on magenta -> blue on magenta");
+  t.is (std::string(c), "blue on magenta", "red on white + blue on magenta -> blue on magenta");
 
   // Blending with upgrades.
   c = Color ("color1 on color0");
   c.blend (Color ("blue"));
-  t.is ((std::string) c, "color4 on color0", "color1 on color0 + blue -> color4 on color0");
+  t.is (std::string(c), "color4 on color0", "color1 on color0 + blue -> color4 on color0");
 
   // Now the dumb show of every color and its code.
   t.is (Color::colorize ("foo", "red"),                std::string ("\033[31mfoo\033[0m"),       "red                -> ^[[31m");

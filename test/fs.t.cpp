@@ -27,7 +27,7 @@
 #include <cmake.h>
 #include <algorithm>
 #include <string>
-#include <stdlib.h>
+#include <cstdlib>
 #include <Context.h>
 #include <FS.h>
 #include <test.h>
@@ -65,7 +65,7 @@ int main (int, char**)
   t.is (p3._data, p3_copy._data, "Path::Path (Path&)");
 
   // operator (std::string) const;
-  t.is ((std::string) p3, "/tmp", "Path::operator (std::string) const");
+  t.is (std::string(p3), "/tmp", "Path::operator (std::string) const");
 
   // std::string name () const;
   Path p4 ("/a/b/c/file.ext");
@@ -138,7 +138,7 @@ int main (int, char**)
   t.ok (File::remove ("tmp/file.t.txt"), "File::remove tmp/file.t.txt good");
 
   // operator (std::string) const;
-  t.is ((std::string) f6, Directory::cwd () + "/tmp/file.t.txt", "File::operator (std::string) const");
+  t.is (std::string(f6), Directory::cwd () + "/tmp/file.t.txt", "File::operator (std::string) const");
 
   t.ok (File::create ("tmp/file.t.create"), "File::create tmp/file.t.create good");
   t.ok (File::remove ("tmp/file.t.create"), "File::remove tmp/file.t.create good");
@@ -204,7 +204,7 @@ int main (int, char**)
   t.is (d5._data, Directory::cwd () + "/tmp/test_directory", "Directory::operator=");
 
   // operator (std::string) const;
-  t.is ((std::string) d3, Directory::cwd () + "/tmp", "Directory::operator (std::string) const");
+  t.is (std::string(d3), Directory::cwd () + "/tmp", "Directory::operator (std::string) const");
 
   // virtual bool create ();
   t.ok (d5.create (), "Directory::create tmp/test_directory");
@@ -219,14 +219,14 @@ int main (int, char**)
   // std::vector <std::string> list ();
   std::vector <std::string> files = d5.list ();
   std::sort (files.begin (), files.end ());
-  t.is ((int)files.size (), 2, "Directory::list 1 file");
+  t.is (static_cast<int>(files.size ()), 2, "Directory::list 1 file");
   t.is (files[0], Directory::cwd () + "/tmp/test_directory/dir", "file[0] is tmp/test_directory/dir");
   t.is (files[1], Directory::cwd () + "/tmp/test_directory/f0", "file[1] is tmp/test_directory/f0");
 
   // std::vector <std::string> listRecursive ();
   files = d5.listRecursive ();
   std::sort (files.begin (), files.end ());
-  t.is ((int)files.size (), 2, "Directory::list 1 file");
+  t.is (static_cast<int>(files.size ()), 2, "Directory::list 1 file");
   t.is (files[0], Directory::cwd () + "/tmp/test_directory/dir/f1", "file is tmp/test_directory/dir/f1");
   t.is (files[1], Directory::cwd () + "/tmp/test_directory/f0", "file is tmp/test_directory/f0");
 
