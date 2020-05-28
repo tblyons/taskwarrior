@@ -647,7 +647,7 @@ void Task::parseJSON (const std::string& line)
   // Parse the whole thing.
   json::value* root = json::parse (line);
   if (root && root->type() == json::j_object) {
-    parseJSON((json::object*)root);
+    parseJSON(static_cast<json::object*>(root));
   }
 
   delete root;
@@ -686,10 +686,10 @@ void Task::parseJSON (const json::object* root_obj)
 
       // Tags are an array of JSON strings.
       else if (i.first == "tags" && i.second->type() == json::j_array) {
-        json::array* tags = (json::array*)i.second;
+        auto* tags = static_cast<json::array*>(i.second);
         for (auto& t : tags->_data)
         {
-          json::string* tag = (json::string*)t;
+          auto* tag = static_cast<json::string*>(t);
           addTag (tag->_data);
         }
       }
@@ -699,7 +699,7 @@ void Task::parseJSON (const json::object* root_obj)
       // 2016-02-21 Mirakel dropped sync support in late 2015. This can be
       //            removed in a later release.
       else if (i.first == "tags" && i.second->type() == json::j_string) {
-        json::string* tag = (json::string*)i.second;
+        auto* tag = static_cast<json::string*>(i.second);
         addTag (tag->_data);
       }
 
@@ -707,10 +707,10 @@ void Task::parseJSON (const json::object* root_obj)
       // 2016-02-21: This will be the only option in future releases.
       //             See other 2016-02-21 comments for details.
       else if (i.first == "depends" && i.second->type() == json::j_array) {
-        json::array* deps = (json::array*)i.second;
+        auto* deps = static_cast<json::array*>(i.second);
         for (auto& t : deps->_data)
         {
-          json::string* dep = (json::string*)t;
+          auto* dep = static_cast<json::string*>(t);
           addDependency (dep->_data);
         }
       }
@@ -718,7 +718,7 @@ void Task::parseJSON (const json::object* root_obj)
       // Dependencies can be exported as a single comma-separated string.
       // 2016-02-21: Deprecated - see other 2016-02-21 comments for details.
       else if (i.first == "depends" && i.second->type() == json::j_string) {
-        json::string* deps = (json::string*)i.second;
+        auto* deps = static_cast<json::string*>(i.second);
         std::vector <std::string> uuids;
         split (uuids, deps->_data, ',');
 
@@ -746,12 +746,12 @@ void Task::parseJSON (const json::object* root_obj)
       {
         std::map <std::string, std::string> annos;
 
-        json::array* atts = (json::array*)i.second;
+        auto* atts = static_cast<json::array*>(i.second);
         for (auto& annotations : atts->_data)
         {
-          json::object* annotation = (json::object*)annotations;
-          json::string* when = (json::string*)annotation->_data["entry"];
-          json::string* what = (json::string*)annotation->_data["description"];
+          auto* annotation = static_cast<json::object*>(annotations);
+          auto* when = static_cast<json::string*>(annotation->_data["entry"]);
+          auto* what = static_cast<json::string*>(annotation->_data["description"]);
 
           if (!when) {
             throw format(STRING_TASK_NO_ENTRY, root_obj->dump());
@@ -1624,7 +1624,7 @@ void Task::validate (bool applyDefault /* = true */)
       if (context.columns["due"]->validate (Task::defaultDue))
       {
         ISO8601p dur (Task::defaultDue);
-        if ((time_t)dur != 0) {
+        if (static_cast<time_t>(dur) != 0) {
           set ("due", (ISO8601d () + dur).toEpoch ());
         } else {
           set("due", ISO8601d(Task::defaultDue).toEpoch());

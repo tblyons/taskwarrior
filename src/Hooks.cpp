@@ -423,14 +423,15 @@ void Hooks::assertValidJSON (const std::vector <std::string>& input) const
         context.error (STRING_HOOK_ERROR_OBJECT);
         throw 0;
       }
+      auto* obj = static_cast<json::object*>(root);
 
-      if (((json::object*)root)->_data.find ("description") == ((json::object*)root)->_data.end ())
+      if (obj->_data.find("description") == obj->_data.end())
       {
         context.error (STRING_HOOK_ERROR_NODESC);
         throw 0;
       }
 
-      if (((json::object*)root)->_data.find ("uuid") == ((json::object*)root)->_data.end ())
+      if (obj->_data.find("uuid") == obj->_data.end())
       {
         context.error (STRING_HOOK_ERROR_NOUUID);
         throw 0;
@@ -473,7 +474,7 @@ void Hooks::assertSameTask (const std::vector <std::string>& input, const Task& 
 
   for (auto& i : input)
   {
-    json::object* root_obj = (json::object*)json::parse (i);
+    auto* root_obj = static_cast<json::object*>(json::parse(i));
 
     // If there is no UUID at all.
     auto u = root_obj->_data.find ("uuid");
@@ -484,7 +485,7 @@ void Hooks::assertSameTask (const std::vector <std::string>& input, const Task& 
       throw 0;
     }
 
-    json::string* up = (json::string*) u->second;
+    auto* up = static_cast<json::string*>(u->second);
     std::string json_uuid = json::decode (unquoteText (up->dump ()));
     if (json_uuid != uuid)
     {

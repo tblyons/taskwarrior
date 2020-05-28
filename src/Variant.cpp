@@ -1923,7 +1923,7 @@ void Variant::cast (const enum type new_type)
         if (isop.parse (_string, pos) &&
             pos == _string.length ())
         {
-          _date = ISO8601d ().toEpoch () + (time_t) isop;
+          _date = ISO8601d ().toEpoch () + static_cast<time_t>(isop);
           break;
         }
 
@@ -1942,7 +1942,7 @@ void Variant::cast (const enum type new_type)
         if (iso.parse (_string, pos) &&
             pos == _string.length ())
         {
-          _duration = (time_t) iso;
+          _duration = static_cast<time_t>(iso);
         }
       }
       break;

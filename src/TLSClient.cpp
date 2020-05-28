@@ -211,7 +211,7 @@ void TLSClient::connect (const std::string& host, const std::string& port)
 
   // Store the TLSClient instance, so that the verification callback can access
   // it during the handshake below and call the verifcation method.
-  gnutls_session_set_ptr (_session, (void*) this);
+  gnutls_session_set_ptr (_session, static_cast<void*>(this));
 
   // use IPv4 or IPv6, does not matter.
   struct addrinfo hints {};
@@ -238,7 +238,7 @@ void TLSClient::connect (const std::string& host, const std::string& port)
     // Setting SO_REUSEADDR allows this program to assume control of a closed,
     // but unavailable socket.
     int on = 1;
-    if (::setsockopt(_socket, SOL_SOCKET, SO_REUSEADDR, (const void*)&on,
+    if (::setsockopt(_socket, SOL_SOCKET, SO_REUSEADDR, static_cast<const void*>(&on),
                      sizeof(on)) == -1) {
       throw std::string(::strerror(errno));
     }

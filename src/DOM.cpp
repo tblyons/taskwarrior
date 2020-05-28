@@ -295,9 +295,9 @@ bool getDOM (const std::string& name, const Task& task, Variant& value)
         ISO8601p iso;
         std::string::size_type cursor = 0;
         if (iso.parse(period, cursor)) {
-          value = Variant ((time_t) iso, Variant::type_duration);
+          value = Variant (static_cast<time_t>(iso), Variant::type_duration);
         } else {
-          value = Variant((time_t)ISO8601p(ref.get(canonical)),
+          value = Variant(static_cast<time_t>(ISO8601p(ref.get(canonical))),
                           Variant::type_duration);
         }
       } else if (column->type() == "numeric") {

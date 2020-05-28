@@ -55,7 +55,7 @@ public:
   void truncateLines (int n)      { _truncate_lines = n;         }
   void truncateRows (int n)       { _truncate_rows = n;          }
   int lines ()                    { return _lines;               }
-  int rows ()                     { return (int) _data.size ();  }
+  int rows ()                     { return static_cast<int>(_data.size());  }
 
   // Data provision.
   int addRow ();

@@ -393,7 +393,7 @@ ISO8601d getNextRecurrence (ISO8601d& current, std::string& period)
     throw std::string(format(STRING_TASK_VALID_RECUR, period));
   }
 
-  secs = (time_t) p;
+  secs = static_cast<time_t>(p);
   return current + secs;
 }
 

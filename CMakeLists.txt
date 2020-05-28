@@ -73,7 +73,7 @@ endif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
 set (CMAKE_CXX_FLAGS "${_CXX11_FLAGS} ${CMAKE_CXX_FLAGS}")
 
-set (CMAKE_CXX_FLAGS "-Wall -Wsign-compare -Wreturn-type ${CMAKE_CXX_FLAGS}")
+set (CMAKE_CXX_FLAGS "-Wall -Wold-style-cast -Wsign-compare -Wreturn-type ${CMAKE_CXX_FLAGS}")
 
 if (NETBSD)
    # Since readline, etc likely to be in /usr/pkg/lib, not standard library

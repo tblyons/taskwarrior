@@ -737,7 +737,7 @@ void CmdEdit::parseTask (Task& task, const std::string& after, const std::string
           }
           else if (type == "duration")
           {
-            task.set (col.first, (time_t) ISO8601p (value));
+            task.set (col.first, static_cast<time_t>(ISO8601p(value)));
           }
         }
         else
