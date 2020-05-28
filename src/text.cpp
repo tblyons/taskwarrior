@@ -380,7 +380,7 @@ bool compare (
 {
   // Use strcasecmp if required.
   if (!sensitive) {
-    return strcasecmp(left.c_str(), right.c_str()) == 0 ? true : false;
+    return strcasecmp(left.c_str(), right.c_str()) == 0;
   }
 
   // Otherwise, just use std::string::operator==.

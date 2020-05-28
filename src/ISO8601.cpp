@@ -929,18 +929,14 @@ bool ISO8601d::parse_time_off_ext  (Nibbler& n)
 bool ISO8601d::validate ()
 {
   // _year;
-  if ((_year && (_year < 1900 || _year > 2200)) ||
+  return !((_year && (_year < 1900 || _year > 2200)) ||
       (_month && (_month < 1 || _month > 12)) ||
       (_week && (_week < 1 || _week > 53)) ||
       (_weekday && (_weekday < 0 || _weekday > 6)) ||
       (_julian && (_julian < 1 || _julian > ISO8601d::daysInYear(_year))) ||
       (_day && (_day < 1 || _day > ISO8601d::daysInMonth(_month, _year))) ||
       (_seconds && (_seconds < 1 || _seconds > 86400)) ||
-      (_offset && (_offset < -86400 || _offset > 86400))) {
-    return false;
-  }
-
-  return true;
+      (_offset && (_offset < -86400 || _offset > 86400)));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1928,7 +1924,7 @@ bool ISO8601p::parse (const std::string& input, std::string::size_type& start)
       for (unsigned int i = 0; i < NUM_DURATIONS; i++)
       {
         if (durations[i].unit == unit &&
-            durations[i].standalone == true)
+            durations[i].standalone)
         {
           _period = static_cast <int> (durations[i].seconds);
           return true;

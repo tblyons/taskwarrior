@@ -113,11 +113,11 @@ int CmdTags::execute (std::string& output)
     for (auto& i : unique)
     {
       // Highlight the special tags.
-      special = (context.color () &&
+      special = context.color () &&
                  (i.first == "nocolor" ||
                   i.first == "nonag"   ||
                   i.first == "nocal"   ||
-                  i.first == "next")) ? true : false;
+                  i.first == "next");
 
       int row = view.addRow ();
       view.set (row, 0, i.first,  special ? bold : Color ());

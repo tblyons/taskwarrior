@@ -221,7 +221,7 @@ bool Nibbler::getQuoted (char c, std::string& result)
       while (j >= start && (*_input)[j] == '\\')
       {
         // Toggle flag for each further backslash encountered.
-        is_escaped_quote = is_escaped_quote ? false : true;
+        is_escaped_quote = !is_escaped_quote;
         --j;
       }
 
@@ -622,11 +622,7 @@ const std::string& Nibbler::str () const
 ////////////////////////////////////////////////////////////////////////////////
 bool Nibbler::depleted ()
 {
-  if (_cursor >= _length) {
-    return true;
-  }
-
-  return false;
+  return _cursor >= _length;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

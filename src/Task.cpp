@@ -204,11 +204,7 @@ void Task::setAsNow (const std::string& att)
 ////////////////////////////////////////////////////////////////////////////////
 bool Task::has (const std::string& name) const
 {
-  if (data.find(name) != data.end()) {
-    return true;
-  }
-
-  return false;
+  return data.find(name) != data.end();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1048,7 +1044,7 @@ std::string Task::composeJSON (bool decorate /*= false*/) const
 ////////////////////////////////////////////////////////////////////////////////
 bool Task::hasAnnotations () const
 {
-  return annotation_count ? true : false;
+  return annotation_count != 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1351,11 +1347,7 @@ bool Task::hasTag (const std::string& tag) const
   std::vector <std::string> tags;
   split (tags, get ("tags"), ',');
 
-  if (std::find(tags.begin(), tags.end(), tag) != tags.end()) {
-    return true;
-  }
-
-  return false;
+  return std::find(tags.begin(), tags.end(), tag) != tags.end();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1431,7 +1423,7 @@ void Task::substitute (
   const std::string& to,
   const std::string& flags)
 {
-  bool global = (flags.find ('g') != std::string::npos ? true : false);
+  bool global = (flags.find ('g') != std::string::npos);
 
   // Get the data to modify.
   std::string description = get ("description");

@@ -156,57 +156,45 @@ std::string Path::extension () const
 ////////////////////////////////////////////////////////////////////////////////
 bool Path::exists () const
 {
-  return access (_data.c_str (), F_OK) ? false : true;
+  return access (_data.c_str (), F_OK) == 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool Path::is_directory () const
 {
   struct stat s {};
-  if (!stat(_data.c_str(), &s) && S_ISDIR(s.st_mode)) {
-    return true;
-  }
-
-  return false;
+  return !stat(_data.c_str(), &s) && S_ISDIR(s.st_mode);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool Path::is_absolute () const
 {
-  if (_data.length() && _data[0] == '/') {
-    return true;
-  }
-
-  return false;
+  return _data.length() && _data[0] == '/';
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool Path::is_link () const
 {
   struct stat s {};
-  if (!lstat(_data.c_str(), &s) && S_ISLNK(s.st_mode)) {
-    return true;
-  }
-
-  return false;
+  return !lstat(_data.c_str(), &s) && S_ISLNK(s.st_mode);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool Path::readable () const
 {
-  return access (_data.c_str (), R_OK) ? false : true;
+  return access (_data.c_str (), R_OK) == 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool Path::writable () const
 {
-  return access (_data.c_str (), W_OK) ? false : true;
+  return access (_data.c_str (), W_OK) == 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool Path::executable () const
 {
-  return access (_data.c_str (), X_OK) ? false : true;
+  return access (_data.c_str (), X_OK) == 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -374,7 +362,7 @@ bool File::create (int mode /* = 0640 */)
 ////////////////////////////////////////////////////////////////////////////////
 bool File::remove () const
 {
-  return unlink (_data.c_str ()) == 0 ? true : false;
+  return unlink (_data.c_str ()) == 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -770,7 +758,7 @@ bool File::write (
 ////////////////////////////////////////////////////////////////////////////////
 bool File::remove (const std::string& name)
 {
-  return unlink (expand (name).c_str ()) == 0 ? true : false;
+  return unlink (expand (name).c_str ()) == 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -844,7 +832,7 @@ Directory& Directory::operator= (const Directory& other)
 ////////////////////////////////////////////////////////////////////////////////
 bool Directory::create (int mode /* = 0755 */)
 {
-  return mkdir (_data.c_str (), mode) == 0 ? true : false;
+  return mkdir (_data.c_str (), mode) == 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -893,7 +881,7 @@ bool Directory::remove_directory (const std::string& dir) const
     closedir (dp);
   }
 
-  return rmdir (dir.c_str ()) ? false : true;
+  return rmdir (dir.c_str ()) == 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -955,7 +943,7 @@ bool Directory::up ()
 ////////////////////////////////////////////////////////////////////////////////
 bool Directory::cd () const
 {
-  return chdir (_data.c_str ()) == 0 ? true : false;
+  return chdir (_data.c_str ()) == 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

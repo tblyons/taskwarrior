@@ -244,7 +244,7 @@ std::string ViewText::render ()
     max_lines = 0;
 
     // Alternate rows based on |s % 2|
-    bool odd = (row % 2) ? true : false;
+    bool odd = (row % 2) != 0;
     Color row_color = odd ? _odd : _even;
 
     // TODO row_color.blend (provided color);

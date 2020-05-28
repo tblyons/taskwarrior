@@ -39,14 +39,14 @@
 static bool isMonth (const std::string& name, int& i)
 {
   i = ISO8601d::monthOfYear (name) - 1;
-  return i != -2 ? true : false;
+  return i != -2;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 static bool isDay (const std::string& name, int& i)
 {
   i = ISO8601d::dayOfWeek (name);
-  return i != -1 ? true : false;
+  return i != -1;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

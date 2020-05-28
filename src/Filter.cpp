@@ -80,7 +80,7 @@ void Filter::subset (const std::vector <Task>& input, std::vector <Task>& output
 
     // Debug output from Eval during compilation is useful.  During evaluation
     // it is mostly noise.
-    eval.debug (context.config.getInteger ("debug.parser") >= 3 ? true : false);
+    eval.debug (context.config.getInteger ("debug.parser") >= 3);
     eval.compileExpression (precompiled);
 
     for (auto& task : input)
@@ -137,7 +137,7 @@ void Filter::subset (std::vector <Task>& output)
 
     // Debug output from Eval during compilation is useful.  During evaluation
     // it is mostly noise.
-    eval.debug (context.config.getInteger ("debug.parser") >= 3 ? true : false);
+    eval.debug (context.config.getInteger ("debug.parser") >= 3);
     eval.compileExpression (precompiled);
 
     output.clear ();
@@ -277,18 +277,10 @@ bool Filter::pendingOnly () const
 
   if (countStatus)
   {
-    if (!countPending && !countWaiting && !countRecurring) {
-      return false;
-    }
-
-    return true;
+    return !(!countPending && !countWaiting && !countRecurring);
   }
 
-  if (countId) {
-    return true;
-  }
-
-  return false;
+  return countId != 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

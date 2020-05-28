@@ -97,7 +97,7 @@ bool confirm (const std::string& question)
   while (! std::cin.eof () && matches.size () != 1);
 
   signal (SIGINT, SIG_DFL);
-  return matches.size () == 1 && matches[0] == STRING_UTIL_CONFIRM_YES ? true : false;
+  return matches.size () == 1 && matches[0] == STRING_UTIL_CONFIRM_YES;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

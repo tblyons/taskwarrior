@@ -181,7 +181,7 @@ int CmdCalendar::execute (std::string& output)
 
   // Now begin the data subset and rendering.
   int countDueDates = 0;
-  if (getpendingdate == true)
+  if (getpendingdate)
   {
     // Find the oldest pending due date.
     ISO8601d oldest (12, 31, 2037);
