@@ -1,0 +1,10 @@
+---
+Checks:          'readability-container-size-empty,readability-simplify-boolean-expr,modernize-deprecated-headers'
+WarningsAsErrors: ''
+HeaderFilterRegex: ''
+FormatStyle:     file
+CheckOptions:
+  - key:             readability-redundant-access-specifiers.CheckFirstDeclaration
+    value:           '1'
+...
+
