@@ -496,10 +496,10 @@ int CmdGHistoryMonthly::execute (std::string& output)
       unsigned int completedBar = (widthOfBar * completedGroup[i.first]) / maxLine;
       unsigned int deletedBar   = (widthOfBar *   deletedGroup[i.first]) / maxLine;
 
-      std::string bar = "";
+      std::string bar;
       if (context.color ())
       {
-        std::string aBar = "";
+        std::string aBar;
         if (addedGroup[i.first])
         {
           aBar = format (addedGroup[i.first]);
@@ -508,7 +508,7 @@ int CmdGHistoryMonthly::execute (std::string& output)
           }
         }
 
-        std::string cBar = "";
+        std::string cBar;
         if (completedGroup[i.first])
         {
           cBar = format (completedGroup[i.first]);
@@ -517,7 +517,7 @@ int CmdGHistoryMonthly::execute (std::string& output)
           }
         }
 
-        std::string dBar = "";
+        std::string dBar;
         if (deletedGroup[i.first])
         {
           dBar = format (deletedGroup[i.first]);
@@ -534,15 +534,15 @@ int CmdGHistoryMonthly::execute (std::string& output)
       }
       else
       {
-        std::string aBar = "";
+        std::string aBar;
         while (aBar.length() < addedBar) {
           aBar += "+";
         }
-        std::string cBar = "";
+        std::string cBar;
         while (cBar.length() < completedBar) {
           cBar += "X";
         }
-        std::string dBar = "";
+        std::string dBar;
         while (dBar.length() < deletedBar) {
           dBar += "-";
         }
@@ -710,10 +710,10 @@ int CmdGHistoryAnnual::execute (std::string& output)
       unsigned int completedBar = (widthOfBar * completedGroup[i.first]) / maxLine;
       unsigned int deletedBar   = (widthOfBar *   deletedGroup[i.first]) / maxLine;
 
-      std::string bar = "";
+      std::string bar;
       if (context.color ())
       {
-        std::string aBar = "";
+        std::string aBar;
         if (addedGroup[i.first])
         {
           aBar = format (addedGroup[i.first]);
@@ -722,7 +722,7 @@ int CmdGHistoryAnnual::execute (std::string& output)
           }
         }
 
-        std::string cBar = "";
+        std::string cBar;
         if (completedGroup[i.first])
         {
           cBar = format (completedGroup[i.first]);
@@ -731,7 +731,7 @@ int CmdGHistoryAnnual::execute (std::string& output)
           }
         }
 
-        std::string dBar = "";
+        std::string dBar;
         if (deletedGroup[i.first])
         {
           dBar = format (deletedGroup[i.first]);
@@ -747,15 +747,15 @@ int CmdGHistoryAnnual::execute (std::string& output)
       }
       else
       {
-        std::string aBar = "";
+        std::string aBar;
         while (aBar.length() < addedBar) {
           aBar += "+";
         }
-        std::string cBar = "";
+        std::string cBar;
         while (cBar.length() < completedBar) {
           cBar += "X";
         }
-        std::string dBar = "";
+        std::string dBar;
         while (dBar.length() < deletedBar) {
           dBar += "-";
         }

@@ -93,7 +93,7 @@ int CmdContext::execute (std::string& output)
 //
 std::string CmdContext::joinWords (const std::vector <std::string>& words, unsigned int from, unsigned int to /* = 0 */)
 {
-  std::string value = "";
+  std::string value;
 
   if (to == 0) {
     to = words.size();

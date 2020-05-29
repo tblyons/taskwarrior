@@ -136,7 +136,7 @@ int CmdSync::execute (std::string& output)
 
   // If this is a first-time initialization, send pending.data and
   // completed.data, but not backlog.data.
-  std::string payload = "";
+  std::string payload;
   int upload_count = 0;
   if (first_time_init)
   {
@@ -219,7 +219,7 @@ int CmdSync::execute (std::string& output)
         context.tdb2.all_tasks();
       }
 
-      std::string sync_key = "";
+      std::string sync_key;
       for (auto& line : lines)
       {
         if (line[0] == '{')

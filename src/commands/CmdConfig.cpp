@@ -175,7 +175,7 @@ int CmdConfig::execute (std::string& output)
     bool found = false;
 
     std::string name = words[0];
-    std::string value = "";
+    std::string value;
 
     // Join the remaining words into config variable's value
     if (words.size () > 1)

@@ -37,7 +37,7 @@
 #include <text.h>
 #include <i18n.h>
 
-std::string Variant::dateFormat = "";
+std::string Variant::dateFormat;
 bool Variant::searchCaseSensitive = true;
 bool Variant::searchUsingRegex = true;
 

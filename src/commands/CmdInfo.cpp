@@ -313,7 +313,7 @@ int CmdInfo::execute (std::string& output)
     {
       // Note: This list must match that in Task::hasTag.
       // Note: This list must match that in ::feedback_reserved_tags.
-      std::string virtualTags = "";
+      std::string virtualTags;
       if (task.hasTag("ACTIVE")) {
         virtualTags += "ACTIVE ";
       }

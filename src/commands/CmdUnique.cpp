@@ -63,7 +63,7 @@ int CmdUnique::execute (std::string& output)
   filter.subset (filtered);
 
   // Find <attribute>.
-  std::string attribute = "";
+  std::string attribute;
 
   // Just the first arg.
   auto words = context.cli2.getWords ();

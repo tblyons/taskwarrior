@@ -87,7 +87,7 @@ bool confirm (const std::string& question)
     std::cout << question
               << STRING_UTIL_CONFIRM_YN;
 
-    std::string answer {""};
+    std::string answer;
     std::getline (std::cin, answer);
     context.debug ("STDIN '" + answer + "'");
     answer = std::cin.eof () ? STRING_UTIL_CONFIRM_NO : Lexer::lowerCase (Lexer::trim (answer));
@@ -127,7 +127,7 @@ int confirm4 (const std::string& question)
               << options[5]
               << ") ";
 
-    std::string answer {""};
+    std::string answer;
     std::getline (std::cin, answer);
     context.debug ("STDIN '" + answer + "'");
     answer = std::cin.eof () ? STRING_UTIL_CONFIRM_QUIT : Lexer::lowerCase (Lexer::trim (answer));
@@ -451,7 +451,7 @@ const std::string indentProject (
   char delimiter /* = '.' */)
 {
   // Count the delimiters in *i.
-  std::string prefix = "";
+  std::string prefix;
   std::string::size_type pos = 0;
   std::string::size_type lastpos = 0;
   while ((pos = project.find (delimiter, pos + 1)) != std::string::npos)
@@ -463,7 +463,7 @@ const std::string indentProject (
     }
   }
 
-  std::string child = "";
+  std::string child;
   if (lastpos == 0) {
     child = project;
   } else {

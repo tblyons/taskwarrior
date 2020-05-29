@@ -310,7 +310,7 @@ std::string CmdEdit::formatTask (Task task, const std::string& dateformat)
     for (auto& uda : udas)
     {
       int pad = 13 - uda.length ();
-      std::string padding = "";
+      std::string padding;
       if (pad > 0) {
         padding = std::string(pad, ' ');
       }
@@ -338,7 +338,7 @@ std::string CmdEdit::formatTask (Task task, const std::string& dateformat)
     for (auto& orphan : orphans)
     {
       int pad = 6 - orphan.length ();
-      std::string padding = "";
+      std::string padding;
       if (pad > 0) {
         padding = std::string(pad, ' ');
       }
@@ -847,7 +847,7 @@ ARE_THESE_REALLY_HARMFUL:
   if (before_orig != after)
   {
     std::cout << STRING_EDIT_CHANGES << "\n";
-    std::string problem = "";
+    std::string problem;
     bool oops = false;
 
     try

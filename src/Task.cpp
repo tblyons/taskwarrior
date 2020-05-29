@@ -65,8 +65,8 @@ extern Task& contextTask;
 static const float epsilon = 0.000001;
 #endif
 
-std::string Task::defaultProject  = "";
-std::string Task::defaultDue      = "";
+std::string Task::defaultProject;
+std::string Task::defaultDue;
 bool Task::searchCaseSensitive    = true;
 bool Task::regex                  = false;
 std::map <std::string, std::string> Task::attributes;
@@ -86,7 +86,7 @@ float Task::urgencyAgeMax                 = 0.0;
 
 std::map <std::string, std::vector <std::string>> Task::customOrder;
 
-static const std::string dummy ("");
+static const std::string dummy;
 
 ////////////////////////////////////////////////////////////////////////////////
 // The uuid and id attributes must be exempt from comparison.
@@ -2132,7 +2132,7 @@ void Task::modify (modType type, bool text_required /* = false */)
   // Need this for later comparison.
   auto originalStatus = getStatus ();
 
-  std::string text = "";
+  std::string text;
   bool mods = false;
   for (auto& a : context.cli2._args)
   {

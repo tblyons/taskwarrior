@@ -70,7 +70,7 @@ int CmdDenotate::execute (std::string&)
   }
 
   // Extract all the ORIGINAL MODIFICATION args as simple text patterns.
-  std::string pattern = "";
+  std::string pattern;
   for (auto& a : context.cli2._args)
   {
     if (a.hasTag ("MISCELLANEOUS"))
