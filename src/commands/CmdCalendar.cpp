@@ -128,11 +128,11 @@ int CmdCalendar::execute (std::string& output)
 
     // YYYY.
     } else if (Lexer::isAllDigits(arg) && arg.length() == 4) {
-      argYear = strtol (arg.c_str (), NULL, 10);
+      argYear = strtol (arg.c_str (), nullptr, 10);
 
     // MM.
     } else if (Lexer::isAllDigits(arg) && arg.length() <= 2) {
-      argMonth = strtol (arg.c_str (), NULL, 10);
+      argMonth = strtol (arg.c_str (), nullptr, 10);
       if (argMonth < 1 || argMonth > 12) {
         throw format(STRING_CMD_CAL_BAD_MONTH, arg);
       }
@@ -584,7 +584,7 @@ std::string CmdCalendar::renderMonths (
                 task.has ("due"))
             {
               std::string due = task.get ("due");
-              ISO8601d duedmy (strtol (due.c_str(), NULL, 10));
+              ISO8601d duedmy (strtol (due.c_str(), nullptr, 10));
 
               if (duedmy.day   () == d           &&
                   duedmy.month () == months[mpl] &&

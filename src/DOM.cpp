@@ -335,7 +335,7 @@ bool getDOM (const std::string& name, const Task& task, Variant& value)
     std::map <std::string, std::string> annos;
     ref.getAnnotations (annos);
 
-    int a = strtol (elements[1].c_str (), NULL, 10);
+    int a = strtol (elements[1].c_str (), nullptr, 10);
     int count = 0;
 
     // Count off the 'a'th annotation.
@@ -364,7 +364,7 @@ bool getDOM (const std::string& name, const Task& task, Variant& value)
     std::map <std::string, std::string> annos;
     ref.getAnnotations (annos);
 
-    int a = strtol (elements[1].c_str (), NULL, 10);
+    int a = strtol (elements[1].c_str (), nullptr, 10);
     int count = 0;
 
     // Count off the 'a'th annotation.

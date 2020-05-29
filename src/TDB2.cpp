@@ -1044,7 +1044,7 @@ void TDB2::show_diff (
   const std::string& prior,
   const std::string& when)
 {
-  ISO8601d lastChange (strtol (when.c_str (), NULL, 10));
+  ISO8601d lastChange (strtol (when.c_str (), nullptr, 10));
 
   // Set the colors.
   Color color_red   (context.color () ? context.config.get ("color.undo.before") : "");

@@ -133,7 +133,7 @@ static void midsommarafton (struct tm* t)
 //
 bool namedDates (const std::string& name, Variant& value)
 {
-  time_t now = time (NULL);
+  time_t now = time (nullptr);
   struct tm* t = localtime (&now);
   int i;
 
@@ -390,12 +390,12 @@ bool namedDates (const std::string& name, Variant& value)
 
     if (Lexer::isDigit (name[1]))
     {
-      number = strtol (name.substr (0, 2).c_str (), NULL, 10);
+      number = strtol (name.substr (0, 2).c_str (), nullptr, 10);
       ordinal = Lexer::lowerCase (name.substr (2));
     }
     else
     {
-      number = strtol (name.substr (0, 1).c_str (), NULL, 10);
+      number = strtol (name.substr (0, 1).c_str (), nullptr, 10);
       ordinal = Lexer::lowerCase (name.substr (1));
     }
 

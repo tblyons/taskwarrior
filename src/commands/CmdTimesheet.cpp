@@ -82,7 +82,7 @@ int CmdTimesheet::execute (std::string& output)
   int quantity = 1;
   std::vector <std::string> words = context.cli2.getWords ();
   if (words.size() == 1) {
-    quantity = strtol(words[0].c_str(), NULL, 10);
+    quantity = strtol(words[0].c_str(), nullptr, 10);
   };
 
   std::stringstream out;

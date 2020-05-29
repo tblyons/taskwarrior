@@ -248,7 +248,7 @@ Column* Column::uda (const std::string& name)
     throw std::string(STRING_UDA_TYPE);
   }
 
-  return NULL;
+  return nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

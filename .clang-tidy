@@ -1,5 +1,5 @@
 ---
-Checks:          'google-readability-casting,readability-container-size-empty,readability-simplify-boolean-expr,modernize-deprecated-headers'
+Checks:          'modernize-use-nullptr,google-readability-casting,readability-container-size-empty,readability-simplify-boolean-expr,modernize-deprecated-headers'
 WarningsAsErrors: ''
 HeaderFilterRegex: ''
 FormatStyle:     file

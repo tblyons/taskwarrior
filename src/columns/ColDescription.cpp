@@ -186,7 +186,7 @@ void ColumnDescription::render (
       task.getAnnotations (annos);
       for (const auto& i : annos)
       {
-        ISO8601d dt (strtol (i.first.substr (11).c_str (), NULL, 10));
+        ISO8601d dt (strtol (i.first.substr (11).c_str (), nullptr, 10));
         description += "\n" + std::string (_indent, ' ') + dt.toString (_dateformat) + " " + i.second;
       }
     }
@@ -219,7 +219,7 @@ void ColumnDescription::render (
       task.getAnnotations (annos);
       for (const auto& i : annos)
       {
-        ISO8601d dt (strtol (i.first.substr (11).c_str (), NULL, 10));
+        ISO8601d dt (strtol (i.first.substr (11).c_str (), nullptr, 10));
         description += " " + dt.toString (_dateformat) + " " + i.second;
       }
     }

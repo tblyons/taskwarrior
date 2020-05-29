@@ -231,7 +231,7 @@ int CmdInfo::execute (std::string& output)
     std::string created = task.get ("entry");
     if (created.length ())
     {
-      ISO8601d dt (strtol (created.c_str (), NULL, 10));
+      ISO8601d dt (strtol (created.c_str (), nullptr, 10));
       age = ISO8601p (now - dt).formatVague ();
     }
 
@@ -617,7 +617,7 @@ int CmdInfo::execute (std::string& output)
           {
             int row = journal.addRow ();
 
-            ISO8601d timestamp (strtol (undo[when].substr (5).c_str (), NULL, 10));
+            ISO8601d timestamp (strtol (undo[when].substr (5).c_str (), nullptr, 10));
             journal.set (row, 0, timestamp.toString (dateformat));
 
             Task before (undo[previous].substr (4));

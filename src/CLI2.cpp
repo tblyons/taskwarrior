@@ -1830,8 +1830,8 @@ void CLI2::insertIDExpr ()
           else
           {
             bool ascending = true;
-            int low  = strtol (r->first.c_str (),  NULL, 10);
-            int high = strtol (r->second.c_str (), NULL, 10);
+            int low  = strtol (r->first.c_str (),  nullptr, 10);
+            int high = strtol (r->second.c_str (), nullptr, 10);
             ascending = low <= high;
 
             reconstructed.push_back (openParen);

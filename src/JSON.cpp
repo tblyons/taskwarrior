@@ -76,7 +76,7 @@ json::value* json::value::parse (Nibbler& nibbler)
     return v;
   }
 
-  return NULL;
+  return nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -108,7 +108,7 @@ json::string* json::string::parse (Nibbler& nibbler)
     return s;
   }
 
-  return NULL;
+  return nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -134,7 +134,7 @@ json::number* json::number::parse (Nibbler& nibbler)
     return s;
   }
 
-  return NULL;
+  return nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -177,7 +177,7 @@ json::literal* json::literal::parse (Nibbler& nibbler)
     return s;
   }
 
-  return NULL;
+  return nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -221,7 +221,7 @@ json::array* json::array::parse (Nibbler& nibbler)
     if ((value = json::value::parse (n)))
     {
       arr->_data.push_back (value);
-      value = NULL; // Not a leak.  Looks like a leak.
+      value = nullptr; // Not a leak.  Looks like a leak.
       n.skipWS ();
       while (n.skip (','))
       {
@@ -251,7 +251,7 @@ json::array* json::array::parse (Nibbler& nibbler)
     delete arr;
   }
 
-  return NULL;
+  return nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -303,7 +303,7 @@ json::object* json::object::parse (Nibbler& nibbler)
     if (json::object::parse_pair (n, name, value))
     {
       obj->_data.insert (std::pair <std::string, json::value*> (name, value));
-      value = NULL; // Not a leak.  Looks like a leak.
+      value = nullptr; // Not a leak.  Looks like a leak.
 
       n.skipWS ();
       while (n.skip (','))
@@ -334,7 +334,7 @@ json::object* json::object::parse (Nibbler& nibbler)
     delete obj;
   }
 
-  return NULL;
+  return nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -395,7 +395,7 @@ std::string json::object::dump () const
 ////////////////////////////////////////////////////////////////////////////////
 json::value* json::parse (const std::string& input)
 {
-  json::value* root = NULL;
+  json::value* root = nullptr;
 
   Nibbler n (input);
   n.skipWS ();

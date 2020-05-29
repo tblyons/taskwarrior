@@ -316,7 +316,7 @@ int execute (
       argv[i + 1] = const_cast<char*>(args[i].c_str());
     }
 
-    argv[args.size () + 1] = NULL;
+    argv[args.size () + 1] = nullptr;
     _exit (execvp (executable.c_str (), argv));
   }
 
@@ -352,7 +352,7 @@ int execute (
     tv.tv_sec = 5;
     tv.tv_usec = 0;
 
-    select_retval = select (std::max (pout[0], pin[1]) + 1, &rfds, &wfds, NULL, &tv);
+    select_retval = select (std::max (pout[0], pin[1]) + 1, &rfds, &wfds, nullptr, &tv);
 
     if (select_retval == -1) {
       throw std::string(std::strerror(errno));

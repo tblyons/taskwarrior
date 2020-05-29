@@ -249,9 +249,9 @@ int CmdDiagnostics::execute (std::string& output)
   char* peditor;
   if (!context.config.get("editor").empty()) {
     out << "  rc.editor: " << context.config.get ("editor") << "\n";
-  } else if ((peditor = getenv("VISUAL")) != NULL) {
+  } else if ((peditor = getenv("VISUAL")) != nullptr) {
     out << "    $VISUAL: " << peditor << "\n";
-  } else if ((peditor = getenv("EDITOR")) != NULL) {
+  } else if ((peditor = getenv("EDITOR")) != nullptr) {
     out << "    $EDITOR: " << peditor << "\n";
   }
 

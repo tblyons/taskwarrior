@@ -37,7 +37,7 @@
 
 extern Context context;
 
-static std::vector <Task>* global_data = NULL;
+static std::vector <Task>* global_data = nullptr;
 static std::vector <std::string> global_keys;
 static bool sort_compare (int, int);
 
@@ -209,13 +209,13 @@ static bool sort_compare (int left, int right)
     }
 
     // UDAs.
-    else if ((column = context.columns[field]) != NULL)
+    else if ((column = context.columns[field]) != nullptr)
     {
       std::string type = column->type ();
       if (type == "numeric")
       {
-        const float left_real  = strtof (((*global_data)[left].get_ref  (field)).c_str (), NULL);
-        const float right_real = strtof (((*global_data)[right].get_ref (field)).c_str (), NULL);
+        const float left_real  = strtof (((*global_data)[left].get_ref  (field)).c_str (), nullptr);
+        const float right_real = strtof (((*global_data)[right].get_ref (field)).c_str (), nullptr);
 
         if (left_real == right_real) {
           continue;

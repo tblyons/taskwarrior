@@ -122,7 +122,7 @@ bool ISO8601p::isoEnabled = true;
 ISO8601d::ISO8601d ()
 {
   clear ();
-  _date = time (NULL);
+  _date = time (nullptr);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -965,7 +965,7 @@ void ISO8601d::resolve ()
   bool utc    = _utc;
 
   // Get current time.
-  time_t now = time (NULL);
+  time_t now = time (nullptr);
 
   // A UTC offset needs to be accommodated.  Once the offset is subtracted,
   // only local and UTC times remain.
@@ -1794,7 +1794,7 @@ ISO8601p::ISO8601p (const std::string& input)
 
   if (Lexer::isAllDigits (input))
   {
-    time_t value = static_cast<time_t>(strtol (input.c_str (), NULL, 10));
+    time_t value = static_cast<time_t>(strtol (input.c_str (), nullptr, 10));
     if (value == 0 || value > 60)
     {
       _period = value;
@@ -1957,7 +1957,7 @@ bool ISO8601p::parse (const std::string& input, std::string::size_type& start)
       // So as a special case, durations, with units of "d" are rejected if the
       // quantity exceeds 10000.
       //
-      if (unit == "d" && strtol(number.c_str(), NULL, 10) > 10000) {
+      if (unit == "d" && strtol(number.c_str(), nullptr, 10) > 10000) {
         return false;
       }
 
@@ -1966,7 +1966,7 @@ bool ISO8601p::parse (const std::string& input, std::string::size_type& start)
           Lexer::isSingleCharOperator (n.next ()))
       {
         start = original_start + n.cursor ();
-        double quantity = strtod (number.c_str (), NULL);
+        double quantity = strtod (number.c_str (), nullptr);
 
         // Linear lookup - should instead be logarithmic.
         double seconds = 1;
